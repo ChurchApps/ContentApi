@@ -1,0 +1,25 @@
+service: content-api
+
+provider:
+  name: aws
+  runtime: nodejs14.x
+  memorySize: 1024
+  timeout: 10
+  region: us-east-2
+
+functions:
+  api:
+    handler: lambda.universal
+    events:
+      - http: ANY {proxy+}
+      - http: ANY /
+  nightly:
+    handler: lambda.nightly
+
+plugins:
+  - serverless-layers
+  
+custom:
+  serverless-layers:
+    dependenciesPath: ./package.json
+    layersDeploymentBucket: "lcs-layers"

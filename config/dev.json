@@ -1,0 +1,7 @@
+{
+  "appEnv": "dev",
+  "appName": "ContentApi",
+  "contentRoot": "http://localhost:3402",
+  "mailSystem": "",
+  "s3Bucket": ""
+}
