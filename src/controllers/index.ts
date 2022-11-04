@@ -1,5 +1,5 @@
 export { ElementController } from "./ElementController";
-export { PageController } from "./PageController";
+export { PageController2 } from "./PageController";
 export { SectionController } from "./SectionController";
 
 

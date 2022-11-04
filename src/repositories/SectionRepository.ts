@@ -34,7 +34,7 @@ export class SectionRepository {
     return DB.queryOne("SELECT * FROM sections WHERE id=? AND churchId=?;", [id, churchId]);
   }
 
-  public loadForSection(churchId: string, pageId: string) {
+  public loadForPage(churchId: string, pageId: string) {
     return DB.query("SELECT * FROM sections WHERE pageId=? AND churchId=? order by sort;", [pageId, churchId]);
   }
 

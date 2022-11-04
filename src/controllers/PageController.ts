@@ -1,10 +1,25 @@
 import { controller, httpPost, httpGet, interfaces, requestParam, httpDelete } from "inversify-express-utils";
 import express from "express";
 import { ContentBaseController } from "./ContentBaseController"
-import { Page } from "../models"
+import { Element, Page, Section } from "../models"
+import { ArrayHelper } from "../apiBase";
+
 
 @controller("/pages")
-export class PageController extends ContentBaseController {
+export class PageController2 extends ContentBaseController {
+
+  @httpGet("/:churchId/tree")
+  public async getTree(@requestParam("churchId") churchId: string, req: express.Request<{}, {}, null>, res: express.Response): Promise<interfaces.IHttpActionResult> {
+    return this.actionWrapperAnon(req, res, async () => {
+      const url = req.query.url as string;
+      const page = await this.repositories.page.loadByUrl(churchId, url);
+      const sections = await this.repositories.section.loadForPage(churchId, page.id);
+      const allElements = await this.repositories.element.loadForPage(churchId, page.id);
+      const result = this.buildTree(page, sections, allElements);
+      if (req.query.admin !== "1") this.removeTreeFields(result);
+      return result;
+    });
+  }
 
   @httpGet("/:id")
   public async get(@requestParam("id") id: string, req: express.Request<{}, {}, null>, res: express.Response): Promise<interfaces.IHttpActionResult> {
@@ -31,6 +46,32 @@ export class PageController extends ContentBaseController {
     return this.actionWrapper(req, res, async (au) => {
       await this.repositories.page.delete(au.churchId, id);
     });
+  }
+
+  private buildTree(page: Page, sections: Section[], allElements: Element[]) {
+    page.sections = sections;
+    page.sections.forEach(s => {
+      s.elements = ArrayHelper.getAll(allElements, "sectionId", s.id);
+    })
+    return page;
+  }
+
+  private removeTreeFields(page: Page) {
+    delete page.id;
+    delete page.churchId;
+    page.sections.forEach(s => {
+      delete s.id;
+      delete s.churchId;
+      delete s.pageId;
+      delete s.sort;
+      s.elements?.forEach(e => {
+        delete e.id;
+        delete e.churchId;
+        delete e.sectionId;
+        delete e.sort;
+      })
+
+    })
   }
 
 }

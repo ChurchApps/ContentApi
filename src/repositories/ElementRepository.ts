@@ -38,4 +38,13 @@ export class ElementRepository {
     return DB.query("SELECT * FROM elements WHERE sectionId=? AND churchId=? order by sort;", [sectionId, churchId]);
   }
 
+  public loadForPage(churchId: string, pageId: string) {
+    const sql = "SELECT e.* "
+      + " FROM elements e"
+      + " INNER JOIN sections s on s.id=e.sectionId"
+      + " WHERE e.churchId=? and s.pageId=?"
+      + " ORDER BY sort;";
+    return DB.query(sql, [pageId, churchId]);
+  }
+
 }

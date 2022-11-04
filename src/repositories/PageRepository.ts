@@ -34,6 +34,10 @@ export class PageRepository {
     return DB.queryOne("SELECT * FROM pages WHERE id=? AND churchId=?;", [id, churchId]);
   }
 
+  public loadByUrl(churchId: string, url: string) {
+    return DB.queryOne("SELECT * FROM pages WHERE url=? AND churchId=?;", [url, churchId]);
+  }
+
   public loadAll(churchId: string) {
     return DB.queryOne("SELECT * FROM pages WHERE churchId=?;", [churchId]);
   }
