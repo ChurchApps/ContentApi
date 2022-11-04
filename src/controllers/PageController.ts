@@ -12,11 +12,14 @@ export class PageController2 extends ContentBaseController {
   public async getTree(@requestParam("churchId") churchId: string, req: express.Request<{}, {}, null>, res: express.Response): Promise<interfaces.IHttpActionResult> {
     return this.actionWrapperAnon(req, res, async () => {
       const url = req.query.url as string;
-      const page = await this.repositories.page.loadByUrl(churchId, url);
+      const id = req.query.id as string;
+      const page = (id)
+        ? await this.repositories.page.load(churchId, id)
+        : await this.repositories.page.loadByUrl(churchId, url);
       const sections = await this.repositories.section.loadForPage(churchId, page.id);
       const allElements = await this.repositories.element.loadForPage(churchId, page.id);
       const result = this.buildTree(page, sections, allElements);
-      if (req.query.admin !== "1") this.removeTreeFields(result);
+      if (url) this.removeTreeFields(result);
       return result;
     });
   }
