@@ -17,7 +17,15 @@ export class PageController2 extends ContentBaseController {
         ? await this.repositories.page.load(churchId, id)
         : await this.repositories.page.loadByUrl(churchId, url);
       const sections = await this.repositories.section.loadForPage(churchId, page.id);
-      const allElements = await this.repositories.element.loadForPage(churchId, page.id);
+      const allElements: Element[] = await this.repositories.element.loadForPage(churchId, page.id);
+      allElements.forEach(e => {
+        try {
+          e.answers = JSON.parse(e.answersJSON);
+        }
+        catch {
+          e.answers = [];
+        }
+      })
       const result = this.buildTree(page, sections, allElements);
       if (url) this.removeTreeFields(result);
       return result;
@@ -72,6 +80,7 @@ export class PageController2 extends ContentBaseController {
         delete e.churchId;
         delete e.sectionId;
         delete e.sort;
+        delete e.answersJSON;
       })
 
     })

@@ -6,5 +6,7 @@ export class Element {
   public sort?: number;
   public parentId?: string;
   public size?: number;
-  public answers?: string;
+  public answersJSON?: string;
+
+  public answers?: any[];
 }

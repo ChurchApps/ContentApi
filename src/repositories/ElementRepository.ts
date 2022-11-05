@@ -13,15 +13,15 @@ export class ElementRepository {
   private async create(element: Element) {
     element.id = UniqueIdHelper.shortId();
 
-    const sql = "INSERT INTO elements (id, churchId, sectionId, elementType, sort, parentId, size, answers) VALUES (?, ?, ?, ?, ?, ?, ?, ?);";
-    const params = [element.id, element.churchId, element.sectionId, element.elementType, element.sort, element.parentId, element.size, element.answers];
+    const sql = "INSERT INTO elements (id, churchId, sectionId, elementType, sort, parentId, size, answersJSON) VALUES (?, ?, ?, ?, ?, ?, ?, ?);";
+    const params = [element.id, element.churchId, element.sectionId, element.elementType, element.sort, element.parentId, element.size, element.answersJSON];
     await DB.query(sql, params);
     return element;
   }
 
   private async update(element: Element) {
-    const sql = "UPDATE elements SET sectionId=?, elementType=?, sort=?, parentId=?, size=?, answers=? WHERE id=? and churchId=?";
-    const params = [element.sectionId, element.elementType, element.sort, element.parentId, element.size, element.answers, element.id, element.churchId];
+    const sql = "UPDATE elements SET sectionId=?, elementType=?, sort=?, parentId=?, size=?, answersJSON=? WHERE id=? and churchId=?";
+    const params = [element.sectionId, element.elementType, element.sort, element.parentId, element.size, element.answersJSON, element.id, element.churchId];
     await DB.query(sql, params);
     return element;
   }
@@ -42,7 +42,7 @@ export class ElementRepository {
     const sql = "SELECT e.* "
       + " FROM elements e"
       + " INNER JOIN sections s on s.id=e.sectionId"
-      + " WHERE e.churchId=? and s.pageId=?"
+      + " WHERE s.pageId=? AND e.churchId=?"
       + " ORDER BY sort;";
     return DB.query(sql, [pageId, churchId]);
   }
