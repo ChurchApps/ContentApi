@@ -13,15 +13,15 @@ export class ElementRepository {
   private async create(element: Element) {
     element.id = UniqueIdHelper.shortId();
 
-    const sql = "INSERT INTO elements (id, churchId, sectionId, elementType, sort, parentId, size, answersJSON) VALUES (?, ?, ?, ?, ?, ?, ?, ?);";
-    const params = [element.id, element.churchId, element.sectionId, element.elementType, element.sort, element.parentId, element.size, element.answersJSON];
+    const sql = "INSERT INTO elements (id, churchId, sectionId, elementType, sort, parentId, answersJSON) VALUES (?, ?, ?, ?, ?, ?, ?);";
+    const params = [element.id, element.churchId, element.sectionId, element.elementType, element.sort, element.parentId, element.answersJSON];
     await DB.query(sql, params);
     return element;
   }
 
   private async update(element: Element) {
-    const sql = "UPDATE elements SET sectionId=?, elementType=?, sort=?, parentId=?, size=?, answersJSON=? WHERE id=? and churchId=?";
-    const params = [element.sectionId, element.elementType, element.sort, element.parentId, element.size, element.answersJSON, element.id, element.churchId];
+    const sql = "UPDATE elements SET sectionId=?, elementType=?, sort=?, parentId=?, answersJSON=? WHERE id=? and churchId=?";
+    const params = [element.sectionId, element.elementType, element.sort, element.parentId, element.answersJSON, element.id, element.churchId];
     await DB.query(sql, params);
     return element;
   }

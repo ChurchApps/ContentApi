@@ -3,6 +3,7 @@ import express from "express";
 import { ContentBaseController } from "./ContentBaseController"
 import { Element, Page, Section } from "../models"
 import { ArrayHelper } from "../apiBase";
+import { child } from "winston";
 
 
 @controller("/pages")
@@ -59,13 +60,25 @@ export class PageController2 extends ContentBaseController {
     });
   }
 
+
+  private getChildElements(element: Element, allElements: Element[]) {
+    const children = ArrayHelper.getAll(allElements, "parentId", element.id);
+    if (children.length > 0) {
+      element.elements = children;
+      element.elements.forEach(e => { this.getChildElements(e, allElements); });
+    }
+
+  }
+
   private buildTree(page: Page, sections: Section[], allElements: Element[]) {
     page.sections = sections;
     page.sections.forEach(s => {
-      s.elements = ArrayHelper.getAll(allElements, "sectionId", s.id);
+      s.elements = ArrayHelper.getAll(ArrayHelper.getAll(allElements, "sectionId", s.id), "parentId", null);
+      s.elements.forEach(e => { this.getChildElements(e, allElements); });
     })
     return page;
   }
+
 
   private removeTreeFields(page: Page) {
     delete page.id;

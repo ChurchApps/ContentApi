@@ -5,8 +5,8 @@ export class Element {
   public elementType?: string;
   public sort?: number;
   public parentId?: string;
-  public size?: number;
   public answersJSON?: string;
 
   public answers?: any[];
+  public elements?: Element[];
 }
