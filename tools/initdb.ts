@@ -10,6 +10,8 @@ const init = async () => {
   console.log("Connecting");
   Pool.initPool();
 
+  await DBCreator.init(["Links"]);
+
   const taskTables: { title: string, file: string }[] = [
     { title: "Elements", file: "elements.mysql" },
     { title: "Pages", file: "pages.mysql" },
