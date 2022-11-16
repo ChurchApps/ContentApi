@@ -5,6 +5,5 @@ CREATE TABLE `pages` (
   `churchId` char(11) DEFAULT NULL,
   `url` varchar(255) DEFAULT NULL,
   `title` varchar(255) DEFAULT NULL,
-  `headerImage` varchar(255) DEFAULT NULL,
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
