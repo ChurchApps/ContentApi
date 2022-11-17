@@ -22,6 +22,7 @@ export class ElementController extends ContentBaseController {
         promises.push(this.repositories.element.save(element));
       });
       const result = await Promise.all(promises);
+      if (req.body.length > 0) await this.repositories.element.updateSort(req.body[0].churchId, req.body[0].sectionId, req.body[0].parentId);
       return result;
     });
   }

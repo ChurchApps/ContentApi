@@ -26,6 +26,18 @@ export class SectionRepository {
     return section;
   }
 
+  public async updateSort(churchId: string, pageId: string) {
+    const sections = await this.loadForPage(churchId, pageId);
+    const promises: Promise<Section>[] = [];
+    for (let i = 0; i < sections.length; i++) {
+      if (sections[i].sort !== i + 1) {
+        sections[i].sort = i + 1;
+        promises.push(this.save(sections[i]));
+      }
+    }
+    if (promises.length > 0) await Promise.all(promises);
+  }
+
   public delete(churchId: string, id: string) {
     return DB.query("DELETE FROM sections WHERE id=? AND churchId=?;", [id, churchId]);
   }

@@ -3,8 +3,6 @@ import express from "express";
 import { ContentBaseController } from "./ContentBaseController"
 import { Element, Page, Section } from "../models"
 import { ArrayHelper } from "../apiBase";
-import { child } from "winston";
-
 
 @controller("/pages")
 export class PageController2 extends ContentBaseController {
