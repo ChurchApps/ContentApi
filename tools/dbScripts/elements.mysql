@@ -7,6 +7,6 @@ CREATE TABLE `elements` (
   `elementType` varchar(45) DEFAULT NULL,
   `sort` int(11) DEFAULT NULL,
   `parentId` char(11) DEFAULT NULL,
-  `answers` text,
+  `answersJSON` text,
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
