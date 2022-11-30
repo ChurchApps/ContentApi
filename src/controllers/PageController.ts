@@ -10,7 +10,10 @@ export class PageController2 extends ContentBaseController {
   @httpGet("/:churchId/tree")
   public async getTree(@requestParam("churchId") churchId: string, req: express.Request<{}, {}, null>, res: express.Response): Promise<interfaces.IHttpActionResult> {
     return this.actionWrapperAnon(req, res, async () => {
-      const url = req.query.url as string;
+      let url = req.query.url as string;
+      if (url && url[0] !== "/") {
+        url = "/" + url;
+      }
       const id = req.query.id as string;
       const page = (id)
         ? await this.repositories.page.load(churchId, id)
