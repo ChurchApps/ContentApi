@@ -15,18 +15,22 @@ export class PageController2 extends ContentBaseController {
       const page = (id)
         ? await this.repositories.page.load(churchId, id)
         : await this.repositories.page.loadByUrl(churchId, url);
-      const sections = await this.repositories.section.loadForPage(churchId, page.id);
-      const allElements: Element[] = await this.repositories.element.loadForPage(churchId, page.id);
-      allElements.forEach(e => {
-        try {
-          e.answers = JSON.parse(e.answersJSON);
-        }
-        catch {
-          e.answers = [];
-        }
-      })
-      const result = this.buildTree(page, sections, allElements);
-      if (url) this.removeTreeFields(result);
+
+      let result = {};
+      if (page?.id !== undefined) {
+        const sections = await this.repositories.section.loadForPage(churchId, page.id);
+        const allElements: Element[] = await this.repositories.element.loadForPage(churchId, page.id);
+        allElements.forEach(e => {
+          try {
+            e.answers = JSON.parse(e.answersJSON);
+          }
+          catch {
+            e.answers = [];
+          }
+        })
+        result = this.buildTree(page, sections, allElements);
+        if (url) this.removeTreeFields(result);
+      }
       return result;
     });
   }
