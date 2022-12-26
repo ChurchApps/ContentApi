@@ -2,6 +2,7 @@ import { controller, httpPost, httpGet, interfaces, requestParam, httpDelete } f
 import express from "express";
 import { ContentBaseController } from "./ContentBaseController"
 import { Section } from "../models"
+import { Permissions } from "../helpers";
 
 @controller("/sections")
 export class SectionController extends ContentBaseController {
@@ -16,21 +17,27 @@ export class SectionController extends ContentBaseController {
   @httpPost("/")
   public async save(req: express.Request<{}, {}, Section[]>, res: express.Response): Promise<interfaces.IHttpActionResult> {
     return this.actionWrapper(req, res, async (au) => {
-      const promises: Promise<Section>[] = [];
-      req.body.forEach(section => {
-        section.churchId = au.churchId;
-        promises.push(this.repositories.section.save(section));
-      });
-      const result = await Promise.all(promises);
-      if (req.body.length > 0) await this.repositories.section.updateSort(req.body[0].churchId, req.body[0].pageId);
-      return result;
+      if (!au.checkAccess(Permissions.content.edit)) return this.json({}, 401);
+      else {
+        const promises: Promise<Section>[] = [];
+        req.body.forEach(section => {
+          section.churchId = au.churchId;
+          promises.push(this.repositories.section.save(section));
+        });
+        const result = await Promise.all(promises);
+        if (req.body.length > 0) await this.repositories.section.updateSort(req.body[0].churchId, req.body[0].pageId);
+        return result;
+      }
     });
   }
 
   @httpDelete("/:id")
   public async delete(@requestParam("id") id: string, req: express.Request<{}, {}, null>, res: express.Response): Promise<interfaces.IHttpActionResult> {
     return this.actionWrapper(req, res, async (au) => {
-      await this.repositories.section.delete(au.churchId, id);
+      if (!au.checkAccess(Permissions.content.edit)) return this.json({}, 401);
+      else {
+        await this.repositories.section.delete(au.churchId, id);
+      }
     });
   }
 
