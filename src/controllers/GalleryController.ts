@@ -7,19 +7,19 @@ import { Environment } from "../helpers";
 @controller("/gallery")
 export class GalleryController extends ContentBaseController {
 
-  @httpGet("/")
-  public async getAll(req: express.Request<{}, {}, null>, res: express.Response): Promise<interfaces.IHttpActionResult> {
+  @httpGet("/:folder")
+  public async getAll(@requestParam("folder") folder: string, req: express.Request<{}, {}, null>, res: express.Response): Promise<interfaces.IHttpActionResult> {
     return this.actionWrapper(req, res, async (au) => {
       // TODO: Restrict permissions
-      const files = await FileHelper.list(au.churchId + "/gallery");
+      const files = await FileHelper.list(au.churchId + "/gallery/" + folder);
       return { images: files }
     });
   }
 
   @httpPost("/requestUpload")
-  public async getUploadUrl(req: express.Request<{}, {}, { fileName: string }>, res: express.Response): Promise<interfaces.IHttpActionResult> {
+  public async getUploadUrl(req: express.Request<{}, {}, { folder: string, fileName: string }>, res: express.Response): Promise<interfaces.IHttpActionResult> {
     return this.actionWrapper(req, res, async (au) => {
-      const key = au.churchId + "/gallery/" + req.body.fileName;
+      const key = au.churchId + "/gallery/" + req.body.folder + req.body.fileName;
       const result = (Environment.fileStore === "S3") ? await AwsHelper.S3PresignedUrl(key) : {};
       return result;
     });
