@@ -7,6 +7,14 @@ import { Environment, Permissions } from "../helpers";
 @controller("/gallery")
 export class GalleryController extends ContentBaseController {
 
+  @httpGet("/stock/:folder")
+  public async getStock(@requestParam("folder") folder: string, req: express.Request<{}, {}, null>, res: express.Response): Promise<interfaces.IHttpActionResult> {
+    return this.actionWrapperAnon(req, res, async () => {
+      const files = await FileHelper.list("stockPhotos/" + folder);
+      return { images: files }
+    });
+  }
+
   @httpGet("/:folder")
   public async getAll(@requestParam("folder") folder: string, req: express.Request<{}, {}, null>, res: express.Response): Promise<interfaces.IHttpActionResult> {
     return this.actionWrapper(req, res, async (au) => {
