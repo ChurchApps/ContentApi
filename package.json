@@ -38,6 +38,7 @@
     "nodemailer": "^6.7.2",
     "nodemailer-direct-transport": "^3.3.2",
     "omit-empty": "^1.0.0",
+    "pexels": "^1.4.0",
     "reflect-metadata": "^0.1.13",
     "uuid": "^8.3.2",
     "winston": "^3.3.3",
