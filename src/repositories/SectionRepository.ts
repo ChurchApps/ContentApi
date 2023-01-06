@@ -13,21 +13,21 @@ export class SectionRepository {
   private async create(section: Section) {
     section.id = UniqueIdHelper.shortId();
 
-    const sql = "INSERT INTO sections (id, churchId, pageId, background, textColor, sort) VALUES (?, ?, ?, ?, ?, ?);";
-    const params = [section.id, section.churchId, section.pageId, section.background, section.textColor, section.sort];
+    const sql = "INSERT INTO sections (id, churchId, pageId, zone, background, textColor, sort) VALUES (?, ?, ?, ?, ?, ?, ?);";
+    const params = [section.id, section.churchId, section.pageId, section.zone, section.background, section.textColor, section.sort];
     await DB.query(sql, params);
     return section;
   }
 
   private async update(section: Section) {
-    const sql = "UPDATE sections SET pageId=?, background=?, textColor=?, sort=? WHERE id=? and churchId=?";
-    const params = [section.pageId, section.background, section.textColor, section.sort, section.id, section.churchId];
+    const sql = "UPDATE sections SET pageId=?, zone=?, background=?, textColor=?, sort=? WHERE id=? and churchId=?";
+    const params = [section.pageId, section.zone, section.background, section.textColor, section.sort, section.id, section.churchId];
     await DB.query(sql, params);
     return section;
   }
 
-  public async updateSort(churchId: string, pageId: string) {
-    const sections = await this.loadForPage(churchId, pageId);
+  public async updateSort(churchId: string, pageId: string, zone: string) {
+    const sections = await this.loadForZone(churchId, pageId, zone);
     const promises: Promise<Section>[] = [];
     for (let i = 0; i < sections.length; i++) {
       if (sections[i].sort !== i + 1) {
@@ -48,6 +48,10 @@ export class SectionRepository {
 
   public loadForPage(churchId: string, pageId: string) {
     return DB.query("SELECT * FROM sections WHERE pageId=? AND churchId=? order by sort;", [pageId, churchId]);
+  }
+
+  public loadForZone(churchId: string, pageId: string, zone: string) {
+    return DB.query("SELECT * FROM sections WHERE pageId=? AND churchId=? AND zone=? order by sort;", [pageId, churchId, zone]);
   }
 
 }

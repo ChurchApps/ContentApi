@@ -25,7 +25,7 @@ export class SectionController extends ContentBaseController {
           promises.push(this.repositories.section.save(section));
         });
         const result = await Promise.all(promises);
-        if (req.body.length > 0) await this.repositories.section.updateSort(req.body[0].churchId, req.body[0].pageId);
+        if (req.body.length > 0) await this.repositories.section.updateSort(req.body[0].churchId, req.body[0].pageId, req.body[0].zone);
         return result;
       }
     });

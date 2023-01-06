@@ -13,15 +13,15 @@ export class PageRepository {
   private async create(page: Page) {
     page.id = UniqueIdHelper.shortId();
 
-    const sql = "INSERT INTO pages (id, churchId, url, title) VALUES (?, ?, ?, ?);";
-    const params = [page.id, page.churchId, page.url, page.title];
+    const sql = "INSERT INTO pages (id, churchId, url, title, layout) VALUES (?, ?, ?, ?, ?);";
+    const params = [page.id, page.churchId, page.url, page.title, page.layout];
     await DB.query(sql, params);
     return page;
   }
 
   private async update(page: Page) {
-    const sql = "UPDATE pages SET url=?, title=? WHERE id=? and churchId=?";
-    const params = [page.url, page.title, page.id, page.churchId];
+    const sql = "UPDATE pages SET url=?, title=?, layout=? WHERE id=? and churchId=?";
+    const params = [page.url, page.title, page.layout, page.id, page.churchId];
     await DB.query(sql, params);
     return page;
   }

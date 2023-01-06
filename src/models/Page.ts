@@ -5,6 +5,7 @@ export class Page {
   public churchId?: string;
   public url?: string;
   public title?: string;
+  public layout?: string;
 
   public sections?: Section[];
 }
