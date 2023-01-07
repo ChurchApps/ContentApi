@@ -46,6 +46,13 @@ export class PageController2 extends ContentBaseController {
     });
   }
 
+  @httpGet("/")
+  public async loadAll(req: express.Request, res: express.Response): Promise<any> {
+    return this.actionWrapper(req, res, async (au) => {
+      return await this.repositories.page.loadAll(au.churchId);
+    });
+  }
+
   @httpPost("/")
   public async save(req: express.Request<{}, {}, Page[]>, res: express.Response): Promise<interfaces.IHttpActionResult> {
     return this.actionWrapper(req, res, async (au) => {
@@ -79,7 +86,6 @@ export class PageController2 extends ContentBaseController {
       element.elements = children;
       element.elements.forEach(e => { this.getChildElements(e, allElements); });
     }
-
   }
 
   private buildTree(page: Page, sections: Section[], allElements: Element[]) {

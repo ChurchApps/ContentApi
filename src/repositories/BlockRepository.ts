@@ -35,7 +35,7 @@ export class BlockRepository {
   }
 
   public loadAll(churchId: string) {
-    return DB.queryOne("SELECT * FROM blocks WHERE churchId=?;", [churchId]);
+    return DB.query("SELECT * FROM blocks WHERE churchId=?;", [churchId]);
   }
 
 }

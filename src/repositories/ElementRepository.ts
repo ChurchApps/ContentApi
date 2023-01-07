@@ -62,12 +62,17 @@ export class ElementRepository {
     return DB.queryOne("SELECT * FROM elements WHERE id=? AND churchId=?;", [id, churchId]);
   }
 
-  public loadForBlock(churchId: string, blockId: string) {
-    return DB.query("SELECT * FROM elements WHERE churchId=? AND blockId=? order by sort;", [churchId, blockId]);
-  }
-
   public loadForSection(churchId: string, sectionId: string) {
     return DB.query("SELECT * FROM elements WHERE churchId=? AND sectionId=? order by sort;", [churchId, sectionId]);
+  }
+
+  public loadForBlock(churchId: string, blockId: string) {
+    const sql = "SELECT e.* "
+      + " FROM elements e"
+      + " INNER JOIN sections s on s.id=e.sectionId"
+      + " WHERE s.blockId=? AND e.churchId=?"
+      + " ORDER BY sort;";
+    return DB.query(sql, [blockId, churchId]);
   }
 
   public loadForPage(churchId: string, pageId: string) {

@@ -39,7 +39,7 @@ export class PageRepository {
   }
 
   public loadAll(churchId: string) {
-    return DB.queryOne("SELECT * FROM pages WHERE churchId=?;", [churchId]);
+    return DB.query("SELECT * FROM pages WHERE churchId=?;", [churchId]);
   }
 
 }
