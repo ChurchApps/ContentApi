@@ -66,6 +66,10 @@ export class ElementRepository {
     return DB.query("SELECT * FROM elements WHERE churchId=? AND sectionId=? order by sort;", [churchId, sectionId]);
   }
 
+  public loadByBlockId(churchId: string, blockId: string) {
+    return DB.query("SELECT * FROM elements WHERE churchId=? AND blockId=? order by sort;", [churchId, blockId]);
+  }
+
   public loadForBlock(churchId: string, blockId: string) {
     const sql = "SELECT e.* "
       + " FROM elements e"

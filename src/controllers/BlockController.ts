@@ -11,11 +11,15 @@ export class BlockController extends ContentBaseController {
   @httpGet("/:churchId/tree/:id")
   public async getTree(@requestParam("churchId") churchId: string, @requestParam("id") id: string, req: express.Request<{}, {}, null>, res: express.Response): Promise<interfaces.IHttpActionResult> {
     return this.actionWrapperAnon(req, res, async () => {
-      const block = await this.repositories.block.load(churchId, id);
+      const block: Block = await this.repositories.block.load(churchId, id);
       let result = {};
       if (block?.id !== undefined) {
-        const sections = await this.repositories.section.loadForBlock(churchId, block.id);
-        const allElements: Element[] = await this.repositories.element.loadForBlock(churchId, block.id);
+        const sections: Section[] = (block.blockType === "elements")
+          ? [{ id: "", background: "#FFFFFF", textColor: "dark", blockId: block.id }]
+          : await this.repositories.section.loadForBlock(churchId, block.id);
+        const allElements: Element[] = (block.blockType === "elements")
+          ? await this.repositories.element.loadByBlockId(churchId, block.id)
+          : await this.repositories.element.loadForBlock(churchId, block.id);
         allElements.forEach(e => {
           try {
             e.answers = JSON.parse(e.answersJSON);
