@@ -13,6 +13,7 @@ const init = async () => {
   await DBCreator.init(["Links"]);
 
   const taskTables: { title: string, file: string }[] = [
+    { title: "Blocks", file: "blocks.mysql" },
     { title: "Elements", file: "elements.mysql" },
     { title: "Pages", file: "pages.mysql" },
     { title: "Sections", file: "sections.mysql" }

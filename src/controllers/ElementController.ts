@@ -25,7 +25,10 @@ export class ElementController extends ContentBaseController {
           promises.push(this.repositories.element.save(element));
         });
         const result = await Promise.all(promises);
-        if (req.body.length > 0) await this.repositories.element.updateSort(req.body[0].churchId, req.body[0].sectionId, req.body[0].parentId);
+        if (req.body.length > 0) {
+          if (req.body[0].blockId) await this.repositories.element.updateSortForBlock(req.body[0].churchId, req.body[0].blockId, req.body[0].parentId);
+          else await this.repositories.element.updateSort(req.body[0].churchId, req.body[0].sectionId, req.body[0].parentId);
+        }
         return result;
       }
     });

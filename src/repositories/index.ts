@@ -1,3 +1,4 @@
+export { BlockRepository } from "./BlockRepository";
 export { ElementRepository } from "./ElementRepository";
 export { PageRepository } from "./PageRepository";
 export { SectionRepository } from "./SectionRepository";

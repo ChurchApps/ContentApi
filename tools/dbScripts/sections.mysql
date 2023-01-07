@@ -4,10 +4,13 @@ CREATE TABLE `sections` (
   `id` char(11) NOT NULL,
   `churchId` char(11) DEFAULT NULL,
   `pageId` char(11) DEFAULT NULL,
+  `blockId` char(11) DEFAULT NULL,
   `zone` varchar(45) DEFAULT NULL,
   `background` varchar(255) DEFAULT NULL,
   `textColor` varchar(45) DEFAULT NULL,
   `sort` int(11) DEFAULT NULL,
+  `targetBlockId` char(11) DEFAULT NULL,
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
 

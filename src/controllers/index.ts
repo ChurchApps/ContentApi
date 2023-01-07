@@ -1,3 +1,4 @@
+export { BlockController } from "./BlockController";
 export { ElementController } from "./ElementController";
 export { GalleryController } from "./GalleryController";
 export { LinkController } from "../apiBase"

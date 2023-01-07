@@ -1,10 +1,12 @@
 import {
+  BlockRepository,
   ElementRepository,
   PageRepository,
   SectionRepository
 } from ".";
 
 export class Repositories {
+  public block: BlockRepository;
   public element: ElementRepository;
   public page: PageRepository;
   public section: SectionRepository;
@@ -16,6 +18,7 @@ export class Repositories {
   }
 
   constructor() {
+    this.block = new BlockRepository();
     this.element = new ElementRepository();
     this.page = new PageRepository();
     this.section = new SectionRepository();
