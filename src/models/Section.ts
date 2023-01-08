@@ -11,5 +11,6 @@ export class Section {
   public sort?: number;
   public targetBlockId?: string;
 
+  public sourceId?: string;
   public elements?: Element[];
 }
