@@ -34,12 +34,10 @@ export class TreeHelper {
           const blockSections = ArrayHelper.getAll(allBlockSections, "blockId", sections[i].targetBlockId);
           const blockElements = ArrayHelper.getAll(allBlockElements, "blockId", sections[i].targetBlockId);
           const tree = this.buildTree(blockSections, blockElements);
-          tree.forEach(s => s.sourceId = sections[i].id)
-          sections.splice(i, 1, ...tree);
+          sections[i].sections = tree;
         }
       }
     }
-    // return sections;
   }
 
   static populateAnswers(elements: Element[]) {
