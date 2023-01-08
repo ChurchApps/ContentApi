@@ -3,7 +3,7 @@ import express from "express";
 import { ContentBaseController } from "./ContentBaseController"
 import { Block, Element, Section } from "../models"
 import { Permissions } from "../helpers";
-import { ArrayHelper } from "../apiBase";
+import { TreeHelper } from "../helpers/TreeHelper";
 
 @controller("/blocks")
 export class BlockController extends ContentBaseController {
@@ -12,23 +12,19 @@ export class BlockController extends ContentBaseController {
   public async getTree(@requestParam("churchId") churchId: string, @requestParam("id") id: string, req: express.Request<{}, {}, null>, res: express.Response): Promise<interfaces.IHttpActionResult> {
     return this.actionWrapperAnon(req, res, async () => {
       const block: Block = await this.repositories.block.load(churchId, id);
-      let result = {};
+      let result: Block = {};
       if (block?.id !== undefined) {
         const sections: Section[] = (block.blockType === "elements")
           ? [{ id: "", background: "#FFFFFF", textColor: "dark", blockId: block.id }]
           : await this.repositories.section.loadForBlock(churchId, block.id);
+        const allElements: Element[] = await this.repositories.element.loadForBlock(churchId, block.id);
+        /*
         const allElements: Element[] = (block.blockType === "elements")
-          ? await this.repositories.element.loadByBlockId(churchId, block.id)
-          : await this.repositories.element.loadForBlock(churchId, block.id);
-        allElements.forEach(e => {
-          try {
-            e.answers = JSON.parse(e.answersJSON);
-          }
-          catch {
-            e.answers = [];
-          }
-        })
-        result = this.buildTree(block, sections, allElements);
+        ? await this.repositories.element.loadByBlockId(churchId, block.id)
+        : await this.repositories.element.loadForBlock(churchId, block.id);*/
+        TreeHelper.populateAnswers(allElements);
+        result = block;
+        result.sections = TreeHelper.buildTree(sections, allElements);
       }
       return result;
     });
@@ -74,24 +70,5 @@ export class BlockController extends ContentBaseController {
       }
     });
   }
-
-  // todo: move to shared helper functions
-  private getChildElements(element: Element, allElements: Element[]) {
-    const children = ArrayHelper.getAll(allElements, "parentId", element.id);
-    if (children.length > 0) {
-      element.elements = children;
-      element.elements.forEach(e => { this.getChildElements(e, allElements); });
-    }
-  }
-
-  private buildTree(block: Block, sections: Section[], allElements: Element[]) {
-    block.sections = sections;
-    block.sections.forEach(s => {
-      s.elements = ArrayHelper.getAll(ArrayHelper.getAll(allElements, "sectionId", s.id), "parentId", null);
-      s.elements.forEach(e => { this.getChildElements(e, allElements); });
-    })
-    return block;
-  }
-
 
 }

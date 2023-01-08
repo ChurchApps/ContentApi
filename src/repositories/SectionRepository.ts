@@ -62,6 +62,10 @@ export class SectionRepository {
     return DB.query("SELECT * FROM sections WHERE churchId=? AND blockId=? order by sort;", [churchId, blockId]);
   }
 
+  public loadForBlocks(churchId: string, blockIds: string[]) {
+    return DB.query("SELECT * FROM sections WHERE churchId=? AND blockId IN (?) order by sort;", [churchId, blockIds]);
+  }
+
   public loadForPage(churchId: string, pageId: string) {
     return DB.query("SELECT * FROM sections WHERE churchId=? AND pageId=? order by sort;", [churchId, pageId]);
   }

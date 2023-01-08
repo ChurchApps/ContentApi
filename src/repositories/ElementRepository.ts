@@ -66,19 +66,33 @@ export class ElementRepository {
     return DB.query("SELECT * FROM elements WHERE churchId=? AND sectionId=? order by sort;", [churchId, sectionId]);
   }
 
-  public loadByBlockId(churchId: string, blockId: string) {
+  public loadForBlock(churchId: string, blockId: string) {
     return DB.query("SELECT * FROM elements WHERE churchId=? AND blockId=? order by sort;", [churchId, blockId]);
+  }
+
+  public loadForBlocks(churchId: string, blockIds: string[]) {
+    return DB.query("SELECT * FROM elements WHERE churchId=? AND blockId IN (?) order by sort;", [churchId, blockIds]);
+  }
+
+  /*
+  public loadForBlocks(churchId: string, blockIds: string[]) {
+    const sql = "SELECT e.* "
+      + " FROM elements e"
+      + " LEFT JOIN sections s on s.id=e.sectionId"
+      + " WHERE e.churchId=? AND (e.blockId IN (?) OR s.blockId IN (?))"
+      + " ORDER BY sort;";
+    return DB.query(sql, [churchId, blockIds, blockIds]);
   }
 
   public loadForBlock(churchId: string, blockId: string) {
     const sql = "SELECT e.* "
       + " FROM elements e"
-      + " INNER JOIN sections s on s.id=e.sectionId"
-      + " WHERE s.blockId=? AND e.churchId=?"
+      + " LEFT JOIN sections s on s.id=e.sectionId"
+      + " WHERE e.churchId=? AND (e.blockId=? OR s.blockId=?)"
       + " ORDER BY sort;";
-    return DB.query(sql, [blockId, churchId]);
+    return DB.query(sql, [churchId, blockId, blockId]);
   }
-
+*/
   public loadForPage(churchId: string, pageId: string) {
     const sql = "SELECT e.* "
       + " FROM elements e"

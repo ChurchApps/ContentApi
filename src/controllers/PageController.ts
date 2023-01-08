@@ -2,8 +2,8 @@ import { controller, httpPost, httpGet, interfaces, requestParam, httpDelete } f
 import express from "express";
 import { ContentBaseController } from "./ContentBaseController"
 import { Element, Page, Section } from "../models"
-import { ArrayHelper } from "../apiBase";
 import { Permissions } from "../helpers";
+import { TreeHelper } from "../helpers/TreeHelper";
 
 @controller("/pages")
 export class PageController2 extends ContentBaseController {
@@ -20,19 +20,14 @@ export class PageController2 extends ContentBaseController {
         ? await this.repositories.page.load(churchId, id)
         : await this.repositories.page.loadByUrl(churchId, url);
 
-      let result = {};
+      let result: Page = {};
       if (page?.id !== undefined) {
         const sections = await this.repositories.section.loadForPage(churchId, page.id);
         const allElements: Element[] = await this.repositories.element.loadForPage(churchId, page.id);
-        allElements.forEach(e => {
-          try {
-            e.answers = JSON.parse(e.answersJSON);
-          }
-          catch {
-            e.answers = [];
-          }
-        })
-        result = this.buildTree(page, sections, allElements);
+        TreeHelper.populateAnswers(allElements);
+        result = page;
+        result.sections = TreeHelper.buildTree(sections, allElements);
+        await TreeHelper.insertBlocks(result.sections, allElements, churchId);
         if (url) this.removeTreeFields(result);
       }
       return result;
@@ -78,25 +73,6 @@ export class PageController2 extends ContentBaseController {
       }
     });
   }
-
-
-  private getChildElements(element: Element, allElements: Element[]) {
-    const children = ArrayHelper.getAll(allElements, "parentId", element.id);
-    if (children.length > 0) {
-      element.elements = children;
-      element.elements.forEach(e => { this.getChildElements(e, allElements); });
-    }
-  }
-
-  private buildTree(page: Page, sections: Section[], allElements: Element[]) {
-    page.sections = sections;
-    page.sections.forEach(s => {
-      s.elements = ArrayHelper.getAll(ArrayHelper.getAll(allElements, "sectionId", s.id), "parentId", null);
-      s.elements.forEach(e => { this.getChildElements(e, allElements); });
-    })
-    return page;
-  }
-
 
   private removeTreeFields(page: Page) {
     delete page.id;
