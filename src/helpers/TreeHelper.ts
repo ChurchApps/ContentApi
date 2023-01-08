@@ -24,19 +24,30 @@ export class TreeHelper {
   static async insertBlocks(sections: Section[], allElements: Element[], churchId: string) {
     const blockIds: string[] = [];
     sections.forEach(s => { if (s.targetBlockId) blockIds.push(s.targetBlockId) });
+    allElements.forEach(e => { if (e.answers.targetBlockId) blockIds.push(e.answers.targetBlockId); });
     if (blockIds.length > 0) {
       const allBlockSections = await Repositories.getCurrent().section.loadForBlocks(churchId, blockIds);
       const allBlockElements = await Repositories.getCurrent().element.loadForBlocks(churchId, blockIds);
       this.populateAnswers(allBlockElements);
 
-      for (let i = sections.length - 1; i >= 0; i--) {
-        if (sections[i].targetBlockId) {
-          const blockSections = ArrayHelper.getAll(allBlockSections, "blockId", sections[i].targetBlockId);
-          const blockElements = ArrayHelper.getAll(allBlockElements, "blockId", sections[i].targetBlockId);
+      allElements.forEach(e => {
+        if (e.answers?.targetBlockId) {
+          const blockSections: Section[] = [{ id: "" }]
+          const blockElements = ArrayHelper.getAll(allBlockElements, "blockId", e.answers?.targetBlockId);
           const tree = this.buildTree(blockSections, blockElements);
-          sections[i].sections = tree;
+          e.elements = tree[0].elements;
         }
-      }
+      })
+
+      sections.forEach(s => {
+        if (s.targetBlockId) {
+          const blockSections = ArrayHelper.getAll(allBlockSections, "blockId", s.targetBlockId);
+          const blockElements = ArrayHelper.getAll(allBlockElements, "blockId", s.targetBlockId);
+          const tree = this.buildTree(blockSections, blockElements);
+          s.sections = tree;
+        }
+      })
+
     }
   }
 
@@ -48,6 +59,7 @@ export class TreeHelper {
       catch {
         e.answers = [];
       }
+      if (!e.answers) e.answers = [];
     })
   }
 

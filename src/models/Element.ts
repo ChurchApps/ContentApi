@@ -8,6 +8,6 @@ export class Element {
   public parentId?: string;
   public answersJSON?: string;
 
-  public answers?: any[];
+  public answers?: any;
   public elements?: Element[];
 }
