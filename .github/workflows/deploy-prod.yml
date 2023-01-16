@@ -10,7 +10,7 @@ env:
 
 jobs:
   deploy:
-    name: Deploy Staging
+    name: Deploy Prod
     runs-on: ubuntu-latest
 
     steps:
