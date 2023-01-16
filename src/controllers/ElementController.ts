@@ -72,6 +72,7 @@ export class ElementController extends ContentBaseController {
       if (children[i].answers.size !== cols[i] || children[i].sort !== i) {
         children[i].answers.size = cols[i];
         children[i].sort = i;
+        children[i].answersJSON = JSON.stringify(children[i].answers);
         await this.repositories.element.save(children[i]);
       }
     }
