@@ -6,9 +6,8 @@ CREATE TABLE `elements` (
   `sectionId` char(11) DEFAULT NULL,
   `blockId` char(11) DEFAULT NULL,
   `elementType` varchar(45) DEFAULT NULL,
-  `sort` int(11) DEFAULT NULL,
+  `sort` float DEFAULT NULL,
   `parentId` char(11) DEFAULT NULL,
   `answersJSON` text,
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
-

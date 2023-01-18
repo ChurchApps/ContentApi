@@ -4,7 +4,6 @@ import { ContentBaseController } from "./ContentBaseController"
 import { Element } from "../models"
 import { Permissions } from "../helpers";
 import { ArrayHelper } from "../apiBase";
-import { child } from "winston";
 
 @controller("/elements")
 export class ElementController extends ContentBaseController {

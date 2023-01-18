@@ -39,7 +39,10 @@ export class SectionController extends ContentBaseController {
     return this.actionWrapper(req, res, async (au) => {
       if (!au.checkAccess(Permissions.content.edit)) return this.json({}, 401);
       else {
+        const section = await this.repositories.section.load(au.churchId, id);
         await this.repositories.section.delete(au.churchId, id);
+        if (section.blockId) await this.repositories.section.updateSortForBlock(section.churchId, section.blockId);
+        else await this.repositories.section.updateSort(section.churchId, section.pageId, section.zone);
       }
     });
   }
