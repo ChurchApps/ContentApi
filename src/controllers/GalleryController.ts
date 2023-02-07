@@ -31,7 +31,7 @@ export class GalleryController extends ContentBaseController {
     return this.actionWrapper(req, res, async (au) => {
       if (!au.checkAccess(Permissions.content.edit)) return this.json({}, 401);
       else {
-        const key = au.churchId + "/gallery/" + req.body.folder + req.body.fileName;
+        const key = au.churchId + "/gallery/" + req.body.folder + "/" + req.body.fileName;
         const result = (Environment.fileStore === "S3") ? await AwsHelper.S3PresignedUrl(key) : {};
         return result;
       }
