@@ -16,7 +16,10 @@ const init = async () => {
     { title: "Blocks", file: "blocks.mysql" },
     { title: "Elements", file: "elements.mysql" },
     { title: "Pages", file: "pages.mysql" },
-    { title: "Sections", file: "sections.mysql" }
+    { title: "Sections", file: "sections.mysql" },
+    { title: "Playlists", file: "playlists.mysql" },
+    { title: "Sermons", file: "sermons.mysql" },
+    { title: "StreamingServices", file: "streamingServices.mysql" }
   ]
 
   await initTables("Content", taskTables);

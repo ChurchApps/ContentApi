@@ -5,7 +5,7 @@ import { ContentBaseController } from "./ContentBaseController";
 import { Permissions } from "../helpers/Permissions";
 import { EncryptionHelper, DateTimeHelper } from "../apiBase";
 
-@controller("/services")
+@controller("/streamingServices")
 export class ServiceController extends ContentBaseController {
 
   @httpGet("/:id/hostChat")
