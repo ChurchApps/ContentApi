@@ -11,7 +11,7 @@ export class StreamingServiceRepository {
   private async create(service: StreamingService) {
     service.id = UniqueIdHelper.shortId();
     const serviceTime = DateTimeHelper.toMysqlDate(service.serviceTime);
-    const sql = "INSERT INTO services (id, churchId, serviceTime, earlyStart, chatBefore, chatAfter, provider, providerKey, videoUrl, timezoneOffset, recurring, label, sermonId) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?);";
+    const sql = "INSERT INTO streamingServices (id, churchId, serviceTime, earlyStart, chatBefore, chatAfter, provider, providerKey, videoUrl, timezoneOffset, recurring, label, sermonId) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?);";
     const params = [service.id, service.churchId, serviceTime, service.earlyStart, service.chatBefore, service.chatAfter, service.provider, service.providerKey, service.videoUrl, service.timezoneOffset, service.recurring, service.label, service.sermonId];
     await DB.query(sql, params);
     return service;
@@ -19,22 +19,22 @@ export class StreamingServiceRepository {
 
   private async update(service: StreamingService) {
     const serviceTime = DateTimeHelper.toMysqlDate(service.serviceTime);
-    const sql = "UPDATE services SET serviceTime=?, earlyStart=?, chatBefore=?, chatAfter=?, provider=?, providerKey=?, videoUrl=?, timezoneOffset=?, recurring=?, label=?, sermonId=? WHERE id=?;";
+    const sql = "UPDATE streamingServices SET serviceTime=?, earlyStart=?, chatBefore=?, chatAfter=?, provider=?, providerKey=?, videoUrl=?, timezoneOffset=?, recurring=?, label=?, sermonId=? WHERE id=?;";
     const params = [serviceTime, service.earlyStart, service.chatBefore, service.chatAfter, service.provider, service.providerKey, service.videoUrl, service.timezoneOffset, service.recurring, service.label, service.sermonId, service.id];
     await DB.query(sql, params);
     return service;
   }
 
   public delete(id: string, churchId: string) {
-    return DB.query("DELETE FROM services WHERE id=? AND churchId=?;", [id, churchId]);
+    return DB.query("DELETE FROM streamingServices WHERE id=? AND churchId=?;", [id, churchId]);
   }
 
   public loadById(id: string, churchId: string): Promise<StreamingService> {
-    return DB.queryOne("SELECT * FROM services WHERE id=? AND churchId=?;", [id]);
+    return DB.queryOne("SELECT * FROM streamingServices WHERE id=? AND churchId=?;", [id]);
   }
 
   public loadAll(churchId: string): Promise<StreamingService[]> {
-    return DB.query("SELECT * FROM services WHERE churchId=? ORDER BY serviceTime;", [churchId]);
+    return DB.query("SELECT * FROM streamingServices WHERE churchId=? ORDER BY serviceTime;", [churchId]);
   }
 
 }

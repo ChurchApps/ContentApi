@@ -11,15 +11,14 @@ export class PreviewController extends ContentBaseController {
   public async loadData(@requestParam("key") key: string, req: express.Request, res: express.Response): Promise<any> {
     try {
       const churchId = await SubDomainHelper.getId(key);
-
       let tabs: Link[] = null;
       let links: Link[] = null;
       let services: StreamingService[] = null;
       let sermons: Sermon[] = null;
 
       const promises: Promise<any>[] = [];
-      promises.push(this.baseRepositories.link.loadByCategory(churchId, 'tab').then(d => tabs = d));
-      promises.push(this.baseRepositories.link.loadByCategory(churchId, 'link').then(d => links = d));
+      promises.push(this.baseRepositories.link.loadByCategory(churchId, 'streamingTab').then(d => tabs = d));
+      promises.push(this.baseRepositories.link.loadByCategory(churchId, 'streamingLink').then(d => links = d));
       promises.push(this.repositories.streamingService.loadAll(churchId).then(d => services = d));
       promises.push(this.repositories.sermon.loadAll(churchId).then(d => sermons = d));
       await Promise.all(promises);

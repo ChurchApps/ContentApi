@@ -6,7 +6,7 @@ import { Permissions } from "../helpers/Permissions";
 import { EncryptionHelper, DateTimeHelper } from "../apiBase";
 
 @controller("/streamingServices")
-export class ServiceController extends ContentBaseController {
+export class StreamingServiceController extends ContentBaseController {
 
   @httpGet("/:id/hostChat")
   public async getHostChatRoom(@requestParam("id") id: string, req: express.Request<{}, {}, null>, res: express.Response): Promise<any> {

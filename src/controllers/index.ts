@@ -6,3 +6,9 @@ export { PageController2 } from "./PageController";
 export { SectionController } from "./SectionController";
 export { StockController } from "./StockController";
 
+export { PlaylistController } from "./PlaylistController";
+export { SermonController } from "./SermonController";
+export { StreamingServiceController } from "./StreamingServiceController";
+export { PreviewController } from "./PreviewController";
+
+
