@@ -2,7 +2,10 @@ import {
   BlockRepository,
   ElementRepository,
   PageRepository,
-  SectionRepository
+  PlaylistRepository,
+  SectionRepository,
+  SermonRepository,
+  StreamingServiceRepository
 } from ".";
 
 export class Repositories {
@@ -10,6 +13,10 @@ export class Repositories {
   public element: ElementRepository;
   public page: PageRepository;
   public section: SectionRepository;
+
+  public playlist: PlaylistRepository;
+  public sermon: SermonRepository;
+  public streamingService: StreamingServiceRepository;
 
   private static _current: Repositories = null;
   public static getCurrent = () => {
@@ -22,5 +29,8 @@ export class Repositories {
     this.element = new ElementRepository();
     this.page = new PageRepository();
     this.section = new SectionRepository();
+    this.playlist = new PlaylistRepository();
+    this.sermon = new SermonRepository();
+    this.streamingService = new StreamingServiceRepository();
   }
 }

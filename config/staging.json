@@ -4,5 +4,6 @@
   "contentRoot": "https://content.staging.churchapps.org",
   "fileStore": "S3",
   "mailSystem": "SES",
+  "membershipApi": "https://membershipapi.staging.churchapps.org",
   "s3Bucket": "staging-churchapps-content"
 }

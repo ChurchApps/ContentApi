@@ -3,5 +3,6 @@
   "appName": "ContentApi",
   "contentRoot": "http://localhost:3402",
   "mailSystem": "",
+  "membershipApi": "http://localhost:8082",
   "s3Bucket": ""
 }
