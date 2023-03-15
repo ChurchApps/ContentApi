@@ -58,7 +58,7 @@ export class PlaylistController extends ContentBaseController {
               return playlist;
             })
           );
-        };
+        }
 
         playlists = await Promise.all(promises);
         return this.json(playlists, 200);

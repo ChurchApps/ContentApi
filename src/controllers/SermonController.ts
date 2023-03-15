@@ -63,7 +63,7 @@ export class SermonController extends ContentBaseController {
               return sermon;
             })
           );
-        };
+        }
         sermons = await Promise.all(promises);
         return this.json(sermons, 200);
       }
