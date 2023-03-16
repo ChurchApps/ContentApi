@@ -10,4 +10,4 @@ CREATE TABLE `elements` (
   `parentId` char(11) DEFAULT NULL,
   `answersJSON` text,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;

@@ -18,8 +18,8 @@ export class FileController extends ContentBaseController {
 
   @httpGet("/")
   public async getAll(req: express.Request<{}, {}, null>, res: express.Response): Promise<interfaces.IHttpActionResult> {
-    return this.actionWrapperAnon(req, res, async () => {
-      return await this.repositories.file.loadAll();
+    return this.actionWrapper(req, res, async (au) => {
+      return await this.repositories.file.loadForChurch(au.churchId);
     });
   }
 
@@ -62,7 +62,12 @@ export class FileController extends ContentBaseController {
   public async delete(@requestParam("id") id: string, req: express.Request<{}, {}, null>, res: express.Response): Promise<interfaces.IHttpActionResult> {
     return this.actionWrapper(req, res, async (au) => {
       if (!au.checkAccess(Permissions.content.edit)) return this.json({}, 401);
-      else await this.repositories.file.delete(au.churchId, id);
+      else {
+        const existingFile = await this.repositories.file.load(au.churchId, id)
+        await FileHelper.remove(au.churchId + "/files/" + existingFile.fileName);
+        await this.repositories.file.delete(au.churchId, id);
+        return {file: au.churchId + "/files/" + existingFile.fileName}
+      }
     });
   }
 
