@@ -36,8 +36,8 @@ export class FileRepository {
     return DB.query("SELECT * FROM files WHERE churchId=?", [churchId]);
   }
 
-  public loadAll(): Promise<File[]> {
-    return DB.query("SELECT * FROM files", []);
+  public loadTotalBytes(churchId: string): Promise<{size:number}> {
+    return DB.query("select sum(size) as size from files where churchId=?", [churchId]);
   }
 
   public delete(churchId: string, id: string): Promise<File> {
