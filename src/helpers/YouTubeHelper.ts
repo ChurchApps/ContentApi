@@ -20,9 +20,13 @@ export class YouTubeHelper {
 
   private static parseDuration(duration: string) {
     let result = 0;
-    const hours = parseInt(duration.split('T')[1].split('H')[0], 0);
-    const minutes = parseInt(duration.split('H')[1].split('M')[0], 0);
-    const seconds = parseInt(duration.split('M')[1].split('S')[0], 0);
+    const hourMatches = duration.match(/[0-9]{1,2}H/g);
+    const minuteMatches = duration.match(/[0-9]{1,2}M/g);
+    const secondMatches = duration.match(/[0-9]{1,2}S/g);
+
+    const hours = (hourMatches?.length>0) ? parseInt(hourMatches[0].replace("H", ""), 0) : 0;
+    const minutes = (minuteMatches?.length>0) ? parseInt(minuteMatches[0].replace("M", ""), 0) : 0;
+    const seconds = (secondMatches?.length>0) ? parseInt(secondMatches[0].replace("S", ""), 0) : 0;
     result = hours * 3600 + minutes * 60 + seconds;
     return result;
   }
