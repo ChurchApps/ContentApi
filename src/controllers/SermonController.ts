@@ -30,6 +30,13 @@ export class SermonController extends ContentBaseController {
     });
   }
 
+  @httpGet("/public/:churchId")
+  public async loadPublicAll(@requestParam("churchId") churchId: string, req: express.Request<{}, {}, null>, res: express.Response): Promise<any> {
+    return this.actionWrapper(req, res, async() => {
+      return await this.repositories.sermon.loadPublicAll(churchId);
+    })
+  }
+
   @httpDelete("/:id")
   public async delete(@requestParam("id") id: string, req: express.Request, res: express.Response): Promise<void> {
     return this.actionWrapper(req, res, async (au) => {
