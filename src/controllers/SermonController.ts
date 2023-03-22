@@ -32,7 +32,7 @@ export class SermonController extends ContentBaseController {
 
   @httpGet("/public/:churchId")
   public async loadPublicAll(@requestParam("churchId") churchId: string, req: express.Request<{}, {}, null>, res: express.Response): Promise<any> {
-    return this.actionWrapper(req, res, async() => {
+    return this.actionWrapperAnon(req, res, async() => {
       return await this.repositories.sermon.loadPublicAll(churchId);
     })
   }
