@@ -1,6 +1,6 @@
 import { DB } from "../apiBase/db";
 import { Playlist } from "../models";
-import { UniqueIdHelper } from "../apiBase/helpers";
+import { UniqueIdHelper, DateTimeHelper } from "../apiBase/helpers";
 
 export class PlaylistRepository {
 
@@ -10,15 +10,17 @@ export class PlaylistRepository {
 
   private async create(playlist: Playlist) {
     playlist.id = UniqueIdHelper.shortId();
+    const publishDate = DateTimeHelper.toMysqlDate(playlist.publishDate);
     const sql = "INSERT INTO playlists (id, churchId, title, description, publishDate, thumbnail) VALUES (?, ?, ?, ?, ?, ?);";
-    const params = [playlist.id, playlist.churchId, playlist.title, playlist.description, playlist.publishDate, playlist.thumbnail];
+    const params = [playlist.id, playlist.churchId, playlist.title, playlist.description, publishDate, playlist.thumbnail];
     await DB.query(sql, params);
     return playlist;
   }
 
   private async update(playlist: Playlist) {
+    const publishDate = DateTimeHelper.toMysqlDate(playlist.publishDate);
     const sql = "UPDATE playlists SET title=?, description=?, publishDate=?, thumbnail=? WHERE id=? and churchId=?;";
-    const params = [playlist.title, playlist.description, playlist.publishDate, playlist.thumbnail, playlist.id, playlist.churchId];
+    const params = [playlist.title, playlist.description, publishDate, playlist.thumbnail, playlist.id, playlist.churchId];
     await DB.query(sql, params);
     return playlist;
   }
@@ -32,6 +34,10 @@ export class PlaylistRepository {
   }
 
   public loadAll(churchId: string): Promise<Playlist[]> {
+    return DB.query("SELECT * FROM playlists WHERE churchId=? ORDER BY publishDate desc;", [churchId]);
+  }
+
+  public loadPublicAll(churchId: string): Promise<Playlist[]> {
     return DB.query("SELECT * FROM playlists WHERE churchId=? ORDER BY publishDate desc;", [churchId]);
   }
 
