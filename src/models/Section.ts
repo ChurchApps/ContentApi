@@ -10,6 +10,7 @@ export class Section {
   public textColor?: string;
   public sort?: number;
   public targetBlockId?: string;
+  public jsonData?: string;
 
   public elements?: Element[];
   public sections?: Section[];
