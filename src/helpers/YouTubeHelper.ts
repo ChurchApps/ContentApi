@@ -33,19 +33,35 @@ export class YouTubeHelper {
   }
 
   public static async getVideosFromChannel(churchId:string, channelId: string) {
-    const url = `https://www.googleapis.com/youtube/v3/search?part=snippet&channelId=${channelId}&maxResults=260&order=date&type=video&key=${Environment.youTubeApiKey}`;
+    const allSermons: Sermon[] = [];
+    let data = await this.getVideoPage(churchId, channelId, "");
+    allSermons.push(...data.sermons);
+    let page = 0;
+    while (page < 4 && data.nextPageToken) {
+      data = await this.getVideoPage(churchId, channelId, data.nextPageToken);
+      allSermons.push(...data.sermons);
+      page++;
+    }
+    return allSermons;
+  }
+
+  public static async getVideoPage(churchId:string, channelId: string, pageToken:string) {
+    const url = `https://www.googleapis.com/youtube/v3/search?part=snippet&channelId=${channelId}&maxResults=50&order=date&type=video&key=${Environment.youTubeApiKey}&pageToken=${pageToken}`;
     const json: any = (await axios.get(url)).data;
-    return YouTubeHelper.convertToSermons(churchId, json);
+    let result = {
+      sermons: YouTubeHelper.convertToSermons(churchId, json),
+      nextPageToken: json.nextPageToken
+    }
+    return result;
   }
 
   private static convertToSermons(churchId:string, json: any) {
     const sermons:Sermon[] = [];
     for (const item of json.items) {
       const sermon:Sermon = {
-        id: item.id.videoId,
         churchId: churchId,
         title: item.snippet.title,
-        thumbnail: item.snippet.thumbnails?.maxres?.url || "",
+        thumbnail: item.snippet.thumbnails?.maxres?.url || item.snippet.thumbnails?.high?.url || "",
         description: item.snippet.description,
         publishDate: new Date(item.snippet.publishedAt),
         videoType: "youtube",
