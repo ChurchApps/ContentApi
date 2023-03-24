@@ -16,6 +16,13 @@ export class SermonController extends ContentBaseController {
     });
   }
 
+  @httpGet("/youtubeImport/:channelId")
+  public async youtubeImport(@requestParam("channelId") channelId: string, req: express.Request<{}, {}, null>, res: express.Response): Promise<any> {
+    return this.actionWrapper(req, res, async (au) => {
+      return await YouTubeHelper.getVideosFromChannel(au.churchId, channelId);
+    });
+  }
+
   @httpGet("/:id")
   public async get(@requestParam("id") id: string, req: express.Request<{}, {}, null>, res: express.Response): Promise<any> {
     return this.actionWrapper(req, res, async (au) => {
