@@ -10,6 +10,6 @@ CREATE TABLE `sections` (
   `textColor` varchar(45) DEFAULT NULL,
   `sort` float DEFAULT NULL,
   `targetBlockId` char(11) DEFAULT NULL,
-  `jsonData` text DEFAULT NULL,
+  `answersJSON` text DEFAULT NULL,
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
