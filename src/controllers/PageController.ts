@@ -25,6 +25,7 @@ export class PageController2 extends ContentBaseController {
         const sections = await this.repositories.section.loadForPage(churchId, page.id);
         const allElements: Element[] = await this.repositories.element.loadForPage(churchId, page.id);
         TreeHelper.populateAnswers(allElements);
+        TreeHelper.populateAnswersSections(sections);
         result = page;
         result.sections = TreeHelper.buildTree(sections, allElements);
         await TreeHelper.insertBlocks(result.sections, allElements, churchId);

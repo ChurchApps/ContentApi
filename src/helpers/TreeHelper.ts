@@ -63,4 +63,16 @@ export class TreeHelper {
     })
   }
 
+  static populateAnswersSections(sections: Section[]) {
+    sections.forEach(e => {
+      try {
+        e.answers = JSON.parse(e.answersJSON);
+      }
+      catch {
+        e.answers = [];
+      }
+      if(!e.answers) e.answers = [];
+    })
+  }
+
 }
