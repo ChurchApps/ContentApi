@@ -51,8 +51,8 @@ export class TreeHelper {
     }
   }
 
-  static populateAnswers(elements: Element[]) {
-    elements.forEach(e => {
+  static populateAnswers(items: Element[] | Section[]) {
+    items.forEach(e => {
       try {
         e.answers = JSON.parse(e.answersJSON);
       }

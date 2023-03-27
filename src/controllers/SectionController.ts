@@ -3,6 +3,7 @@ import express from "express";
 import { ContentBaseController } from "./ContentBaseController"
 import { Section } from "../models"
 import { Permissions } from "../helpers";
+import { TreeHelper } from "../helpers/TreeHelper";
 
 @controller("/sections")
 export class SectionController extends ContentBaseController {
@@ -29,6 +30,7 @@ export class SectionController extends ContentBaseController {
           if (req.body[0].blockId) await this.repositories.section.updateSortForBlock(req.body[0].churchId, req.body[0].blockId);
           else await this.repositories.section.updateSort(req.body[0].churchId, req.body[0].pageId, req.body[0].zone);
         }
+        TreeHelper.populateAnswers(result);
         return result;
       }
     });
