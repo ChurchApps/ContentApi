@@ -1,9 +1,7 @@
-import { injectable } from "inversify";
 import { UniqueIdHelper } from "../apiBase"
 import { DB } from "../apiBase/db"
 import { Element } from "../models";
 
-@injectable()
 export class ElementRepository {
 
   public save(element: Element) {
