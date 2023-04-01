@@ -2,7 +2,9 @@ export class Event {
   id?: string;
   churchId?: string;
   groupId?: string;
-  eventDate?: Date;
+  allDay?: boolean;
+  start?: Date;
+  end?: Date;
   title?: string;
   description?: string;
 }

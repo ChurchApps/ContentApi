@@ -9,15 +9,15 @@ export class RecurringExceptionRepository {
 
   private async create(recurringException: RecurringException) {
     recurringException.id = UniqueIdHelper.shortId();
-    const sql = "INSERT INTO recurringExceptions (id, churchId, recurringEventId, eventId, originalDate, newDate) VALUES (?, ?, ?, ?, ?, ?);";
-    const params = [recurringException.id, recurringException.churchId, recurringException.recurringEventId, recurringException.eventId, recurringException.originalDate, recurringException.newDate];
+    const sql = "INSERT INTO recurringExceptions (id, churchId, recurringEventId, eventId, originalStart) VALUES (?, ?, ?, ?, ?);";
+    const params = [recurringException.id, recurringException.churchId, recurringException.recurringEventId, recurringException.eventId, recurringException.originalStart];
     await DB.query(sql, params);
     return recurringException;
   }
 
   private async update(recurringException: RecurringException) {
-    const sql = "UPDATE recurringExceptions SET recurringEventId=?, eventId=?, originalDate=?, newDate=? WHERE id=? and churchId=?";
-    const params = [recurringException.recurringEventId, recurringException.eventId, recurringException.originalDate, recurringException.newDate, recurringException.id, recurringException.churchId];
+    const sql = "UPDATE recurringExceptions SET recurringEventId=?, eventId=?, originalStart=? WHERE id=? and churchId=?";
+    const params = [recurringException.recurringEventId, recurringException.eventId, recurringException.originalStart, recurringException.id, recurringException.churchId];
     await DB.query(sql, params);
     return recurringException;
   }

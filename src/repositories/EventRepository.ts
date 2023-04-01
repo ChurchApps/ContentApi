@@ -9,15 +9,15 @@ export class EventRepository {
 
   private async create(event: Event) {
     event.id = UniqueIdHelper.shortId();
-    const sql = "INSERT INTO events (id, churchId, groupId, eventDate, title, description) VALUES (?, ?, ?, ?, ?, ?);";
-    const params = [event.id, event.churchId, event.groupId, event.eventDate, event.title, event.description];
+    const sql = "INSERT INTO events (id, churchId, groupId, allDay, start, end, title, description) VALUES (?, ?, ?, ?, ?, ?, ?, ?);";
+    const params = [event.id, event.churchId, event.groupId, event.allDay, event.start, event.end, event.title, event.description];
     await DB.query(sql, params);
     return event;
   }
 
   private async update(event: Event) {
-    const sql = "UPDATE events SET groupId=?, eventDate=?, title=?, description=? WHERE id=? and churchId=?";
-    const params = [event.groupId, event.eventDate, event.title, event.description, event.id, event.churchId];
+    const sql = "UPDATE events SET groupId=?, allDay=?, start=?, end=?, title=?, description=? WHERE id=? and churchId=?";
+    const params = [event.groupId, event.allDay, event.start, event.end, event.title, event.description, event.id, event.churchId];
     await DB.query(sql, params);
     return event;
   }
