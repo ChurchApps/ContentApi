@@ -72,6 +72,11 @@ export class ElementController extends ContentBaseController {
         await this.repositories.element.save(column);
       }
     }
+
+    //Delete slides
+    if (children.length > slides.length) {
+      for (let i = slides.length; i < children.length ; i++) await this.repositories.element.delete(children[i].churchId, children[i].id);
+    }
   }
 
   private async checkRows(elements: Element[]) {
