@@ -10,7 +10,7 @@ export class EventController extends ContentBaseController {
   @httpGet("/:id")
   public async get(@requestParam("id") id: string, req: express.Request<{}, {}, null>, res: express.Response): Promise<interfaces.IHttpActionResult> {
     return this.actionWrapper(req, res, async (au) => {
-      return await this.repositories.element.load(au.churchId, id);
+      return await this.repositories.event.load(au.churchId, id);
     });
   }
 
@@ -20,9 +20,9 @@ export class EventController extends ContentBaseController {
       //if (!au.checkAccess(Permissions.content.edit)) return this.json({}, 401);
       //else {
         const promises: Promise<Event>[] = [];
-        req.body.forEach(element => {
-          element.churchId = au.churchId;
-          promises.push(this.repositories.element.save(element));
+        req.body.forEach(event => {
+          event.churchId = au.churchId;
+          promises.push(this.repositories.event.save(event));
         });
         const result = await Promise.all(promises);
         return result;
@@ -35,7 +35,7 @@ export class EventController extends ContentBaseController {
     return this.actionWrapper(req, res, async (au) => {
       if (!au.checkAccess(Permissions.content.edit)) return this.json({}, 401);
       else {
-        await this.repositories.element.delete(au.churchId, id);
+        await this.repositories.event.delete(au.churchId, id);
       }
     });
   }
