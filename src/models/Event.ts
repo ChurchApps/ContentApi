@@ -7,4 +7,5 @@ export class Event {
   end?: Date;
   title?: string;
   description?: string;
+  visibility?: string;
 }

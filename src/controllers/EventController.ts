@@ -7,6 +7,20 @@ import { Permissions } from "../helpers";
 @controller("/events")
 export class EventController extends ContentBaseController {
 
+  @httpGet("/group/:groupId")
+  public async getForGroup(@requestParam("groupId") groupId: string, req: express.Request<{}, {}, null>, res: express.Response): Promise<interfaces.IHttpActionResult> {
+    return this.actionWrapper(req, res, async (au) => {
+      return await this.repositories.event.loadForGroup(au.churchId, groupId);
+    });
+  }
+
+  @httpGet("/public/group/:churchId/:groupId")
+  public async getPublicForGroup(@requestParam("churchId") churchId: string, @requestParam("groupId") groupId: string, req: express.Request<{}, {}, null>, res: express.Response): Promise<interfaces.IHttpActionResult> {
+    return this.actionWrapperAnon(req, res, async () => {
+      return await this.repositories.event.loadPublicForGroup(churchId, groupId);
+    });
+  }
+
   @httpGet("/:id")
   public async get(@requestParam("id") id: string, req: express.Request<{}, {}, null>, res: express.Response): Promise<interfaces.IHttpActionResult> {
     return this.actionWrapper(req, res, async (au) => {

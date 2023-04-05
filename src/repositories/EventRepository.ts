@@ -9,15 +9,15 @@ export class EventRepository {
 
   private async create(event: Event) {
     event.id = UniqueIdHelper.shortId();
-    const sql = "INSERT INTO events (id, churchId, groupId, allDay, start, end, title, description) VALUES (?, ?, ?, ?, ?, ?, ?, ?);";
-    const params = [event.id, event.churchId, event.groupId, event.allDay, event.start, event.end, event.title, event.description];
+    const sql = "INSERT INTO events (id, churchId, groupId, allDay, start, end, title, description, visibility) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?);";
+    const params = [event.id, event.churchId, event.groupId, event.allDay, event.start, event.end, event.title, event.description, event.visibility];
     await DB.query(sql, params);
     return event;
   }
 
   private async update(event: Event) {
-    const sql = "UPDATE events SET groupId=?, allDay=?, start=?, end=?, title=?, description=? WHERE id=? and churchId=?";
-    const params = [event.groupId, event.allDay, event.start, event.end, event.title, event.description, event.id, event.churchId];
+    const sql = "UPDATE events SET groupId=?, allDay=?, start=?, end=?, title=?, description=?, visibility=? WHERE id=? and churchId=?";
+    const params = [event.groupId, event.allDay, event.start, event.end, event.title, event.description, event.visibility, event.id, event.churchId];
     await DB.query(sql, params);
     return event;
   }
@@ -28,6 +28,15 @@ export class EventRepository {
 
   public load(churchId: string, id: string) {
     return DB.queryOne("SELECT * FROM events WHERE id=? AND churchId=?;", [id, churchId]);
+  }
+
+  public loadForGroup(churchId: string, groupId: string) {
+    console.log("SELECT * FROM events WHERE groupId=? AND churchId=? order by start;", [groupId, churchId])
+    return DB.query("SELECT * FROM events WHERE groupId=? AND churchId=? order by start;", [groupId, churchId]);
+  }
+
+  public loadPublicForGroup(churchId: string, groupId: string) {
+    return DB.query("SELECT * FROM events WHERE groupId=? AND churchId=? and visibility='public' order by start;", [groupId, churchId]);
   }
 
 }
