@@ -31,6 +31,7 @@ export class ElementController extends ContentBaseController {
           else await this.repositories.element.updateSort(req.body[0].churchId, req.body[0].sectionId, req.body[0].parentId);
         }
         await this.checkRows(result);
+        await this.checkSlides(result);
         return result;
       }
     });
@@ -44,6 +45,38 @@ export class ElementController extends ContentBaseController {
         await this.repositories.element.delete(au.churchId, id);
       }
     });
+  }
+
+  private async checkSlides(elements: Element[]) {
+    for (const element of elements) {
+      if (element.elementType === "carousel") {
+        element.answers = JSON.parse(element.answersJSON);
+        const slidesNumber = parseInt(element.answers.slides);
+        const slides: number[] = [];
+        for ( let i = 0; i < slidesNumber; i++) {
+          slides.push(i);
+        }
+        const allElements: Element[] = await this.repositories.element.loadForSection(element.churchId, element.sectionId);
+        const children = ArrayHelper.getAll(allElements, "parentId", element.id);
+        await this.checkSlide(element, children, slides);
+      }
+    }
+  }
+
+  private async checkSlide(row: Element, children: Element[], slides: number[]) {
+    //Add new slides
+    if (slides.length > children.length) {
+      for (let i= children.length; i < slides.length; i++) {
+        const answers = { slide: slides[i] }
+        const column: Element = { churchId: row.churchId, sectionId: row.sectionId, blockId: row.blockId, elementType: "carousel", sort: i, parentId: row.id, answersJSON: JSON.stringify(answers) };
+        await this.repositories.element.save(column);
+      }
+    }
+
+    //Delete slides
+    if (children.length > slides.length) {
+      for (let i = slides.length; i < children.length ; i++) await this.repositories.element.delete(children[i].churchId, children[i].id);
+    }
   }
 
   private async checkRows(elements: Element[]) {
