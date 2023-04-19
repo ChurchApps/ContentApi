@@ -1,11 +1,12 @@
-DROP TABLE IF EXISTS `recurringExceptions`;
+DROP TABLE IF EXISTS `eventExceptions`;
 
-CREATE TABLE `recurringExceptions` (
+CREATE TABLE `eventExceptions` (
   `id` char(11) CHARACTER SET latin1 NOT NULL,
   `churchId` char(11) CHARACTER SET latin1 DEFAULT NULL,
-  `recurringEventId` char(11) CHARACTER SET latin1 DEFAULT NULL,
   `eventId` char(11) CHARACTER SET latin1 DEFAULT NULL,
-  `originalStart` datetime DEFAULT NULL,
+  `exceptionDate` datetime DEFAULT NULL,
+  `recurrenceDate` datetime DEFAULT NULL,
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
 

@@ -8,4 +8,5 @@ export class Event {
   title?: string;
   description?: string;
   visibility?: string;
+  recurrenceRule?: string;
 }

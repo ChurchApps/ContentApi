@@ -9,15 +9,15 @@ export class EventRepository {
 
   private async create(event: Event) {
     event.id = UniqueIdHelper.shortId();
-    const sql = "INSERT INTO events (id, churchId, groupId, allDay, start, end, title, description, visibility) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?);";
-    const params = [event.id, event.churchId, event.groupId, event.allDay, event.start, event.end, event.title, event.description, event.visibility];
+    const sql = "INSERT INTO events (id, churchId, groupId, allDay, start, end, title, description, visibility, recurrenceRule) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?);";
+    const params = [event.id, event.churchId, event.groupId, event.allDay, event.start, event.end, event.title, event.description, event.visibility, event.recurrenceRule];
     await DB.query(sql, params);
     return event;
   }
 
   private async update(event: Event) {
-    const sql = "UPDATE events SET groupId=?, allDay=?, start=?, end=?, title=?, description=?, visibility=? WHERE id=? and churchId=?";
-    const params = [event.groupId, event.allDay, event.start, event.end, event.title, event.description, event.visibility, event.id, event.churchId];
+    const sql = "UPDATE events SET groupId=?, allDay=?, start=?, end=?, title=?, description=?, visibility=?, recurrenceRule=? WHERE id=? and churchId=?";
+    const params = [event.groupId, event.allDay, event.start, event.end, event.title, event.description, event.visibility, event.recurrenceRule, event.id, event.churchId];
     await DB.query(sql, params);
     return event;
   }

@@ -9,8 +9,7 @@ export { SermonRepository } from "./SermonRepository";
 export { StreamingServiceRepository } from "./StreamingServiceRepository";
 
 export { EventRepository } from "./EventRepository";
-export { RecurringEventRepository } from "./RecurringEventRepository";
-export { RecurringExceptionRepository } from "./RecurringExceptionRepository";
+export { EventExceptionRepository } from "./EventExceptionRepository";
 
 export { Repositories } from "./Repositories";
 

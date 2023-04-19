@@ -9,5 +9,4 @@ export { StreamingService } from "./StreamingService"
 export { File } from "./File";
 
 export { Event } from "./Event";
-export { RecurringEvent } from "./RecurringEvent";
-export { RecurringException } from "./RecurringException";
+export { EventException } from "./EventException";

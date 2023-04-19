@@ -1,11 +1,11 @@
 import { controller, httpPost, httpGet, interfaces, requestParam, httpDelete } from "inversify-express-utils";
 import express from "express";
 import { ContentBaseController } from "./ContentBaseController"
-import { RecurringException } from "../models"
+import { EventException } from "../models"
 import { Permissions } from "../helpers";
 
-@controller("/recurringExceptions")
-export class RecurringExceptionController extends ContentBaseController {
+@controller("/eventExceptions")
+export class EventExceptionController extends ContentBaseController {
 
   @httpGet("/:id")
   public async get(@requestParam("id") id: string, req: express.Request<{}, {}, null>, res: express.Response): Promise<interfaces.IHttpActionResult> {
@@ -15,11 +15,11 @@ export class RecurringExceptionController extends ContentBaseController {
   }
 
   @httpPost("/")
-  public async save(req: express.Request<{}, {}, RecurringException[]>, res: express.Response): Promise<interfaces.IHttpActionResult> {
+  public async save(req: express.Request<{}, {}, EventException[]>, res: express.Response): Promise<interfaces.IHttpActionResult> {
     return this.actionWrapper(req, res, async (au) => {
       if (!au.checkAccess(Permissions.content.edit)) return this.json({}, 401);
       else {
-        const promises: Promise<RecurringException>[] = [];
+        const promises: Promise<EventException>[] = [];
         req.body.forEach(element => {
           element.churchId = au.churchId;
           promises.push(this.repositories.element.save(element));

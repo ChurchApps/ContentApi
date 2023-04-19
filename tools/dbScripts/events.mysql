@@ -10,5 +10,6 @@ CREATE TABLE `events` (
   `title` varchar(255) CHARACTER SET latin1 DEFAULT NULL,
   `description` text CHARACTER SET latin1,
   `visibility` varchar(45) DEFAULT NULL,
+  `recurrenceRule` varchar(45) DEFAULT NULL,
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
