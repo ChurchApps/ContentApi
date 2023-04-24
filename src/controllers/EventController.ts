@@ -1,7 +1,7 @@
 import { controller, httpPost, httpGet, interfaces, requestParam, httpDelete } from "inversify-express-utils";
 import express from "express";
 import { ContentBaseController } from "./ContentBaseController"
-import { Event } from "../models"
+import { Event, EventException } from "../models"
 import { Permissions } from "../helpers";
 
 @controller("/events")
@@ -10,14 +10,18 @@ export class EventController extends ContentBaseController {
   @httpGet("/group/:groupId")
   public async getForGroup(@requestParam("groupId") groupId: string, req: express.Request<{}, {}, null>, res: express.Response): Promise<interfaces.IHttpActionResult> {
     return this.actionWrapper(req, res, async (au) => {
-      return await this.repositories.event.loadForGroup(au.churchId, groupId);
+      const result = await this.repositories.event.loadForGroup(au.churchId, groupId);
+      await this.addExceptionDates(result);
+      return result;
     });
   }
 
   @httpGet("/public/group/:churchId/:groupId")
   public async getPublicForGroup(@requestParam("churchId") churchId: string, @requestParam("groupId") groupId: string, req: express.Request<{}, {}, null>, res: express.Response): Promise<interfaces.IHttpActionResult> {
     return this.actionWrapperAnon(req, res, async () => {
-      return await this.repositories.event.loadPublicForGroup(churchId, groupId);
+      const result = await this.repositories.event.loadPublicForGroup(churchId, groupId);
+      await this.addExceptionDates(result);
+      return result;
     });
   }
 
@@ -51,6 +55,17 @@ export class EventController extends ContentBaseController {
       else {
         await this.repositories.event.delete(au.churchId, id);
       }
+    });
+  }
+
+  private async addExceptionDates(events: Event[]) {
+    const promises: Promise<Event>[] = [];
+    const eventIds = events.map(event => event.id);
+    events.forEach(event => { event.exceptionDates=[]; });
+    const result = await this.repositories.eventException.loadForEvents(events[0].churchId, eventIds);
+    result.forEach((eventException:EventException) => {
+      const event = events.find(event => event.id === eventException.eventId);
+      if (event) event.exceptionDates.push(eventException.exceptionDate);
     });
   }
 

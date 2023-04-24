@@ -9,4 +9,5 @@ export class Event {
   description?: string;
   visibility?: string;
   recurrenceRule?: string;
+  exceptionDates?: Date[];
 }

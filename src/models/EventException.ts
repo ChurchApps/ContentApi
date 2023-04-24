@@ -3,5 +3,4 @@ export class EventException {
   churchId?: string;
   eventId?: string;
   exceptionDate?: Date;
-  recurrenceDate?: Date;
 }
