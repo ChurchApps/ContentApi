@@ -8,6 +8,7 @@ import {
   StreamingServiceRepository,
   FileRepository,
   EventRepository,
+  EventExceptionRepository,
 } from ".";
 
 export class Repositories {
@@ -22,6 +23,7 @@ export class Repositories {
   public streamingService: StreamingServiceRepository;
 
   public event: EventRepository;
+  public eventException: EventExceptionRepository;
 
   private static _current: Repositories = null;
   public static getCurrent = () => {
@@ -33,6 +35,7 @@ export class Repositories {
     this.block = new BlockRepository();
     this.element = new ElementRepository();
     this.event = new EventRepository();
+    this.eventException = new EventExceptionRepository();
     this.file = new FileRepository();
     this.page = new PageRepository();
     this.section = new SectionRepository();

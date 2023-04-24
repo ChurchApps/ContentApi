@@ -12,5 +12,6 @@ export { SermonController } from "./SermonController";
 export { StreamingServiceController } from "./StreamingServiceController";
 export { PreviewController } from "./PreviewController";
 
-export { EventController } from "./EventController";
 export { EventExceptionController } from "./EventExceptionController";
+export { EventController } from "./EventController";
+
