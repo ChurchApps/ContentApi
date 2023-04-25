@@ -11,7 +11,6 @@ export class EventExceptionRepository {
     eventException.id = UniqueIdHelper.shortId();
     const sql = "INSERT INTO eventExceptions (id, churchId, eventId, exceptionDate) VALUES (?, ?, ?, ?);";
     const params = [eventException.id, eventException.churchId, eventException.eventId, eventException.exceptionDate];
-    console.log(sql, params)
     await DB.query(sql, params);
     return eventException;
   }

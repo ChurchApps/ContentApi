@@ -59,7 +59,7 @@ export class EventController extends ContentBaseController {
   }
 
   private async addExceptionDates(events: Event[]) {
-    const promises: Promise<Event>[] = [];
+    if (events.length===0) return;
     const eventIds = events.map(event => event.id);
     events.forEach(event => { event.exceptionDates=[]; });
     const result = await this.repositories.eventException.loadForEvents(events[0].churchId, eventIds);
