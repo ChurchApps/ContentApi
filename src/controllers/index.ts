@@ -14,3 +14,5 @@ export { PreviewController } from "./PreviewController";
 
 export { EventExceptionController } from "./EventExceptionController";
 export { EventController } from "./EventController";
+export { CuratedCalendarController } from "./CuratedCalendarController";
+export { CuratedEventController } from "./CuratedEventController";

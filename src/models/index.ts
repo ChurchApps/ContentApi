@@ -10,3 +10,5 @@ export { File } from "./File";
 
 export { Event } from "./Event";
 export { EventException } from "./EventException";
+export { CuratedCalendar } from "./CuratedCalendar";
+export { CuratedEvent } from "./CuratedEvent";

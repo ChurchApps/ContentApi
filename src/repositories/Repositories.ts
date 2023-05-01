@@ -9,6 +9,8 @@ import {
   FileRepository,
   EventRepository,
   EventExceptionRepository,
+  CuratedCalendarRepository,
+  CuratedEventRepository,
 } from ".";
 
 export class Repositories {
@@ -24,6 +26,8 @@ export class Repositories {
 
   public event: EventRepository;
   public eventException: EventExceptionRepository;
+  public curatedCalendar: CuratedCalendarRepository;
+  public curatedEvent: CuratedEventRepository;
 
   private static _current: Repositories = null;
   public static getCurrent = () => {
@@ -33,6 +37,8 @@ export class Repositories {
 
   constructor() {
     this.block = new BlockRepository();
+    this.curatedCalendar = new CuratedCalendarRepository();
+    this.curatedEvent = new CuratedEventRepository();
     this.element = new ElementRepository();
     this.event = new EventRepository();
     this.eventException = new EventExceptionRepository();

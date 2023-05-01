@@ -10,6 +10,8 @@ export { StreamingServiceRepository } from "./StreamingServiceRepository";
 
 export { EventRepository } from "./EventRepository";
 export { EventExceptionRepository } from "./EventExceptionRepository";
+export { CuratedCalendarRepository } from "./CuratedCalendarRepository";
+export { CuratedEventRepository } from "./CuratedEventRepository";
 
 export { Repositories } from "./Repositories";
 
