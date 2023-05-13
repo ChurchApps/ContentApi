@@ -1,4 +1,4 @@
-import { UniqueIdHelper } from "../apiBase"
+import { UniqueIdHelper, DateTimeHelper } from "../apiBase"
 import { DB } from "../apiBase/db"
 import { EventException } from "../models";
 
@@ -9,15 +9,17 @@ export class EventExceptionRepository {
 
   private async create(eventException: EventException) {
     eventException.id = UniqueIdHelper.shortId();
+    const exceptionDate = DateTimeHelper.toMysqlDate(eventException.exceptionDate);
     const sql = "INSERT INTO eventExceptions (id, churchId, eventId, exceptionDate) VALUES (?, ?, ?, ?);";
-    const params = [eventException.id, eventException.churchId, eventException.eventId, eventException.exceptionDate];
+    const params = [eventException.id, eventException.churchId, eventException.eventId, exceptionDate];
     await DB.query(sql, params);
     return eventException;
   }
 
   private async update(eventException: EventException) {
+    const exceptionDate = DateTimeHelper.toMysqlDate(eventException.exceptionDate);
     const sql = "UPDATE eventExceptions SET eventId=?, exceptionDate=?, WHERE id=? and churchId=?";
-    const params = [eventException.eventId, eventException.exceptionDate, eventException.id, eventException.churchId];
+    const params = [eventException.eventId, exceptionDate, eventException.id, eventException.churchId];
     await DB.query(sql, params);
     return eventException;
   }
