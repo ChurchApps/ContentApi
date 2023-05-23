@@ -14,14 +14,14 @@ export class CuratedEventRepository {
     curatedEvent.id = UniqueIdHelper.shortId();
 
     const sql = "INSERT INTO curatedEvents (id, churchId, curatedCalendarId, groupId, eventId) VALUES (?, ?, ?, ?, ?);";
-    const params = [curatedEvent.id, curatedEvent.churchId, curatedEvent.curratedCalendarId, curatedEvent.groupId, curatedEvent.eventId];
+    const params = [curatedEvent.id, curatedEvent.churchId, curatedEvent.curatedCalendarId, curatedEvent.groupId, curatedEvent.eventId];
     await DB.query(sql, params);
     return curatedEvent;
   }
 
   private async update(curatedEvent: CuratedEvent) {
     const sql = "UPDATE curatedEvents SET curatedCalendarId=?, groupId=?, eventId=? WHERE id=? and churchId=?";
-    const params = [curatedEvent.curratedCalendarId, curatedEvent.groupId, curatedEvent.eventId, curatedEvent.id, curatedEvent.churchId];
+    const params = [curatedEvent.curatedCalendarId, curatedEvent.groupId, curatedEvent.eventId, curatedEvent.id, curatedEvent.churchId];
     await DB.query(sql, params);
     return curatedEvent;
   }
