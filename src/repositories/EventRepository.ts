@@ -1,4 +1,4 @@
-import { UniqueIdHelper } from "../apiBase"
+import { UniqueIdHelper, DateTimeHelper } from "../apiBase"
 import { DB } from "../apiBase/db"
 import { Event } from "../models";
 
@@ -9,15 +9,19 @@ export class EventRepository {
 
   private async create(event: Event) {
     event.id = UniqueIdHelper.shortId();
+    const start = DateTimeHelper.toMysqlDate(event.start);
+    const end = DateTimeHelper.toMysqlDate(event.end);
     const sql = "INSERT INTO events (id, churchId, groupId, allDay, start, end, title, description, visibility, recurrenceRule) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?);";
-    const params = [event.id, event.churchId, event.groupId, event.allDay, event.start, event.end, event.title, event.description, event.visibility, event.recurrenceRule];
+    const params = [event.id, event.churchId, event.groupId, event.allDay, start, end, event.title, event.description, event.visibility, event.recurrenceRule];
     await DB.query(sql, params);
     return event;
   }
 
   private async update(event: Event) {
+    const start = DateTimeHelper.toMysqlDate(event.start);
+    const end = DateTimeHelper.toMysqlDate(event.end);
     const sql = "UPDATE events SET groupId=?, allDay=?, start=?, end=?, title=?, description=?, visibility=?, recurrenceRule=? WHERE id=? and churchId=?";
-    const params = [event.groupId, event.allDay, event.start, event.end, event.title, event.description, event.visibility, event.recurrenceRule, event.id, event.churchId];
+    const params = [event.groupId, event.allDay, start, end, event.title, event.description, event.visibility, event.recurrenceRule, event.id, event.churchId];
     await DB.query(sql, params);
     return event;
   }
