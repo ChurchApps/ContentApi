@@ -21,7 +21,9 @@ const init = async () => {
     { title: "Sermons", file: "sermons.mysql" },
     { title: "StreamingServices", file: "streamingServices.mysql" },
     { title: "Events", file: "events.mysql" },
-    { title: "Event Exceptions", file: "eventExceptions.mysql" }
+    { title: "Event Exceptions", file: "eventExceptions.mysql" },
+    { title: "Curated Calendars", file: "curatedCalendars.mysql" },
+    { title: "Curated Events", file: "curatedEvents.mysql" },
   ]
 
   await initTables("Content", taskTables);
