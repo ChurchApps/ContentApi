@@ -38,4 +38,8 @@ export class CuratedEventRepository {
     return DB.query("SELECT * FROM curatedEvents WHERE churchId=?;", [churchId]);
   }
 
+  public loadForCuratedCalendar(churchId: string, curatedCalendarId: string) {
+    return DB.query("SELECT * FROM curatedEvents WHERE churchId=? AND curatedCalendarId=?;", [churchId, curatedCalendarId]);
+  }
+
 }
