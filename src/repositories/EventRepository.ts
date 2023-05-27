@@ -1,4 +1,4 @@
-import { UniqueIdHelper, DateTimeHelper, MySqlHelper } from "../apiBase"
+import { UniqueIdHelper, DateTimeHelper } from "../apiBase"
 import { DB } from "../apiBase/db"
 import { Event } from "../models";
 
