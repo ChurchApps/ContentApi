@@ -43,10 +43,4 @@ export class EventRepository {
     return DB.query("SELECT * FROM events WHERE groupId=? AND churchId=? and visibility='public' order by start;", [groupId, churchId]);
   }
 
-  public loadPublicByIds(churchId: string, groupIds: string[], ids: string[]) {
-    const CommaSeparatedGroupIds = MySqlHelper.toQuotedAndCommaSeparatedString(groupIds);
-    const CommaSeparatedIds = MySqlHelper.toQuotedAndCommaSeparatedString(ids);
-    return DB.query("SELECT * FROM events WHERE groupId IN (" + CommaSeparatedGroupIds + ") AND id IN (" + CommaSeparatedIds + ") and churchId=? and visibility='public' order by start;", [churchId]);
-  }
-
 }

@@ -10,26 +10,20 @@ export class CuratedEventController extends ContentBaseController {
   @httpGet("/calendar/:curatedCalendarId")
   public async getForCuratedCalendar(@requestParam("curatedCalendarId") curatedCalendarId: string, req: express.Request<{}, {}, null>, res: express.Response): Promise<interfaces.IHttpActionResult> {
     return this.actionWrapper(req, res, async (au) => {
-      const result = await this.repositories.curatedEvent.loadForCuratedCalendar(au.churchId, curatedCalendarId);
-      return result;
-    });
-  }
-
-  @httpGet("/calendar/:curatedCalendarId/events")
-  public async getEventsForCuratedCalendar(@requestParam("curatedCalendarId") curatedCalendarId: string, req: express.Request<{}, {}, null>, res: express.Response): Promise<interfaces.IHttpActionResult> {
-    return this.actionWrapper(req, res, async (au) => {
-      let results: Event[] = [];
-      const curatedEvents = await this.repositories.curatedEvent.loadForCuratedCalendar(au.churchId, curatedCalendarId);
-      if (curatedEvents?.length > 0) {
-        //If Curated Events are there for a specific Curated Calendar, then get the groupIds and eventIds - to find those events in Events table.
-        const groupIds = curatedEvents.map((crtEv: CuratedEvent) => crtEv.groupId);
-        const eventIds = curatedEvents.map((crtEv: CuratedEvent) => crtEv.eventId);
-        if (groupIds?.length > 0 && eventIds?.length > 0) {
-          const events = await this.repositories.event.loadPublicByIds(au.churchId, groupIds, eventIds);
-          results = events;
-        }
+      const promises: Promise<CuratedEvent>[] = [];
+      const curatedEvents = await this.repositories.curatedEvent.loadByCuratedCalendarId(au.churchId, curatedCalendarId);
+      if (req.query?.with === "eventData") {
+        const newArray = curatedEvents?.map(async(crtEv: CuratedEvent) => {
+          const eventData = await this.repositories.event.load(au.churchId, crtEv.eventId);
+          crtEv.eventData = eventData;
+          return crtEv;
+        })
+        newArray.forEach((ev: any) => promises.push(ev));
+      } else {
+        curatedEvents.forEach((ev: any) => promises.push(ev));
       }
-      return results;
+      const result = await Promise.all(promises);
+      return result;
     });
   }
 
