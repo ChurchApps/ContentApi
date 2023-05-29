@@ -47,25 +47,30 @@ export class CuratedEventController extends ContentBaseController {
       if (!au.checkAccess(Permissions.content.edit)) return this.json({}, 401);
       else {
         const promises: Promise<CuratedEvent>[] = [];
-        req.body.forEach(async curatedEvent => {
+        req.body.forEach(curatedEvent => {
           curatedEvent.churchId = au.churchId;
-          if (curatedEvent?.eventId) {
-            //If eventId is there, it's already pointed to a group event - save it directly.
-            promises.push(this.repositories.curatedEvent.save(curatedEvent));
-          } else {
-            //If eventId is not there, it means the whole group needs to be added to the curated calendar. All the group events will be added to the curated calendar.
-            const groupEvents = await this.repositories.event.loadPublicForGroup(curatedEvent.churchId, curatedEvent.groupId);
-            if (groupEvents?.length > 0) {
-              //If events are there in a group, then save each event with it's ID in curated events.
-              groupEvents.forEach((ev: Event) => {
-                promises.push(this.repositories.curatedEvent.save({...curatedEvent, eventId: ev.id}));
-              })
+          const saveFunction = async () => {
+            if (curatedEvent?.eventId) {
+              // If eventId is there, it's already pointed to a group event - save it directly.
+              return await this.repositories.curatedEvent.save(curatedEvent);
             } else {
-              //If there are no events in a group, still allow them to add a group with eventId as NULL.
-              promises.push(this.repositories.curatedEvent.save(curatedEvent));
+              // If eventId is not there, it means the whole group needs to be added to the curated calendar. All the group events will be added to the curated calendar.
+              const groupEvents = await this.repositories.event.loadPublicForGroup(curatedEvent.churchId, curatedEvent.groupId);
+              if (groupEvents?.length > 0) {
+                //If events are there in a group, then save each event with it's ID in curated events.
+                for (const event of groupEvents) {
+                  return this.repositories.curatedEvent.save({...curatedEvent, eventId: event.id});
+                }
+              } else {
+                //If there are no events in a group, still allow them to add a group with eventId as NULL.
+                return await this.repositories.curatedEvent.save(curatedEvent)
+              }
             }
           }
-        });
+
+          promises.push(saveFunction());
+        })
+
         const result = await Promise.all(promises);
         return result;
       }

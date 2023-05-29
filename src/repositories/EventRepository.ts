@@ -35,7 +35,6 @@ export class EventRepository {
   }
 
   public loadForGroup(churchId: string, groupId: string) {
-    console.log("SELECT * FROM events WHERE groupId=? AND churchId=? order by start;", [groupId, churchId])
     return DB.query("SELECT * FROM events WHERE groupId=? AND churchId=? order by start;", [groupId, churchId]);
   }
 
