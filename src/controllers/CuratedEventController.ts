@@ -10,20 +10,21 @@ export class CuratedEventController extends ContentBaseController {
   @httpGet("/calendar/:curatedCalendarId")
   public async getForCuratedCalendar(@requestParam("curatedCalendarId") curatedCalendarId: string, req: express.Request<{}, {}, null>, res: express.Response): Promise<interfaces.IHttpActionResult> {
     return this.actionWrapper(req, res, async (au) => {
-      const promises: Promise<CuratedEvent>[] = [];
-      const curatedEvents = await this.repositories.curatedEvent.loadByCuratedCalendarId(au.churchId, curatedCalendarId);
+      const curatedEvents: CuratedEvent[] = await this.repositories.curatedEvent.loadByCuratedCalendarId(au.churchId, curatedCalendarId);
       if (req.query?.with === "eventData") {
-        const newArray = curatedEvents?.map(async(crtEv: CuratedEvent) => {
-          const eventData = await this.repositories.event.load(au.churchId, crtEv.eventId);
-          crtEv.eventData = eventData;
-          return crtEv;
+        const promises: Promise<CuratedEvent>[] = [];
+        curatedEvents?.forEach(c => {
+          promises.push(this.repositories.event.load(au.churchId, c.eventId).then((eventData: Event) => {
+            c.eventData = eventData;
+            return c;
+          }))
         })
-        newArray.forEach((ev: any) => promises.push(ev));
-      } else {
-        curatedEvents.forEach((ev: any) => promises.push(ev));
+
+        const result = await Promise.all(promises);
+        return result;
       }
-      const result = await Promise.all(promises);
-      return result;
+
+      return curatedEvents;
     });
   }
 
