@@ -30,6 +30,10 @@ export class CuratedEventRepository {
     return DB.query("DELETE FROM curatedEvents WHERE id=? AND churchId=?;", [id, churchId]);
   }
 
+  public deleteByGroupId(churchId: string, curatedCalendarId: string, groupId: string) {
+    return DB.query("DELETE FROM curatedEvents WHERE curatedCalendarId=? AND groupId=? and churchId=?;", [curatedCalendarId, groupId, churchId]);
+  }
+
   public load(churchId: string, id: string) {
     return DB.queryOne("SELECT * FROM curatedEvents WHERE id=? AND churchId=?;", [id, churchId]);
   }
