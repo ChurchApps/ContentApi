@@ -59,9 +59,9 @@ export class CuratedEventController extends ContentBaseController {
               const groupEvents = await this.repositories.event.loadPublicForGroup(curatedEvent.churchId, curatedEvent.groupId);
               if (groupEvents?.length > 0) {
                 //If events are there in a group, then save each event with it's ID in curated events.
-                for (const event of groupEvents) {
+                groupEvents.forEach((event: Event) => {
                   return this.repositories.curatedEvent.save({...curatedEvent, eventId: event.id});
-                }
+                })
               } else {
                 //If there are no events in a group, still allow them to add a group with eventId as NULL.
                 return await this.repositories.curatedEvent.save(curatedEvent)
