@@ -88,7 +88,7 @@ export class CuratedEventController extends ContentBaseController {
     });
   }
 
-  @httpDelete("/calendar/:curatedCalendarId/:groupId")
+  @httpDelete("/calendar/:curatedCalendarId/group/:groupId")
   public async deleteByGroupId(@requestParam("curatedCalendarId") curatedCalendarId: string, @requestParam("groupId") groupId: string, req: express.Request<{}, {}, null>, res: express.Response): Promise<interfaces.IHttpActionResult> {
     return this.actionWrapper(req, res, async(au) => {
       if (!au.checkAccess(Permissions.content.edit)) return this.json({}, 401);
