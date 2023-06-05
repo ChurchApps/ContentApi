@@ -47,7 +47,7 @@ export class CuratedEventController extends ContentBaseController {
     return this.actionWrapper(req, res, async (au) => {
       if (!au.checkAccess(Permissions.content.edit)) return this.json({}, 401);
       else {
-        const promises: Promise<CuratedEvent>[] = [];
+        const promises: Promise<CuratedEvent | CuratedEvent[]>[] = [];
         req.body.forEach(curatedEvent => {
           curatedEvent.churchId = au.churchId;
           const saveFunction = async () => {
@@ -61,9 +61,12 @@ export class CuratedEventController extends ContentBaseController {
               const groupEvents = await this.repositories.event.loadPublicForGroup(curatedEvent.churchId, curatedEvent.groupId);
               if (groupEvents?.length > 0) {
                 //If events are there in a group, then save each event with it's ID in curated events.
-                for (const event of groupEvents) {
-                  return this.repositories.curatedEvent.save({...curatedEvent, eventId: event.id});
-                }
+                const eventPromises: Promise<CuratedEvent>[] = [];
+                groupEvents.forEach((event: Event) => {
+                  eventPromises.push(this.repositories.curatedEvent.save({...curatedEvent, eventId: event.id}))
+                })
+
+                return await Promise.all(eventPromises);
               } else {
                 //If there are no events in a group, still allow them to add a group with eventId as NULL.
                 return await this.repositories.curatedEvent.save(curatedEvent)
@@ -75,7 +78,7 @@ export class CuratedEventController extends ContentBaseController {
         })
 
         const result = await Promise.all(promises);
-        return result;
+        return result.flat();
       }
     });
   }
@@ -88,6 +91,16 @@ export class CuratedEventController extends ContentBaseController {
         await this.repositories.curatedEvent.delete(au.churchId, id);
       }
     });
+  }
+
+  @httpDelete("/calendar/:curatedCalendarId/group/:groupId")
+  public async deleteByGroupId(@requestParam("curatedCalendarId") curatedCalendarId: string, @requestParam("groupId") groupId: string, req: express.Request<{}, {}, null>, res: express.Response): Promise<interfaces.IHttpActionResult> {
+    return this.actionWrapper(req, res, async(au) => {
+      if (!au.checkAccess(Permissions.content.edit)) return this.json({}, 401);
+      else {
+        await this.repositories.curatedEvent.deleteByGroupId(au.churchId, curatedCalendarId, groupId);
+      }
+    })
   }
 
 }
