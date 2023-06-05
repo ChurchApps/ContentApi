@@ -43,7 +43,7 @@ export class CuratedEventController extends ContentBaseController {
   }
 
   @httpPost("/")
-  public async save(req: express.Request<{}, {}, RequestBody[]>, res: express.Response): Promise<interfaces.IHttpActionResult> {
+  public async save(req: express.Request<{}, {}, PostRequestBody[]>, res: express.Response): Promise<interfaces.IHttpActionResult> {
     return this.actionWrapper(req, res, async (au) => {
       if (!au.checkAccess(Permissions.content.edit)) return this.json({}, 401);
       else {
@@ -105,6 +105,6 @@ export class CuratedEventController extends ContentBaseController {
 
 }
 
-interface RequestBody extends CuratedEvent {
+interface PostRequestBody extends CuratedEvent {
   eventIds?: string[];
 }
