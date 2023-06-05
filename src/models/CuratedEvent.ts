@@ -8,5 +8,4 @@ export class CuratedEvent {
   public eventId?: string;
 
   public eventData?: Event;
-  public eventIds?: string[];
 }

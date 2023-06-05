@@ -43,7 +43,7 @@ export class CuratedEventController extends ContentBaseController {
   }
 
   @httpPost("/")
-  public async save(req: express.Request<{}, {}, CuratedEvent[]>, res: express.Response): Promise<interfaces.IHttpActionResult> {
+  public async save(req: express.Request<{}, {}, RequestBody[]>, res: express.Response): Promise<interfaces.IHttpActionResult> {
     return this.actionWrapper(req, res, async (au) => {
       if (!au.checkAccess(Permissions.content.edit)) return this.json({}, 401);
       else {
@@ -51,10 +51,7 @@ export class CuratedEventController extends ContentBaseController {
         req.body.forEach(curatedEvent => {
           curatedEvent.churchId = au.churchId;
           const saveFunction = async () => {
-            if (curatedEvent?.eventId) {
-              // If eventId is there, it's already pointed to a group event - save it directly.
-              return await this.repositories.curatedEvent.save(curatedEvent);
-            } else if (curatedEvent?.eventIds) {
+            if (curatedEvent?.eventIds) {
               //If eventIds are there, it means only specific group events are need to be added.
               curatedEvent.eventIds.forEach((id) => {
                 return this.repositories.curatedEvent.save({...curatedEvent, eventId: id});
@@ -93,4 +90,8 @@ export class CuratedEventController extends ContentBaseController {
     });
   }
 
+}
+
+interface RequestBody extends CuratedEvent {
+  eventIds?: string[];
 }
