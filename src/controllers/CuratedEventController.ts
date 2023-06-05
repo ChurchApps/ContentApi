@@ -53,9 +53,12 @@ export class CuratedEventController extends ContentBaseController {
           const saveFunction = async () => {
             if (curatedEvent?.eventIds) {
               //If eventIds are there, it means only specific group events are need to be added.
+              const eventPromises: Promise<CuratedEvent>[] = [];
               curatedEvent.eventIds.forEach((id) => {
-                return this.repositories.curatedEvent.save({...curatedEvent, eventId: id});
-              })
+                eventPromises.push(this.repositories.curatedEvent.save({...curatedEvent, eventId: id}))
+              });
+
+              return await Promise.all(eventPromises);
             } else {
               // If eventId is not there, it means the whole group needs to be added to the curated calendar. All the group events will be added to the curated calendar.
               const groupEvents = await this.repositories.event.loadPublicForGroup(curatedEvent.churchId, curatedEvent.groupId);
