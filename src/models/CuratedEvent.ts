@@ -6,6 +6,4 @@ export class CuratedEvent {
   public curatedCalendarId?: string;
   public groupId?: string;
   public eventId?: string;
-
-  public eventData?: Event;
 }

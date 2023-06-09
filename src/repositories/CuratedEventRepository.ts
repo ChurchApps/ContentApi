@@ -50,4 +50,16 @@ export class CuratedEventRepository {
     return DB.query("SELECT * FROM curatedEvents WHERE churchId=? AND curatedCalendarId=?;", [churchId, curatedCalendarId]);
   }
 
+  public loadForEvents(curatedCalendarId: string, churchId: string) {
+    const sql = "SELECT * "
+    + " FROM curatedEvents ce"
+    + " INNER JOIN events e ON "
+    + " (CASE"
+    + " WHEN ce.eventId IS NULL THEN e.groupId=ce.groupId"
+    + " ELSE e.id=ce.eventId"
+    + " END)"
+    + " where curatedCalendarId=? AND ce.churchId=?;";
+    return DB.query(sql, [curatedCalendarId, churchId]);
+  }
+
 }
