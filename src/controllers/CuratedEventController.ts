@@ -10,21 +10,7 @@ export class CuratedEventController extends ContentBaseController {
   @httpGet("/calendar/:curatedCalendarId")
   public async getForCuratedCalendar(@requestParam("curatedCalendarId") curatedCalendarId: string, req: express.Request<{}, {}, null>, res: express.Response): Promise<interfaces.IHttpActionResult> {
     return this.actionWrapper(req, res, async (au) => {
-      const curatedEvents: CuratedEvent[] = await this.repositories.curatedEvent.loadByCuratedCalendarId(au.churchId, curatedCalendarId);
-      if (req.query?.with === "eventData") {
-        const promises: Promise<CuratedEvent>[] = [];
-        curatedEvents?.forEach(c => {
-          promises.push(this.repositories.event.load(au.churchId, c.eventId).then((eventData: Event) => {
-            c.eventData = eventData;
-            return c;
-          }))
-        })
-
-        const result = await Promise.all(promises);
-        return result;
-      }
-
-      return curatedEvents;
+      return await this.repositories.curatedEvent.loadForEvents(curatedCalendarId, au.churchId);
     });
   }
 
@@ -61,19 +47,7 @@ export class CuratedEventController extends ContentBaseController {
               return await Promise.all(eventPromises);
             } else {
               // If eventId is not there, it means the whole group needs to be added to the curated calendar. All the group events will be added to the curated calendar.
-              const groupEvents = await this.repositories.event.loadPublicForGroup(curatedEvent.churchId, curatedEvent.groupId);
-              if (groupEvents?.length > 0) {
-                //If events are there in a group, then save each event with it's ID in curated events.
-                const eventPromises: Promise<CuratedEvent>[] = [];
-                groupEvents.forEach((event: Event) => {
-                  eventPromises.push(this.repositories.curatedEvent.save({...curatedEvent, eventId: event.id}))
-                })
-
-                return await Promise.all(eventPromises);
-              } else {
-                //If there are no events in a group, still allow them to add a group with eventId as NULL.
-                return await this.repositories.curatedEvent.save(curatedEvent)
-              }
+              return await this.repositories.curatedEvent.save(curatedEvent);
             }
           }
 
