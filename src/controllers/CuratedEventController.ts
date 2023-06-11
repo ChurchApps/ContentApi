@@ -10,12 +10,7 @@ export class CuratedEventController extends ContentBaseController {
   @httpGet("/calendar/:curatedCalendarId")
   public async getForCuratedCalendar(@requestParam("curatedCalendarId") curatedCalendarId: string, req: express.Request<{}, {}, null>, res: express.Response): Promise<interfaces.IHttpActionResult> {
     return this.actionWrapper(req, res, async (au) => {
-      const curatedEvents: CuratedEvent[] = await this.repositories.curatedEvent.loadByCuratedCalendarId(au.churchId, curatedCalendarId);
-      if (req.query?.with === "eventData") {
-        return await this.repositories.curatedEvent.loadForEvents(curatedCalendarId, au.churchId);
-      }
-
-      return curatedEvents;
+      return await this.repositories.curatedEvent.loadForEvents(curatedCalendarId, au.churchId);
     });
   }
 
