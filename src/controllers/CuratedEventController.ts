@@ -14,6 +14,13 @@ export class CuratedEventController extends ContentBaseController {
     });
   }
 
+  @httpGet("/public/calendar/:churchId/:curatedCalendarId")
+  public async getPublicForCuratedCalendar(@requestParam("churchId") churchId: string, @requestParam("curatedCalendarId") curatedCalendarId: string, req: express.Request<{}, {}, null>, res: express.Response): Promise<interfaces.IHttpActionResult> {
+    return this.actionWrapperAnon(req, res, async () => {
+      return await this.repositories.curatedEvent.loadForEvents(curatedCalendarId, churchId);
+    })
+  }
+
   @httpGet("/:id")
   public async get(@requestParam("id") id: string, req: express.Request<{}, {}, null>, res: express.Response): Promise<interfaces.IHttpActionResult> {
     return this.actionWrapper(req, res, async (au) => {
