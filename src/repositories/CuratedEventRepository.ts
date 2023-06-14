@@ -58,7 +58,7 @@ export class CuratedEventRepository {
     + " WHEN ce.eventId IS NULL THEN e.groupId=ce.groupId"
     + " ELSE e.id=ce.eventId"
     + " END)"
-    + " where curatedCalendarId=? AND ce.churchId=?;";
+    + " where curatedCalendarId=? AND ce.churchId=? and e.visibility='public';";
     return DB.query(sql, [curatedCalendarId, churchId]);
   }
 
