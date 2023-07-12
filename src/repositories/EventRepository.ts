@@ -6,6 +6,21 @@ export class EventRepository {
   public save(event: Event) {
     return event.id ? this.update(event) : this.create(event);
   }
+  
+  public async loadPosts(churchId: string, groupIds: string[]) {
+    const sql = "select 'event' as postType, id as postId, groupId as posterId, '' as posterName, title as message, '' as conversationId from events"
+      + " where churchId=? AND ("
+        + "  ("
+          + "    groupId IN (?)"
+          + "    OR groupId IN (SELECT groupId FROM curatedEvents WHERE churchId=? AND eventId IS NULL)"
+          + "    OR id IN (SELECT eventId from curatedEvents WHERE churchId=?)"
+          + "  )"
+        + "  and (end>curdate() or recurrenceRule IS NOT NULL)"
+      + ")";
+    const params = [churchId, groupIds, churchId, churchId];
+    const result = await DB.query(sql, params);
+    return result;
+  }
 
   private async create(event: Event) {
     event.id = UniqueIdHelper.shortId();

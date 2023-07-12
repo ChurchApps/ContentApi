@@ -6,6 +6,13 @@ import { Permissions } from "../helpers";
 
 @controller("/events")
 export class EventController extends ContentBaseController {
+  
+  @httpGet("/posts")
+  public async getPosts(req: express.Request<{}, {}, null>, res: express.Response): Promise<interfaces.IHttpActionResult> {
+    return this.actionWrapper(req, res, async (au) => {
+      return await this.repositories.event.loadPosts(au.churchId, au.groupIds);
+    });
+  }
 
   @httpGet("/group/:groupId")
   public async getForGroup(@requestParam("groupId") groupId: string, req: express.Request<{}, {}, null>, res: express.Response): Promise<interfaces.IHttpActionResult> {
