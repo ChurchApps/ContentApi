@@ -7,9 +7,9 @@ export class EventRepository {
     return event.id ? this.update(event) : this.create(event);
   }
   
-  public async loadPosts(churchId: string, groupIds: string[]) {
-    const sql = "select 'event' as postType, id as postId, groupId as posterId, '' as posterName, title as message, '' as conversationId from events"
-      + " where churchId=? AND ("
+  public async loadTimeline(churchId: string, groupIds: string[], eventIds: string[]) {
+    let sql = "select *, 'event' as postType, id as postId from events"
+      + " where churchId=? AND (("
         + "  ("
           + "    groupId IN (?)"
           + "    OR groupId IN (SELECT groupId FROM curatedEvents WHERE churchId=? AND eventId IS NULL)"
@@ -17,7 +17,10 @@ export class EventRepository {
           + "  )"
         + "  and (end>curdate() or recurrenceRule IS NOT NULL)"
       + ")";
+      if (eventIds.length > 0) sql += " OR id IN (?)";
+      sql += ")";
     const params = [churchId, groupIds, churchId, churchId];
+    if (eventIds.length > 0) params.push(eventIds);
     const result = await DB.query(sql, params);
     return result;
   }

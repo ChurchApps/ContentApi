@@ -7,10 +7,11 @@ import { Permissions } from "../helpers";
 @controller("/events")
 export class EventController extends ContentBaseController {
   
-  @httpGet("/posts")
+  @httpGet("/timeline")
   public async getPosts(req: express.Request<{}, {}, null>, res: express.Response): Promise<interfaces.IHttpActionResult> {
     return this.actionWrapper(req, res, async (au) => {
-      return await this.repositories.event.loadPosts(au.churchId, au.groupIds);
+      const eventIds = req.query.eventIds ? req.query.eventIds.toString().split(",") : [];
+      return await this.repositories.event.loadTimeline(au.churchId, au.groupIds, eventIds);
     });
   }
 
