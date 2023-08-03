@@ -1,5 +1,5 @@
 import { Repositories } from "../repositories";
-import { CustomBaseController } from "../apiBase"
+import { CustomBaseController } from "../apiBase/controllers"
 
 
 export class ContentBaseController extends CustomBaseController {

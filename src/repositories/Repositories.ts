@@ -11,6 +11,7 @@ import {
   EventExceptionRepository,
   CuratedCalendarRepository,
   CuratedEventRepository,
+  LinkRepository,
 } from ".";
 
 export class Repositories {
@@ -19,6 +20,7 @@ export class Repositories {
   public file: FileRepository;
   public page: PageRepository;
   public section: SectionRepository;
+  public link: LinkRepository;
 
   public playlist: PlaylistRepository;
   public sermon: SermonRepository;
@@ -43,6 +45,7 @@ export class Repositories {
     this.event = new EventRepository();
     this.eventException = new EventExceptionRepository();
     this.file = new FileRepository();
+    this.link = new LinkRepository();
     this.page = new PageRepository();
     this.section = new SectionRepository();
     this.playlist = new PlaylistRepository();
