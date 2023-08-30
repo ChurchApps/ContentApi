@@ -3,7 +3,7 @@ import express from "express";
 import { ContentBaseController } from "./ContentBaseController"
 import { Element } from "../models"
 import { Permissions } from "../helpers";
-import { ArrayHelper } from "../apiBase";
+import { ArrayHelper } from "@churchapps/apihelper";
 
 @controller("/elements")
 export class ElementController extends ContentBaseController {
@@ -51,7 +51,7 @@ export class ElementController extends ContentBaseController {
     for (const element of elements) {
       if (element.elementType === "carousel") {
         element.answers = JSON.parse(element.answersJSON);
-        const slidesNumber = parseInt(element.answers.slides);
+        const slidesNumber = parseInt(element.answers.slides, 0);
         const slides: number[] = [];
         for ( let i = 0; i < slidesNumber; i++) {
           slides.push(i);
@@ -64,7 +64,7 @@ export class ElementController extends ContentBaseController {
   }
 
   private async checkSlide(row: Element, children: Element[], slides: number[]) {
-    //Add new slides
+    // Add new slides
     if (slides.length > children.length) {
       for (let i= children.length; i < slides.length; i++) {
         const answers = { slide: slides[i] }
@@ -73,7 +73,7 @@ export class ElementController extends ContentBaseController {
       }
     }
 
-    //Delete slides
+    // Delete slides
     if (children.length > slides.length) {
       for (let i = slides.length; i < children.length ; i++) await this.repositories.element.delete(children[i].churchId, children[i].id);
     }

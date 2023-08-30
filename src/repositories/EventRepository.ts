@@ -1,12 +1,12 @@
-import { UniqueIdHelper, DateTimeHelper } from "../apiBase"
-import { DB } from "../apiBase/db"
+import { UniqueIdHelper, DateHelper } from "@churchapps/apihelper"
+import { DB } from "@churchapps/apihelper"
 import { Event } from "../models";
 
 export class EventRepository {
   public save(event: Event) {
     return event.id ? this.update(event) : this.create(event);
   }
-  
+
   public async loadTimeline(churchId: string, groupIds: string[], eventIds: string[]) {
     let sql = "select *, 'event' as postType, id as postId from events"
       + " where churchId=? AND (("
@@ -27,8 +27,8 @@ export class EventRepository {
 
   private async create(event: Event) {
     event.id = UniqueIdHelper.shortId();
-    const start = DateTimeHelper.toMysqlDate(event.start);
-    const end = DateTimeHelper.toMysqlDate(event.end);
+    const start = DateHelper.toMysqlDate(event.start);
+    const end = DateHelper.toMysqlDate(event.end);
     const sql = "INSERT INTO events (id, churchId, groupId, allDay, start, end, title, description, visibility, recurrenceRule) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?);";
     const params = [event.id, event.churchId, event.groupId, event.allDay, start, end, event.title, event.description, event.visibility, event.recurrenceRule];
     await DB.query(sql, params);
@@ -36,14 +36,14 @@ export class EventRepository {
   }
 
   private async update(event: Event) {
-    const start = DateTimeHelper.toMysqlDate(event.start);
-    const end = DateTimeHelper.toMysqlDate(event.end);
+    const start = DateHelper.toMysqlDate(event.start);
+    const end = DateHelper.toMysqlDate(event.end);
     const sql = "UPDATE events SET groupId=?, allDay=?, start=?, end=?, title=?, description=?, visibility=?, recurrenceRule=? WHERE id=? and churchId=?";
     const params = [event.groupId, event.allDay, start, end, event.title, event.description, event.visibility, event.recurrenceRule, event.id, event.churchId];
     await DB.query(sql, params);
     return event;
   }
-  
+
   public delete(churchId: string, id: string) {
     return DB.query("DELETE FROM events WHERE id=? AND churchId=?;", [id, churchId]);
   }

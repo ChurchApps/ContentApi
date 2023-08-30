@@ -1,6 +1,5 @@
-import { DB } from "../apiBase/db";
+import { DB, UniqueIdHelper, DateHelper } from "@churchapps/apihelper";
 import { Sermon } from "../models";
-import { UniqueIdHelper, DateTimeHelper } from "../apiBase/helpers";
 
 export class SermonRepository {
 
@@ -10,7 +9,7 @@ export class SermonRepository {
 
   private async create(sermon: Sermon) {
     sermon.id = UniqueIdHelper.shortId();
-    const publishDate = DateTimeHelper.toMysqlDate(sermon.publishDate);
+    const publishDate = DateHelper.toMysqlDate(sermon.publishDate);
     const sql = "INSERT INTO sermons (id, churchId, playlistId, videoType, videoData, videoUrl, title, description, publishDate, thumbnail, duration, permanentUrl) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?);";
     const params = [sermon.id, sermon.churchId, sermon.playlistId, sermon.videoType, sermon.videoData, sermon.videoUrl, sermon.title, sermon.description, publishDate, sermon.thumbnail, sermon.duration, sermon.permanentUrl];
     await DB.query(sql, params);
@@ -18,7 +17,7 @@ export class SermonRepository {
   }
 
   private async update(sermon: Sermon) {
-    const publishDate = DateTimeHelper.toMysqlDate(sermon.publishDate);
+    const publishDate = DateHelper.toMysqlDate(sermon.publishDate);
     const sql = "UPDATE sermons SET playlistId=?, videoType=?, videoData=?, videoUrl=?, title=?, description=?, publishDate=?, thumbnail=?, duration=?, permanentUrl=? WHERE id=? and churchId=?;";
     const params = [sermon.playlistId, sermon.videoType, sermon.videoData, sermon.videoUrl, sermon.title, sermon.description, publishDate, sermon.thumbnail, sermon.duration, sermon.permanentUrl, sermon.id, sermon.churchId];
     await DB.query(sql, params);

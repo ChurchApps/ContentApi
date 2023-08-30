@@ -1,5 +1,5 @@
-import { DateTimeHelper, UniqueIdHelper } from "../apiBase";
-import { DB } from "../apiBase/db";
+import { DateHelper, UniqueIdHelper } from "@churchapps/apihelper";
+import { DB } from "@churchapps/apihelper";
 import { StreamingService } from "../models";
 
 export class StreamingServiceRepository {
@@ -10,7 +10,7 @@ export class StreamingServiceRepository {
 
   private async create(service: StreamingService) {
     service.id = UniqueIdHelper.shortId();
-    const serviceTime = DateTimeHelper.toMysqlDate(service.serviceTime);
+    const serviceTime = DateHelper.toMysqlDate(service.serviceTime);
     const sql = "INSERT INTO streamingServices (id, churchId, serviceTime, earlyStart, chatBefore, chatAfter, provider, providerKey, videoUrl, timezoneOffset, recurring, label, sermonId) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?);";
     const params = [service.id, service.churchId, serviceTime, service.earlyStart, service.chatBefore, service.chatAfter, service.provider, service.providerKey, service.videoUrl, service.timezoneOffset, service.recurring, service.label, service.sermonId];
     await DB.query(sql, params);
@@ -18,7 +18,7 @@ export class StreamingServiceRepository {
   }
 
   private async update(service: StreamingService) {
-    const serviceTime = DateTimeHelper.toMysqlDate(service.serviceTime);
+    const serviceTime = DateHelper.toMysqlDate(service.serviceTime);
     const sql = "UPDATE streamingServices SET serviceTime=?, earlyStart=?, chatBefore=?, chatAfter=?, provider=?, providerKey=?, videoUrl=?, timezoneOffset=?, recurring=?, label=?, sermonId=? WHERE id=?;";
     const params = [serviceTime, service.earlyStart, service.chatBefore, service.chatAfter, service.provider, service.providerKey, service.videoUrl, service.timezoneOffset, service.recurring, service.label, service.sermonId, service.id];
     await DB.query(sql, params);

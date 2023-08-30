@@ -1,6 +1,5 @@
 import { Link } from "../models";
-import { DB } from "../apiBase/db";
-import { UniqueIdHelper } from "../apiBase/helpers";
+import { DB, UniqueIdHelper } from "@churchapps/apihelper";
 
 export class LinkRepository {
 

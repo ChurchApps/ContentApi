@@ -1,5 +1,5 @@
 import { Section, Element } from "../models";
-import { ArrayHelper } from "../apiBase";
+import { ArrayHelper } from "@churchapps/apihelper";
 import { Repositories } from "../repositories";
 
 export class TreeHelper {

@@ -4,7 +4,7 @@ import { Sermon } from "../models";
 import { ContentBaseController } from "./ContentBaseController";
 import { Permissions } from "../helpers/Permissions";
 import { YouTubeHelper, Environment } from "../helpers";
-import { FileHelper } from "../apiBase";
+import { FileStorageHelper } from "@churchapps/apihelper";
 
 @controller("/sermons")
 export class SermonController extends ContentBaseController {
@@ -88,7 +88,7 @@ export class SermonController extends ContentBaseController {
     const base64 = sermon.thumbnail.split(',')[1];
     const key = "/" + churchId + "/streamingLive/sermons/" + sermon.id + ".png";
 
-    return FileHelper.store(key, "image/png", Buffer.from(base64, 'base64')).then(async () => {
+    return FileStorageHelper.store(key, "image/png", Buffer.from(base64, 'base64')).then(async () => {
       const photoUpdated = new Date();
       sermon.thumbnail = Environment.contentRoot + key + "?dt=" + photoUpdated.getTime().toString();
       await this.repositories.sermon.save(sermon);

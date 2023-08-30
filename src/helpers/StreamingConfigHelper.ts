@@ -1,6 +1,6 @@
 import { Sermon, StreamingService } from "../models";
 import { Link } from "../models"
-import { ArrayHelper } from "../apiBase";
+import { ArrayHelper } from "@churchapps/apihelper";
 
 export class StreamingConfigHelper {
 

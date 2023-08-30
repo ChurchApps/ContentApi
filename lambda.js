@@ -1,10 +1,12 @@
 const { createServer, proxy } = require('aws-serverless-express');
 const { init } = require('./dist/app');
-const { Pool } = require('./dist/apiBase/pool');
+const { Pool } = require('@churchapps/apihelper');
 const { Environment } = require('./dist/helpers/Environment');
 
-Environment.init(process.env.APP_ENV);
-Pool.initPool();
+Environment.init(process.env.APP_ENV).then(() => {
+  Pool.initPool();
+});
+
 
 const universal = function universal(event, context) {
   init().then(app => {
