@@ -1,6 +1,5 @@
-import { DB } from "../apiBase/db";
+import { DB, UniqueIdHelper, DateHelper } from "@churchapps/apihelper";
 import { Playlist } from "../models";
-import { UniqueIdHelper, DateTimeHelper } from "../apiBase/helpers";
 
 export class PlaylistRepository {
 
@@ -10,7 +9,7 @@ export class PlaylistRepository {
 
   private async create(playlist: Playlist) {
     playlist.id = UniqueIdHelper.shortId();
-    const publishDate = DateTimeHelper.toMysqlDate(playlist.publishDate);
+    const publishDate = DateHelper.toMysqlDate(playlist.publishDate);
     const sql = "INSERT INTO playlists (id, churchId, title, description, publishDate, thumbnail) VALUES (?, ?, ?, ?, ?, ?);";
     const params = [playlist.id, playlist.churchId, playlist.title, playlist.description, publishDate, playlist.thumbnail];
     await DB.query(sql, params);
@@ -18,7 +17,7 @@ export class PlaylistRepository {
   }
 
   private async update(playlist: Playlist) {
-    const publishDate = DateTimeHelper.toMysqlDate(playlist.publishDate);
+    const publishDate = DateHelper.toMysqlDate(playlist.publishDate);
     const sql = "UPDATE playlists SET title=?, description=?, publishDate=?, thumbnail=? WHERE id=? and churchId=?;";
     const params = [playlist.title, playlist.description, publishDate, playlist.thumbnail, playlist.id, playlist.churchId];
     await DB.query(sql, params);

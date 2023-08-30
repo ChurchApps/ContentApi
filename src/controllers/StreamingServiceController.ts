@@ -3,7 +3,7 @@ import express from "express";
 import { StreamingService } from "../models";
 import { ContentBaseController } from "./ContentBaseController";
 import { Permissions } from "../helpers/Permissions";
-import { EncryptionHelper, DateTimeHelper } from "../apiBase";
+import { EncryptionHelper, DateHelper } from "@churchapps/apihelper";
 
 @controller("/streamingServices")
 export class StreamingServiceController extends ContentBaseController {
@@ -24,7 +24,7 @@ export class StreamingServiceController extends ContentBaseController {
       const promises: Promise<any>[] = []
       services.forEach((s:StreamingService, index:number, allServices:StreamingService[]) => {
         // Update service time
-        if (s.serviceTime < DateTimeHelper.subtractHoursFromNow(6)) {
+        if (s.serviceTime < DateHelper.subtractHoursFromNow(6)) {
           if (!s.recurring) {
             promises.push(this.repositories.streamingService.delete(s.id, s.churchId));
             allServices.splice(index, 1)

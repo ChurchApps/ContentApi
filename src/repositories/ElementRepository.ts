@@ -1,5 +1,5 @@
-import { UniqueIdHelper } from "../apiBase"
-import { DB } from "../apiBase/db"
+import { UniqueIdHelper } from "@churchapps/apihelper"
+import { DB } from "@churchapps/apihelper"
 import { Element } from "../models";
 
 export class ElementRepository {

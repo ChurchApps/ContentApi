@@ -3,7 +3,8 @@
     "module": "commonjs",
     "esModuleInterop": true,
     "lib": [
-      "es6"
+      "ESNext",
+      "DOM"
     ],
     "types": [
       "reflect-metadata"
@@ -16,6 +17,8 @@
     "sourceMap": true,
     "outDir": "dist",
     "baseUrl": ".",
+    "strict": false,
+    "allowSyntheticDefaultImports": true,
     "paths": {
       "*": [
         "node_modules/*"
@@ -23,6 +26,7 @@
     }
   },
   "include": [
-    "src/**/*"
+    "src/**/*",
+    "LambdaEntry.js"
   ]
 }

@@ -75,7 +75,7 @@ export class LinkController extends ContentBaseController {
   private async savePhoto(churchId: string, link: Link) {
     const base64 = link.photo.split(',')[1];
     const key = "/" + churchId + "/tabs/" + link.id + ".png";
-    return FileHelper.store(key, "image/png", Buffer.from(base64, 'base64')).then(async () => {
+    return FileStorageHelper.store(key, "image/png", Buffer.from(base64, 'base64')).then(async () => {
       link.photo = EnvironmentBase.contentRoot + key + "?dt=" + new Date().getTime().toString();
       await this.baseRepositories.link.save(link);
     });

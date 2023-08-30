@@ -1,5 +1,5 @@
-import { UniqueIdHelper, DateTimeHelper } from "../apiBase"
-import { DB } from "../apiBase/db"
+import { UniqueIdHelper, DateHelper } from "@churchapps/apihelper"
+import { DB } from "@churchapps/apihelper"
 import { EventException } from "../models";
 
 export class EventExceptionRepository {
@@ -9,7 +9,7 @@ export class EventExceptionRepository {
 
   private async create(eventException: EventException) {
     eventException.id = UniqueIdHelper.shortId();
-    const exceptionDate = DateTimeHelper.toMysqlDate(eventException.exceptionDate);
+    const exceptionDate = DateHelper.toMysqlDate(eventException.exceptionDate);
     const sql = "INSERT INTO eventExceptions (id, churchId, eventId, exceptionDate) VALUES (?, ?, ?, ?);";
     const params = [eventException.id, eventException.churchId, eventException.eventId, exceptionDate];
     await DB.query(sql, params);
@@ -17,13 +17,13 @@ export class EventExceptionRepository {
   }
 
   private async update(eventException: EventException) {
-    const exceptionDate = DateTimeHelper.toMysqlDate(eventException.exceptionDate);
+    const exceptionDate = DateHelper.toMysqlDate(eventException.exceptionDate);
     const sql = "UPDATE eventExceptions SET eventId=?, exceptionDate=?, WHERE id=? and churchId=?";
     const params = [eventException.eventId, exceptionDate, eventException.id, eventException.churchId];
     await DB.query(sql, params);
     return eventException;
   }
-  
+
   public delete(churchId: string, id: string) {
     return DB.query("DELETE FROM eventExceptions WHERE id=? AND churchId=?;", [id, churchId]);
   }

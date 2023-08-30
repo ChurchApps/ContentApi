@@ -3,7 +3,7 @@ import express from "express";
 import { ContentBaseController } from "./ContentBaseController"
 import { File } from "../models"
 import { Permissions } from '../helpers/Permissions'
-import { AwsHelper, FileHelper } from "../apiBase";
+import { AwsHelper, FileStorageHelper } from "@churchapps/apihelper";
 import { Environment } from "../helpers";
 
 @controller("/files")
@@ -67,7 +67,7 @@ export class FileController extends ContentBaseController {
       if (!au.checkAccess(Permissions.content.edit)) return this.json({}, 401);
       else {
         const existingFile = await this.repositories.file.load(au.churchId, id)
-        await FileHelper.remove(au.churchId + "/files/" + existingFile.fileName);
+        await FileStorageHelper.remove(au.churchId + "/files/" + existingFile.fileName);
         await this.repositories.file.delete(au.churchId, id);
         return {file: au.churchId + "/files/" + existingFile.fileName}
       }
@@ -80,13 +80,13 @@ export class FileController extends ContentBaseController {
     {
       const existingFile = await this.repositories.file.load(file.churchId, file.id)
       const oldKey = "/" + churchId + "/files/" + existingFile.fileName;
-      if (oldKey !== key) await FileHelper.remove(oldKey);
+      if (oldKey !== key) await FileStorageHelper.remove(oldKey);
     }
 
     if (file.fileContents) {
       const base64 = file.fileContents.split(',')[1];
       const buffer = Buffer.from(base64, 'base64');
-      await FileHelper.store(key, file.fileType, buffer);
+      await FileStorageHelper.store(key, file.fileType, buffer);
     }
 
     const fileUpdated = new Date();

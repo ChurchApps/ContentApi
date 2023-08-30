@@ -4,7 +4,7 @@ import { Playlist } from "../models";
 import { ContentBaseController } from "./ContentBaseController";
 import { Permissions } from "../helpers/Permissions";
 import { Environment } from "../helpers";
-import { FileHelper } from "../apiBase";
+import { FileStorageHelper } from "@churchapps/apihelper";
 
 @controller("/playlists")
 export class PlaylistController extends ContentBaseController {
@@ -78,7 +78,7 @@ export class PlaylistController extends ContentBaseController {
     const base64 = playlist.thumbnail.split(',')[1];
     const key = "/" + churchId + "/streamingLive/playlists/" + playlist.id + ".png";
 
-    return FileHelper.store(key, "image/png", Buffer.from(base64, "base64")).then(async () => {
+    return FileStorageHelper.store(key, "image/png", Buffer.from(base64, "base64")).then(async () => {
       const photoUpdated = new Date();
       playlist.thumbnail = Environment.contentRoot + key + "?dt=" + photoUpdated.getTime().toString();
       await this.repositories.playlist.save(playlist);

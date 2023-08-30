@@ -48,7 +48,7 @@ export class CuratedEventController extends ContentBaseController {
           curatedEvent.churchId = au.churchId;
           const saveFunction = async () => {
             if (curatedEvent?.eventIds) {
-              //If eventIds are there, it means only specific group events are need to be added.
+              // If eventIds are there, it means only specific group events are need to be added.
               const eventPromises: Promise<CuratedEvent>[] = [];
               curatedEvent.eventIds.forEach((id) => {
                 eventPromises.push(this.repositories.curatedEvent.save({...curatedEvent, eventId: id}))
@@ -89,7 +89,7 @@ export class CuratedEventController extends ContentBaseController {
       }
     })
   }
-        
+
   @httpDelete("/calendar/:curatedCalendarId/group/:groupId")
   public async deleteByGroupId(@requestParam("curatedCalendarId") curatedCalendarId: string, @requestParam("groupId") groupId: string, req: express.Request<{}, {}, null>, res: express.Response): Promise<interfaces.IHttpActionResult> {
     return this.actionWrapper(req, res, async(au) => {

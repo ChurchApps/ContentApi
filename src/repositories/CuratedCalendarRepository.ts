@@ -1,6 +1,6 @@
 import { injectable } from "inversify";
-import { UniqueIdHelper } from "../apiBase"
-import { DB } from "../apiBase/db"
+import { UniqueIdHelper } from "@churchapps/apihelper"
+import { DB } from "@churchapps/apihelper"
 import { CuratedCalendar } from "../models";
 
 @injectable()
