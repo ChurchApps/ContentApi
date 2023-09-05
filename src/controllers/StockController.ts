@@ -2,6 +2,7 @@ import { controller, httpGet, httpPost, interfaces, requestParam } from "inversi
 import express from "express";
 import { ContentBaseController } from "./ContentBaseController"
 import Pexels from "pexels";
+import { Environment } from "../helpers";
 
 @controller("/stock")
 export class StockController extends ContentBaseController {
@@ -9,7 +10,7 @@ export class StockController extends ContentBaseController {
   @httpPost("/search")
   public async getUploadUrl(req: express.Request<{}, {}, { term: string }>, res: express.Response): Promise<interfaces.IHttpActionResult> {
     return this.actionWrapperAnon(req, res, async () => {
-      const key = process.env.PEXELS_KEY;
+      const key = Environment.pexelsKey;
       const client = Pexels.createClient(key);
       const response: Pexels.PhotosWithTotalResults = await client.photos.search({ query: req.body.term, per_page: 50 }) as Pexels.PhotosWithTotalResults;
       const result: any[] = [];
