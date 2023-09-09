@@ -64,7 +64,7 @@ export class LinkController extends ContentBaseController {
   @httpDelete("/:id")
   public async delete(@requestParam("id") id: string, req: express.Request, res: express.Response): Promise<void> {
     return this.actionWrapper(req, res, async (au) => {
-      if (!au.checkAccess(Permissions.links.edit)) return this.json({}, 401);
+      if (!au.checkAccess(Permissions.content.edit)) return this.json({}, 401);
       else {
         await this.repositories.link.delete(id, au.churchId);
       }
