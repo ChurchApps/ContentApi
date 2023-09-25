@@ -37,7 +37,7 @@ export class FileRepository {
   }
 
   public loadTotalBytes(churchId: string): Promise<{size:number}> {
-    return DB.query("select sum(size) as size from files where churchId=?", [churchId]);
+    return DB.query("select IFNULL(sum(size), 0) as size from files where churchId=?", [churchId]);
   }
 
   public delete(churchId: string, id: string): Promise<File> {
