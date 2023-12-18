@@ -15,6 +15,7 @@ const init = async () => {
   const taskTables: { title: string, file: string }[] = [
     { title: "Blocks", file: "blocks.mysql" },
     { title: "Elements", file: "elements.mysql" },
+    { title: "GlobalStyles", file: "globalStyles.mysql" },
     { title: "Pages", file: "pages.mysql" },
     { title: "Sections", file: "sections.mysql" },
     { title: "Playlists", file: "playlists.mysql" },

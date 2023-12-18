@@ -7,6 +7,7 @@ import {
   SermonRepository,
   StreamingServiceRepository,
   FileRepository,
+  GlobalStyleRepository,
   EventRepository,
   EventExceptionRepository,
   CuratedCalendarRepository,
@@ -16,11 +17,12 @@ import {
 
 export class Repositories {
   public block: BlockRepository;
+  public globalStyle: GlobalStyleRepository;
   public element: ElementRepository;
   public file: FileRepository;
+  public link: LinkRepository;
   public page: PageRepository;
   public section: SectionRepository;
-  public link: LinkRepository;
 
   public playlist: PlaylistRepository;
   public sermon: SermonRepository;
@@ -39,6 +41,7 @@ export class Repositories {
 
   constructor() {
     this.block = new BlockRepository();
+    this.globalStyle = new GlobalStyleRepository();
     this.curatedCalendar = new CuratedCalendarRepository();
     this.curatedEvent = new CuratedEventRepository();
     this.element = new ElementRepository();

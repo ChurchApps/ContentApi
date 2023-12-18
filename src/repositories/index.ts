@@ -4,6 +4,7 @@ export { PageRepository } from "./PageRepository";
 export { SectionRepository } from "./SectionRepository";
 export { LinkRepository } from "./LinkRepository";
 export { FileRepository } from "./FileRepository";
+export { GlobalStyleRepository } from "./GlobalStyleRepository";
 
 export { PlaylistRepository } from "./PlaylistRepository";
 export { SermonRepository } from "./SermonRepository";
