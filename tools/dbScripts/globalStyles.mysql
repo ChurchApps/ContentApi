@@ -4,5 +4,6 @@ CREATE TABLE `globalStyles` (
   `fonts` text,
   `palette` varchar(255) DEFAULT NULL,
   `customCss` text,
+  `customJS` text,
   PRIMARY KEY (`id`)
 );

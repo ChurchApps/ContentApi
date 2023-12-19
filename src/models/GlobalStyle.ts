@@ -4,4 +4,5 @@ export class GlobalStyle {
   fonts?: string;
   palette?: string;
   customCss?: string;
+  customJS?: string;
 }
