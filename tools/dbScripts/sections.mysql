@@ -8,6 +8,7 @@ CREATE TABLE `sections` (
   `zone` varchar(45) DEFAULT NULL,
   `background` varchar(255) DEFAULT NULL,
   `textColor` varchar(45) DEFAULT NULL,
+  `headingColor` varchar(45) DEFAULT NULL,
   `sort` float DEFAULT NULL,
   `targetBlockId` char(11) DEFAULT NULL,
   `answersJSON` text DEFAULT NULL,
