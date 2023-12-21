@@ -3,6 +3,7 @@ export { Element } from "./Element";
 export { Page } from "./Page";
 export { Section } from "./Section";
 export { Link } from "./Link";
+export { GlobalStyle } from "./GlobalStyle";
 
 export { Playlist } from "./Playlist"
 export { Sermon } from "./Sermon";

@@ -13,15 +13,15 @@ export class SectionRepository {
   private async create(section: Section) {
     section.id = UniqueIdHelper.shortId();
 
-    const sql = "INSERT INTO sections (id, churchId, pageId, blockId, zone, background, textColor, sort, targetBlockId, answersJSON) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?);";
-    const params = [section.id, section.churchId, section.pageId, section.blockId, section.zone, section.background, section.textColor, section.sort, section.targetBlockId, section.answersJSON];
+    const sql = "INSERT INTO sections (id, churchId, pageId, blockId, zone, background, textColor, headingColor, sort, targetBlockId, answersJSON) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?);";
+    const params = [section.id, section.churchId, section.pageId, section.blockId, section.zone, section.background, section.textColor, section.headingColor, section.sort, section.targetBlockId, section.answersJSON];
     await DB.query(sql, params);
     return section;
   }
 
   private async update(section: Section) {
-    const sql = "UPDATE sections SET pageId=?, blockId=?, zone=?, background=?, textColor=?, sort=?, targetBlockId=?, answersJSON=? WHERE id=? and churchId=?";
-    const params = [section.pageId, section.blockId, section.zone, section.background, section.textColor, section.sort, section.targetBlockId, section.answersJSON, section.id, section.churchId];
+    const sql = "UPDATE sections SET pageId=?, blockId=?, zone=?, background=?, textColor=?, headingColor=?, sort=?, targetBlockId=?, answersJSON=? WHERE id=? and churchId=?";
+    const params = [section.pageId, section.blockId, section.zone, section.background, section.textColor, section.headingColor, section.sort, section.targetBlockId, section.answersJSON, section.id, section.churchId];
     await DB.query(sql, params);
     return section;
   }

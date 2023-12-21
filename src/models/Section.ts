@@ -8,6 +8,7 @@ export class Section {
   public zone?: string;
   public background?: string;
   public textColor?: string;
+  public headingColor?: string;
   public sort?: number;
   public targetBlockId?: string;
   public answersJSON?: string;

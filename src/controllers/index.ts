@@ -1,4 +1,5 @@
 export { BlockController } from "./BlockController";
+export { GlobalStyleController } from "./GlobalStyleController";
 export { ElementController } from "./ElementController";
 export { GalleryController } from "./GalleryController";
 export { FileController } from "./FileController";
