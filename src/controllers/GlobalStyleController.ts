@@ -7,11 +7,20 @@ import { GlobalStyle } from "../models";
 @controller("/globalStyles")
 export class GlobalStyleController extends ContentBaseController {
 
+  defaultStyle: GlobalStyle = {
+    fonts: JSON.stringify({ body: "Roboto", heading: "Roboto" }),
+    palette: JSON.stringify({ light: "#FFFFFF", lightAccent: "#DDDDDD", accent: "#0000DD", darkAccent: "#9999DD", dark: "#000000" }),
+    customCss: "",
+    customJS: ""
+  };
+
+
   // Anonymous access
   @httpGet("/church/:churchId")
   public async loadAnon(@requestParam("churchId") churchId: string, req: express.Request, res: express.Response): Promise<any> {
     return this.actionWrapperAnon(req, res, async () => {
-      return await this.repositories.globalStyle.loadForChurch(churchId);
+      const result = await this.repositories.globalStyle.loadForChurch(churchId);
+      return result || this.defaultStyle;
     });
   }
 
@@ -20,7 +29,7 @@ export class GlobalStyleController extends ContentBaseController {
   public async loadAll(req: express.Request, res: express.Response): Promise<any> {
     return this.actionWrapper(req, res, async (au) => {
       const result = await this.repositories.globalStyle.loadForChurch(au.churchId);
-      return result || {};
+      return result || this.defaultStyle;
     });
   }
 
