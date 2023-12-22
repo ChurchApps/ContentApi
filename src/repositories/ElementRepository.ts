@@ -42,7 +42,7 @@ export class ElementRepository {
     const elements = await this.loadForSection(churchId, sectionId);
     const promises: Promise<Element>[] = [];
     for (let i = 0; i < elements.length; i++) {
-      if (elements[i].parentId === parentId) {
+      if (!elements[i].parentId) {
         if (elements[i].sort !== i + 1) {
           elements[i].sort = i + 1;
           promises.push(this.save(elements[i]));
