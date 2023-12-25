@@ -1,4 +1,4 @@
-import { UniqueIdHelper } from "@churchapps/apihelper"
+import { ArrayHelper, UniqueIdHelper } from "@churchapps/apihelper"
 import { DB } from "@churchapps/apihelper"
 import { Element } from "../models";
 
@@ -40,13 +40,12 @@ export class ElementRepository {
 
   public async updateSort(churchId: string, sectionId: string, parentId: string) {
     const elements = await this.loadForSection(churchId, sectionId);
+    const skipParentId = ArrayHelper.getAll(elements, "parentId", null);
     const promises: Promise<Element>[] = [];
-    for (let i = 0; i < elements.length; i++) {
-      if (!elements[i].parentId) {
-        if (elements[i].sort !== i + 1) {
-          elements[i].sort = i + 1;
-          promises.push(this.save(elements[i]));
-        }
+    for (let i = 0; i < skipParentId.length; i++) {
+      if (skipParentId[i].sort !== i + 1) {
+        skipParentId[i].sort = i + 1;
+        promises.push(this.save(skipParentId[i]));
       }
     }
     if (promises.length > 0) await Promise.all(promises);
