@@ -41,11 +41,19 @@ export class ElementRepository {
   public async updateSort(churchId: string, sectionId: string, parentId: string) {
     const elements = await this.loadForSection(churchId, sectionId);
     const skipParentId = ArrayHelper.getAll(elements, "parentId", null);
+    const withParentId = ArrayHelper.getAll(elements,"parentId" , parentId);
     const promises: Promise<Element>[] = [];
     for (let i = 0; i < skipParentId.length; i++) {
       if (skipParentId[i].sort !== i + 1) {
         skipParentId[i].sort = i + 1;
         promises.push(this.save(skipParentId[i]));
+      }
+    }
+    // for elements inside a column
+    for(let i = 0; i < withParentId.length; i++) {
+      if (withParentId[i].sort !== i + 1) {
+        withParentId[i].sort = i + 1;
+        promises.push(this.save(withParentId[i]));
       }
     }
     if (promises.length > 0) await Promise.all(promises);
