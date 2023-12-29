@@ -12,8 +12,10 @@ export class Section {
   public sort?: number;
   public targetBlockId?: string;
   public answersJSON?: string;
+  public stylesJSON?: string;
 
   public answers?: any;
+  public styles?: any;
   public elements?: Element[];
   public sections?: Section[];
 }

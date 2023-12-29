@@ -55,11 +55,14 @@ export class TreeHelper {
     items.forEach(e => {
       try {
         e.answers = JSON.parse(e.answersJSON);
+        e.styles = JSON.parse(e.stylesJSON);
       }
       catch {
         e.answers = [];
+        e.styles = [];
       }
       if (!e.answers) e.answers = [];
+      if (!e.styles) e.styles = [];
     })
   }
 

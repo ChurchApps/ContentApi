@@ -7,7 +7,9 @@ export class Element {
   public sort?: number;
   public parentId?: string;
   public answersJSON?: string;
+  public stylesJSON?: string;
 
   public answers?: any;
+  public styles?: any;
   public elements?: Element[];
 }

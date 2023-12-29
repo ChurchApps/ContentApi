@@ -9,5 +9,6 @@ CREATE TABLE `elements` (
   `sort` float DEFAULT NULL,
   `parentId` char(11) DEFAULT NULL,
   `answersJSON` text,
+  `stylesJSON` text,
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;

@@ -12,5 +12,6 @@ CREATE TABLE `sections` (
   `sort` float DEFAULT NULL,
   `targetBlockId` char(11) DEFAULT NULL,
   `answersJSON` text DEFAULT NULL,
+  `stylesJSON` text,
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
