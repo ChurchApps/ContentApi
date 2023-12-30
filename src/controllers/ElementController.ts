@@ -103,7 +103,7 @@ export class ElementController extends ContentBaseController {
       children[i].answers = JSON.parse(children[i].answersJSON);
       if (children[i].answers.size !== cols[i] || children[i].sort !== i) {
         children[i].answers.size = cols[i];
-        children[i].sort = i;
+        children[i].sort = i + 1;
         children[i].answersJSON = JSON.stringify(children[i].answers);
         await this.repositories.element.save(children[i]);
       }
@@ -113,7 +113,7 @@ export class ElementController extends ContentBaseController {
     if (cols.length > children.length) {
       for (let i = children.length; i < cols.length; i++) {
         const answers = { size: cols[i] };
-        const column: Element = { churchId: row.churchId, sectionId: row.sectionId, blockId: row.blockId, elementType: "column", sort: i, parentId: row.id, answersJSON: JSON.stringify(answers) };
+        const column: Element = { churchId: row.churchId, sectionId: row.sectionId, blockId: row.blockId, elementType: "column", sort: i + 1, parentId: row.id, answersJSON: JSON.stringify(answers) };
         await this.repositories.element.save(column);
       }
     }
