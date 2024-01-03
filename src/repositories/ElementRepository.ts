@@ -49,7 +49,7 @@ export class ElementRepository {
         promises.push(this.save(skipParentId[i]));
       }
     }
-    // for elements inside a column
+    // for elements inside a column/slide/box
     for(let i = 0; i < withParentId.length; i++) {
       if (withParentId[i].sort !== i + 1) {
         withParentId[i].sort = i + 1;
