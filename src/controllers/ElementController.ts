@@ -30,8 +30,12 @@ export class ElementController extends ContentBaseController {
           if (req.body[0].blockId) await this.repositories.element.updateSortForBlock(req.body[0].churchId, req.body[0].blockId, req.body[0].parentId);
           else await this.repositories.element.updateSort(req.body[0].churchId, req.body[0].sectionId, req.body[0].parentId);
         }
-        await this.checkRows(result);
-        await this.checkSlides(result);
+        if (req.query.duplicate) {
+          await this.checkChildrenElements(result);
+        } else {
+          await this.checkRows(result);
+          await this.checkSlides(result);
+        }
         return result;
       }
     });
@@ -115,6 +119,34 @@ export class ElementController extends ContentBaseController {
         const answers = { size: cols[i] };
         const column: Element = { churchId: row.churchId, sectionId: row.sectionId, blockId: row.blockId, elementType: "column", sort: i + 1, parentId: row.id, answersJSON: JSON.stringify(answers) };
         await this.repositories.element.save(column);
+      }
+    }
+  }
+
+  private async checkNestedElements(elements: Element[], parentId: string) {
+    for (const element of elements) {
+      const { id, ...rest } = element;
+      const e = rest;
+      e.parentId = parentId;
+      const result = await this.repositories.element.save(e);
+      if (result?.elements) {
+        await this.checkNestedElements(result.elements, result.id);
+      }
+    }
+  }
+
+  private async checkChildrenElements(elements: Element[]) {
+    for (const element of elements) {
+      if (element?.elements) {
+        for (const children of element.elements) {
+          const { id, ...rest } = children;
+          const e = rest;
+          e.parentId = element.id;
+          const result = await this.repositories.element.save(e);
+          if (result?.elements) {
+            await this.checkNestedElements(result.elements, result.id);
+          }
+        }
       }
     }
   }
