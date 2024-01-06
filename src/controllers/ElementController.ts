@@ -108,9 +108,11 @@ export class ElementController extends ContentBaseController {
       if (children[i].answers.size !== cols[i] || children[i].sort !== i) {
         children[i].answers.size = cols[i];
         children[i].sort = i + 1;
+        shouldSave = true;
       }
       if (children[i].answers.mobileSize && mobileSizes.length<i || !children[i].answers.mobileSize && mobileSizes.length>=i || children[i].answers.mobileSize !== mobileSizes[i]) {
         children[i].answers.size = cols[i];
+        shouldSave = true;
       }
       if (shouldSave)
       {
