@@ -85,14 +85,17 @@ export class ElementController extends ContentBaseController {
         element.answers = JSON.parse(element.answersJSON);
         const cols: number[] = []
         element.answers.columns.split(',').forEach((c: string) => cols.push(parseInt(c, 0)));
+        const mobileSizes: number[] = []
+        element.answers.mobileSizes.split(',').forEach((c: string) => mobileSizes.push(parseInt(c, 0)));
+        if (mobileSizes.length!== cols.length) element.answers.mobileSizes = [];
         const allElements: Element[] = await this.repositories.element.loadForSection(element.churchId, element.sectionId);
         const children = ArrayHelper.getAll(allElements, "parentId", element.id);
-        await this.checkRow(element, children, cols);
+        await this.checkRow(element, children, cols, mobileSizes);
       }
     }
   }
 
-  private async checkRow(row: Element, children: Element[], cols: number[]) {
+  private async checkRow(row: Element, children: Element[], cols: number[], mobileSizes: number[]) {
     // Delete existing columns that should no longer exist
     if (children.length > cols.length) {
       for (let i = cols.length; i < children.length; i++) await this.repositories.element.delete(children[i].churchId, children[i].id);
@@ -101,9 +104,16 @@ export class ElementController extends ContentBaseController {
     // Update existing column sizes
     for (let i = 0; i < children.length && i < cols.length; i++) {
       children[i].answers = JSON.parse(children[i].answersJSON);
+      let shouldSave = false;
       if (children[i].answers.size !== cols[i] || children[i].sort !== i) {
         children[i].answers.size = cols[i];
         children[i].sort = i + 1;
+      }
+      if (children[i].answers.mobileSize && mobileSizes.length<i || !children[i].answers.mobileSize && mobileSizes.length>=i || children[i].answers.mobileSize !== mobileSizes[i]) {
+        children[i].answers.size = cols[i];
+      }
+      if (shouldSave)
+      {
         children[i].answersJSON = JSON.stringify(children[i].answers);
         await this.repositories.element.save(children[i]);
       }
