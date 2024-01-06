@@ -88,14 +88,18 @@ export class ElementController extends ContentBaseController {
         const mobileSizes: number[] = []
         element.answers.mobileSizes.split(',').forEach((c: string) => mobileSizes.push(parseInt(c, 0)));
         if (mobileSizes.length!== cols.length) element.answers.mobileSizes = [];
+        const mobileOrder: number[] = []
+        element.answers.mobileOrder.split(',').forEach((c: string) => mobileOrder.push(parseInt(c, 0)));
+        if (mobileOrder.length!== cols.length) element.answers.mobileOrder = [];
+
         const allElements: Element[] = await this.repositories.element.loadForSection(element.churchId, element.sectionId);
         const children = ArrayHelper.getAll(allElements, "parentId", element.id);
-        await this.checkRow(element, children, cols, mobileSizes);
+        await this.checkRow(element, children, cols, mobileSizes, mobileOrder);
       }
     }
   }
 
-  private async checkRow(row: Element, children: Element[], cols: number[], mobileSizes: number[]) {
+  private async checkRow(row: Element, children: Element[], cols: number[], mobileSizes: number[], mobileOrder: number[]) {
     // Delete existing columns that should no longer exist
     if (children.length > cols.length) {
       for (let i = cols.length; i < children.length; i++) await this.repositories.element.delete(children[i].churchId, children[i].id);
@@ -114,6 +118,12 @@ export class ElementController extends ContentBaseController {
         if (!children[i].answers.mobileSize) children[i].answers.mobileSize = [];
         if (mobileSizes.length<i) delete children[i].answers.mobileSize;
         else children[i].answers.mobileSize = mobileSizes[i];
+        shouldSave = true;
+      }
+      if (children[i].answers.mobileOrder && mobileOrder.length<i || !children[i].answers.mobileOrder && mobileOrder.length>=i || children[i].answers.mobileOrder !== mobileOrder[i]) {
+        if (!children[i].answers.mobileOrder) children[i].answers.mobileOrder = [];
+        if (mobileOrder.length<i) delete children[i].answers.mobileOrder;
+        else children[i].answers.mobileOrder = mobileOrder[i];
         shouldSave = true;
       }
       if (shouldSave)
