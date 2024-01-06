@@ -111,7 +111,9 @@ export class ElementController extends ContentBaseController {
         shouldSave = true;
       }
       if (children[i].answers.mobileSize && mobileSizes.length<i || !children[i].answers.mobileSize && mobileSizes.length>=i || children[i].answers.mobileSize !== mobileSizes[i]) {
-        children[i].answers.size = cols[i];
+        if (!children[i].answers.mobileSize) children[i].answers.mobileSize = [];
+        if (mobileSizes.length<i) delete children[i].answers.mobileSize;
+        else children[i].answers.mobileSize = mobileSizes[i];
         shouldSave = true;
       }
       if (shouldSave)
