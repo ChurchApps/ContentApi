@@ -4,6 +4,7 @@ import { ContentBaseController } from "./ContentBaseController"
 import { Element } from "../models"
 import { Permissions } from "../helpers";
 import { ArrayHelper } from "@churchapps/apihelper";
+import { TreeHelper } from "../helpers/TreeHelper";
 
 @controller("/elements")
 export class ElementController extends ContentBaseController {
@@ -12,6 +13,20 @@ export class ElementController extends ContentBaseController {
   public async get(@requestParam("id") id: string, req: express.Request<{}, {}, null>, res: express.Response): Promise<interfaces.IHttpActionResult> {
     return this.actionWrapper(req, res, async (au) => {
       return await this.repositories.element.load(au.churchId, id);
+    });
+  }
+
+  @httpPost("/duplicate/:id")
+  public async duplicate(@requestParam("id") id: string, req: express.Request<{}, {}, null>, res: express.Response): Promise<interfaces.IHttpActionResult> {
+    return this.actionWrapper(req, res, async (au) => {
+      if (!au.checkAccess(Permissions.content.edit)) return this.json({}, 401);
+      else {
+        const element = await this.repositories.element.load(au.churchId, id);
+        const allElements: Element[] = await this.repositories.element.loadForSection(element.churchId, element.sectionId);
+        TreeHelper.getChildElements(element, allElements);
+        const result = await TreeHelper.duplicateElement(element, element.sectionId, element.parentId)
+        return result;
+      }
     });
   }
 

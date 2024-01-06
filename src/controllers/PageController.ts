@@ -49,6 +49,45 @@ export class PageController2 extends ContentBaseController {
     });
   }
 
+  @httpPost("/duplicate/:id")
+  public async duplicate(@requestParam("id") id: string, req: express.Request<{}, {}, null>, res: express.Response): Promise<interfaces.IHttpActionResult> {
+    return this.actionWrapper(req, res, async (au) => {
+      if (!au.checkAccess(Permissions.content.edit)) return this.json({}, 401);
+      else {
+        const page = await this.repositories.page.load(au.churchId, id);
+        page.id = undefined;
+        page.name += " (copy)";
+        page.url += "-copy";
+        const newPage = await this.repositories.page.save(page);
+        const sections:Section[] = await this.repositories.section.loadForPage(au.churchId, id);
+        const allElements: Element[] = await this.repositories.element.loadForPage(au.churchId, id);
+
+        sections.forEach(s => {
+          // s.id = undefined;
+          s.pageId = newPage.id;
+        });
+
+        allElements.forEach(el => {
+          el.id = undefined;
+          // el.sectionId = undefined;
+          // el.parentId = undefined;
+        });
+
+        TreeHelper.populateAnswers(allElements);
+        TreeHelper.populateAnswers(sections);
+        newPage.sections = TreeHelper.buildTree(sections, allElements);
+
+        const promises: Promise<Section>[] = [];
+        newPage.sections.forEach(s => {
+          promises.push(TreeHelper.duplicateSection(s));
+        });
+        await Promise.all(promises);
+
+        return newPage;
+      }
+    });
+  }
+
   @httpPost("/")
   public async save(req: express.Request<{}, {}, Page[]>, res: express.Response): Promise<interfaces.IHttpActionResult> {
     return this.actionWrapper(req, res, async (au) => {

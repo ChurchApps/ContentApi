@@ -31,7 +31,7 @@ export class BlockRepository {
   }
 
   public load(churchId: string, id: string) {
-    return DB.queryOne("SELECT * FROM blocks WHERE id=? AND churchId=?;", [id, churchId]);
+    return DB.queryOne("SELECT * FROM blocks WHERE id=? AND churchId=? order by name;", [id, churchId]);
   }
 
   public loadAll(churchId: string) {

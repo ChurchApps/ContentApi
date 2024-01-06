@@ -15,6 +15,20 @@ export class SectionController extends ContentBaseController {
     });
   }
 
+  @httpPost("/duplicate/:id")
+  public async duplicate(@requestParam("id") id: string, req: express.Request<{}, {}, null>, res: express.Response): Promise<interfaces.IHttpActionResult> {
+    return this.actionWrapper(req, res, async (au) => {
+      if (!au.checkAccess(Permissions.content.edit)) return this.json({}, 401);
+      else {
+        let section = await this.repositories.section.load(au.churchId, id);
+        const allElements: Element[] = await this.repositories.element.loadForSection(section.churchId, section.id);
+        section = TreeHelper.buildTree([section], allElements)[0];
+        const result = await TreeHelper.duplicateSection(section)
+        return result;
+      }
+    });
+  }
+
   @httpPost("/")
   public async save(req: express.Request<{}, {}, Section[]>, res: express.Response): Promise<interfaces.IHttpActionResult> {
     return this.actionWrapper(req, res, async (au) => {

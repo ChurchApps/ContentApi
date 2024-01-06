@@ -4,7 +4,7 @@ import { Repositories } from "../repositories";
 
 export class TreeHelper {
 
-  private static getChildElements(element: Element, allElements: Element[]) {
+  public static getChildElements(element: Element, allElements: Element[]) {
     const children = ArrayHelper.getAll(allElements, "parentId", element.id);
     if (children.length > 0) {
       element.elements = children;
@@ -64,6 +64,33 @@ export class TreeHelper {
       if (!e.answers) e.answers = [];
       if (!e.styles) e.styles = [];
     })
+  }
+
+  static async duplicateSection(section:Section) {
+    const sec = {...section};
+    sec.id = undefined;
+    const result = await Repositories.getCurrent().section.save(sec);
+    const promises:Promise<Element>[] = [];
+    sec.elements?.forEach(e => {
+      promises.push(this.duplicateElement(e, result.id, null));
+    });
+    await Promise.all(promises);
+    return result;
+  }
+
+  static async duplicateElement(element: Element, sectionId: string, parentId: string) {
+    const el = {...element};
+    el.id = undefined;
+    el.sectionId = sectionId;
+    el.parentId = parentId;
+    // el.sort = element.sort + 1;
+    const result = await Repositories.getCurrent().element.save(el);
+    const promises:Promise<Element>[] = [];
+    el.elements?.forEach(e => {
+      promises.push(this.duplicateElement(e, sectionId, result.id));
+    });
+    await Promise.all(promises);
+    return result;
   }
 
 }
