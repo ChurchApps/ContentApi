@@ -86,10 +86,10 @@ export class ElementController extends ContentBaseController {
         const cols: number[] = []
         element.answers.columns.split(',').forEach((c: string) => cols.push(parseInt(c, 0)));
         const mobileSizes: number[] = []
-        element.answers.mobileSizes.split(',').forEach((c: string) => mobileSizes.push(parseInt(c, 0)));
+        element.answers.mobileSizes?.split(',').forEach((c: string) => mobileSizes.push(parseInt(c, 0)));
         if (mobileSizes.length!== cols.length) element.answers.mobileSizes = [];
         const mobileOrder: number[] = []
-        element.answers.mobileOrder.split(',').forEach((c: string) => mobileOrder.push(parseInt(c, 0)));
+        element.answers.mobileOrder?.split(',').forEach((c: string) => mobileOrder.push(parseInt(c, 0)));
         if (mobileOrder.length!== cols.length) element.answers.mobileOrder = [];
 
         const allElements: Element[] = await this.repositories.element.loadForSection(element.churchId, element.sectionId);
