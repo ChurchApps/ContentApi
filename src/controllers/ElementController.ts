@@ -83,7 +83,7 @@ export class ElementController extends ContentBaseController {
     if (slides.length > children.length) {
       for (let i= children.length; i < slides.length; i++) {
         const answers = { slide: slides[i] }
-        const column: Element = { churchId: row.churchId, sectionId: row.sectionId, blockId: row.blockId, elementType: "carousel", sort: i, parentId: row.id, answersJSON: JSON.stringify(answers) };
+        const column: Element = { churchId: row.churchId, sectionId: row.sectionId, blockId: row.blockId, elementType: "carousel", sort: i + 1, parentId: row.id, answersJSON: JSON.stringify(answers) };
         await this.repositories.element.save(column);
       }
     }
