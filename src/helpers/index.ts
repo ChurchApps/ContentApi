@@ -4,3 +4,4 @@ export { Environment } from "./Environment";
 export { SubDomainHelper } from "./SubDomainHelper";
 export { StreamingConfigHelper } from "./StreamingConfigHelper";
 export { YouTubeHelper } from "./YouTubeHelper";
+export { VimeoHelper } from "./VimeoHelper";
