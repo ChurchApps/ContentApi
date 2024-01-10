@@ -12,7 +12,11 @@ export class SermonController extends ContentBaseController {
   @httpGet("/lookup")
   public async lookup(req: express.Request<{}, {}, null>, res: express.Response): Promise<any> {
     return this.actionWrapperAnon(req, res, async () => {
-      return await YouTubeHelper.getSermon(req.query.videoData as string);
+      if (req.query.videoType === "youtube") {
+        return await YouTubeHelper.getSermon(req.query.videoData as string);
+      } else {
+        return await VimeoHelper.getSermon(req.query.videoData as string);
+      }
     });
   }
 
