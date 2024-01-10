@@ -6,7 +6,7 @@ export class YouTubeHelper {
 
   public static async getSermon(sermonId: string) {
     const url = `https://www.googleapis.com/youtube/v3/videos?part=contentDetails%2C+snippet&id=${sermonId}&key=${Environment.youTubeApiKey}`;
-    const result = { title: "", thumbnail: "", description: "", duration: 0 }
+    const result = { title: "", thumbnail: "", description: "", duration: 0, publishDate: new Date() }
     const json: any = (await axios.get(url)).data;
     if (json.items?.length > 0) {
       const snippet = json.items[0].snippet;
@@ -15,6 +15,7 @@ export class YouTubeHelper {
       result.title = snippet.title;
       result.description = snippet.description;
       result.thumbnail = snippet.thumbnails?.maxres?.url || "";
+      result.publishDate = new Date(snippet.publishedAt);
     }
     return result;
   }
