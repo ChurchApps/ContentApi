@@ -3,7 +3,7 @@ import express from "express";
 import { Sermon } from "../models";
 import { ContentBaseController } from "./ContentBaseController";
 import { Permissions } from "../helpers/Permissions";
-import { YouTubeHelper, Environment } from "../helpers";
+import { YouTubeHelper, Environment, VimeoHelper } from "../helpers";
 import { FileStorageHelper } from "@churchapps/apihelper";
 
 @controller("/sermons")
@@ -21,6 +21,13 @@ export class SermonController extends ContentBaseController {
     return this.actionWrapper(req, res, async (au) => {
       return await YouTubeHelper.getVideosFromChannel(au.churchId, channelId);
     });
+  }
+
+  @httpGet("/vimeoImport/:channelId")
+  public async vimeoImport(@requestParam("channelId") channelId: string, req: express.Request<{}, {}, null>, res: express.Response): Promise<any> {
+    return this.actionWrapper(req, res, async (au) => {
+      return await VimeoHelper.getVideosFromChannel(au.churchId, channelId);
+    })
   }
 
   @httpGet("/:id")
