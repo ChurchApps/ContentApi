@@ -62,20 +62,14 @@ export class PageController2 extends ContentBaseController {
         const sections:Section[] = await this.repositories.section.loadForPage(au.churchId, id);
         const allElements: Element[] = await this.repositories.element.loadForPage(au.churchId, id);
 
+        TreeHelper.populateAnswers(allElements);
+        TreeHelper.populateAnswers(sections);
+        newPage.sections = TreeHelper.buildTree(sections, allElements);
+
         sections.forEach(s => {
           // s.id = undefined;
           s.pageId = newPage.id;
         });
-
-        allElements.forEach(el => {
-          el.id = undefined;
-          // el.sectionId = undefined;
-          // el.parentId = undefined;
-        });
-
-        TreeHelper.populateAnswers(allElements);
-        TreeHelper.populateAnswers(sections);
-        newPage.sections = TreeHelper.buildTree(sections, allElements);
 
         const promises: Promise<Section>[] = [];
         newPage.sections.forEach(s => {
