@@ -10,15 +10,15 @@ export class FileRepository {
 
   public async create(file: File) {
     file.id = UniqueIdHelper.shortId();
-    const sql = "INSERT INTO files (id, churchId, fileName, contentPath, fileType, size, dateModified) VALUES (?, ?, ?, ?, ?, ?, NOW());";
-    const params = [file.id, file.churchId, file.fileName, file.contentPath, file.fileType, file.size];
+    const sql = "INSERT INTO files (id, churchId, contentType, contentId, fileName, contentPath, fileType, size, dateModified) VALUES (?, ?, ?, ?, ?, ?, ?, ?, NOW());";
+    const params = [file.id, file.churchId, file.contentType, file.contentId, file.fileName, file.contentPath, file.fileType, file.size];
     await DB.query(sql, params);
     return file;
   }
 
   public async update(file: File) {
-    const sql = "UPDATE files SET fileName=?, contentPath=?, fileType=?, size=?, dateModified=? WHERE id=? AND churchId=?";
-    const params = [file.fileName, file.contentPath, file.fileType, file.size, file.dateModified, file.id, file.churchId];
+    const sql = "UPDATE files SET contentType=?, contentId=?, fileName=?, contentPath=?, fileType=?, size=?, dateModified=? WHERE id=? AND churchId=?";
+    const params = [file.contentType, file.contentId, file.fileName, file.contentPath, file.fileType, file.size, file.dateModified, file.id, file.churchId];
     await DB.query(sql, params);
     return file;
   }
@@ -32,12 +32,16 @@ export class FileRepository {
     return DB.query(sql, [churchId].concat(ids));
   }
 
-  public loadForChurch(churchId: string): Promise<File[]> {
-    return DB.query("SELECT * FROM files WHERE churchId=?", [churchId]);
+  public loadForContent(churchId: string, contentType:string, contentId:string): Promise<File[]> {
+    return DB.query("SELECT * FROM files WHERE churchId=? and contentType=? and contentId=?", [churchId, contentType, contentId]);
   }
 
-  public loadTotalBytes(churchId: string): Promise<{size:number}> {
-    return DB.query("select IFNULL(sum(size), 0) as size from files where churchId=?", [churchId]);
+  public loadForWebsite(churchId: string): Promise<File[]> {
+    return DB.query("SELECT * FROM files WHERE churchId=? and contentType='website'", [churchId]);
+  }
+
+  public loadTotalBytes(churchId: string, contentType:string, contentId:string): Promise<{size:number}> {
+    return DB.query("select IFNULL(sum(size), 0) as size from files where churchId=? and contentType=? and contentId=?", [churchId, contentType, contentId]);
   }
 
   public delete(churchId: string, id: string): Promise<File> {

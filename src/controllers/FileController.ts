@@ -16,10 +16,17 @@ export class FileController extends ContentBaseController {
     });
   }
 
+  @httpGet("/:contentType/:contentId")
+  public async getByContent(@requestParam("contentType") contentType:string, @requestParam("contentId") contentId:string, req: express.Request<{}, {}, null>, res: express.Response): Promise<interfaces.IHttpActionResult> {
+    return this.actionWrapper(req, res, async (au) => {
+      return await this.repositories.file.loadForContent(au.churchId, contentType, contentId)
+    });
+  }
+
   @httpGet("/")
   public async getAll(req: express.Request<{}, {}, null>, res: express.Response): Promise<interfaces.IHttpActionResult> {
     return this.actionWrapper(req, res, async (au) => {
-      return await this.repositories.file.loadForChurch(au.churchId);
+      return await this.repositories.file.loadForWebsite(au.churchId);
     });
   }
 
@@ -27,8 +34,8 @@ export class FileController extends ContentBaseController {
   @httpPost("/")
   public async save(req: express.Request<{}, {}, File[]>, res: express.Response): Promise<interfaces.IHttpActionResult> {
     return this.actionWrapper(req, res, async (au) => {
-      if (!au.checkAccess(Permissions.content.edit)) { return this.json({}, 401);
-    }else {
+      if (!au.checkAccess(Permissions.content.edit) && au.groupIds.indexOf(req.body[0].contentId)===-1) { return this.json({}, 401); }
+      else {
         const promises: Promise<File>[] = [];
         req.body.forEach(file => {
           file.churchId = au.churchId;
@@ -46,11 +53,11 @@ export class FileController extends ContentBaseController {
   }
 
   @httpPost("/postUrl")
-  public async getUploadUrl(req: express.Request<{}, {}, { resourceId: string, fileName: string }>, res: express.Response): Promise<interfaces.IHttpActionResult> {
+  public async getUploadUrl(req: express.Request<{}, {}, { resourceId: string, fileName: string, contentType:string, contentId:string }>, res: express.Response): Promise<interfaces.IHttpActionResult> {
     return this.actionWrapper(req, res, async (au) => {
-      if (!au.checkAccess(Permissions.content.edit)) return this.json({}, 401);
+      if (!au.checkAccess(Permissions.content.edit) && au.groupIds.indexOf(req.body.contentId)===-1) return this.json({}, 401);
       else {
-        const totalBytes = await this.repositories.file.loadTotalBytes(au.churchId);
+        const totalBytes = await this.repositories.file.loadTotalBytes(au.churchId, req.body.contentType, req.body.contentId);
         if (totalBytes?.size > 100000000) return this.json({}, 401);
         else {
           const key = "/" + au.churchId + "/files/" + req.body.fileName;
@@ -64,9 +71,9 @@ export class FileController extends ContentBaseController {
   @httpDelete("/:id")
   public async delete(@requestParam("id") id: string, req: express.Request<{}, {}, null>, res: express.Response): Promise<interfaces.IHttpActionResult> {
     return this.actionWrapper(req, res, async (au) => {
-      if (!au.checkAccess(Permissions.content.edit)) return this.json({}, 401);
+      const existingFile = await this.repositories.file.load(au.churchId, id)
+      if (!au.checkAccess(Permissions.content.edit) && au.groupIds.indexOf(existingFile.contentId)===-1) return this.json({}, 401);
       else {
-        const existingFile = await this.repositories.file.load(au.churchId, id)
         await FileStorageHelper.remove(au.churchId + "/files/" + existingFile.fileName);
         await this.repositories.file.delete(au.churchId, id);
         return {file: au.churchId + "/files/" + existingFile.fileName}
