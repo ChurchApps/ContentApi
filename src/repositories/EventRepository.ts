@@ -7,6 +7,20 @@ export class EventRepository {
     return event.id ? this.update(event) : this.create(event);
   }
 
+  public async loadTimelineGroup(churchId: string, groupId: string, eventIds: string[]) {
+    let sql = "select *, 'event' as postType, id as postId from events"
+      + " where churchId=? AND (("
+        + " groupId = ?"
+        + " and (end>curdate() or recurrenceRule IS NOT NULL)"
+      + ")";
+      if (eventIds.length > 0) sql += " OR id IN (?)";
+      sql += ")";
+    const params:any = [churchId, groupId, churchId, churchId];
+    if (eventIds.length > 0) params.push(eventIds);
+    const result = await DB.query(sql, params);
+    return result;
+  }
+
   public async loadTimeline(churchId: string, groupIds: string[], eventIds: string[]) {
     let sql = "select *, 'event' as postType, id as postId from events"
       + " where churchId=? AND (("

@@ -7,6 +7,14 @@ import { Permissions } from "../helpers";
 @controller("/events")
 export class EventController extends ContentBaseController {
 
+  @httpGet("/timeline/group/:groupId")
+  public async getPostsForGroup(@requestParam("groupId") groupId: string, req: express.Request<{}, {}, null>, res: express.Response): Promise<interfaces.IHttpActionResult> {
+    return this.actionWrapper(req, res, async (au) => {
+      const eventIds = req.query.eventIds ? req.query.eventIds.toString().split(",") : [];
+      return await this.repositories.event.loadTimelineGroup(au.churchId, groupId, eventIds);
+    });
+  }
+
   @httpGet("/timeline")
   public async getPosts(req: express.Request<{}, {}, null>, res: express.Response): Promise<interfaces.IHttpActionResult> {
     return this.actionWrapper(req, res, async (au) => {
