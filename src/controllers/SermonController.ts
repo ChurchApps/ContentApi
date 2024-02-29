@@ -9,6 +9,14 @@ import { FileStorageHelper } from "@churchapps/apihelper";
 @controller("/sermons")
 export class SermonController extends ContentBaseController {
 
+  @httpGet("/timeline")
+  public async getPosts(req: express.Request<{}, {}, null>, res: express.Response): Promise<any> {
+    return this.actionWrapper(req, res, async (au) => {
+      const sermonIds = req.query.sermonIds ? req.query.sermonIds.toString().split(",") : [];
+      return await this.repositories.sermon.loadTimeline(sermonIds);
+    });
+  }
+
   @httpGet("/lookup")
   public async lookup(req: express.Request<{}, {}, null>, res: express.Response): Promise<any> {
     return this.actionWrapperAnon(req, res, async () => {

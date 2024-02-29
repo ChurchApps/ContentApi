@@ -40,4 +40,14 @@ export class SermonRepository {
     return DB.query("SELECT * FROM sermons WHERE churchId=? ORDER BY publishDate desc;", [churchId]);
   }
 
+  public async loadTimeline(sermonIds: string[]) {
+    const sql = "select 'sermon' as postType, id as postId, title, description, thumbnail"
+    + " from sermons"
+    + " where id in (?)";
+
+    const params = [sermonIds];
+    const result = await DB.query(sql, params);
+    return result;
+  }
+
 }
