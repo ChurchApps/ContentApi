@@ -10,8 +10,6 @@ const init = async () => {
   console.log("Connecting");
   Pool.initPool();
 
-  await DBCreator.init(["Links"]);
-
   const taskTables: { title: string, file: string }[] = [
     { title: "Blocks", file: "blocks.mysql" },
     { title: "Elements", file: "elements.mysql" },
@@ -25,6 +23,7 @@ const init = async () => {
     { title: "Event Exceptions", file: "eventExceptions.mysql" },
     { title: "Curated Calendars", file: "curatedCalendars.mysql" },
     { title: "Curated Events", file: "curatedEvents.mysql" },
+    { title: "Links", file: "links.mysql"},
   ]
 
   await initTables("Content", taskTables);
