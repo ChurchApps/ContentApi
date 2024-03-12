@@ -15,5 +15,7 @@ export { EventExceptionRepository } from "./EventExceptionRepository";
 export { CuratedCalendarRepository } from "./CuratedCalendarRepository";
 export { CuratedEventRepository } from "./CuratedEventRepository";
 
+export { SettingRepository } from "./SettingRepository";
+
 export { Repositories } from "./Repositories";
 

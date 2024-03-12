@@ -1,0 +1,11 @@
+DROP TABLE IF EXISTS `settings`;
+
+CREATE TABLE `settings` (
+  `id` char(11) NOT NULL,
+  `churchId` char(11) DEFAULT NULL,
+  `keyName` varchar(255) DEFAULT NULL,
+  `value` TEXT DEFAULT NULL,
+  `public` bit(1) DEFAULT NULL,
+  PRIMARY KEY (`id`),
+  KEY `churchId` (`churchId`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_520_ci;

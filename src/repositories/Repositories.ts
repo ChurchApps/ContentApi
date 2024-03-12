@@ -13,6 +13,7 @@ import {
   CuratedCalendarRepository,
   CuratedEventRepository,
   LinkRepository,
+  SettingRepository,
 } from ".";
 
 export class Repositories {
@@ -32,6 +33,8 @@ export class Repositories {
   public eventException: EventExceptionRepository;
   public curatedCalendar: CuratedCalendarRepository;
   public curatedEvent: CuratedEventRepository;
+
+  public setting: SettingRepository;
 
   private static _current: Repositories = null;
   public static getCurrent = () => {
@@ -54,5 +57,6 @@ export class Repositories {
     this.playlist = new PlaylistRepository();
     this.sermon = new SermonRepository();
     this.streamingService = new StreamingServiceRepository();
+    this.setting = new SettingRepository();
   }
 }
