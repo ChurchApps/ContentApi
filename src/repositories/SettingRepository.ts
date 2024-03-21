@@ -1,5 +1,5 @@
 import { injectable } from "inversify";
-import { DB, UniqueIdHelper } from "@churchapps/apihelper";
+import { ArrayHelper, DB, UniqueIdHelper } from "@churchapps/apihelper";
 import { Setting } from "../models";
 
 @injectable()
@@ -36,6 +36,10 @@ export class SettingRepository {
         return DB.query("SELECT * FROM settings WHERE keyName in (?) AND churchId IN (?) AND public=1", [keyNames, churchIds])
     }
 
+    public loadByKeyNames(churchId: string, keyNames: string[]) {
+        return DB.query("SELECT * FROM settings WHERE keyName in (?) AND churchId=?;", [keyNames, churchId]);
+    }
+
     public convertToModel(churchId: string, data: any) {
         const result: Setting = {
             id: data.id,
@@ -49,6 +53,39 @@ export class SettingRepository {
     public convertAllToModel(churchId: string, data: any[]) {
         const result: Setting[] = [];
         data.forEach(d => result.push(this.convertToModel(churchId, d)));
+        return result;
+    }
+
+    public getImports(data: any[], playlistId?: string, channelId?: string) {
+        let result: any[] = [];
+        if (playlistId && channelId) {
+            const filteredByPlaylist = data.filter((d) => d.keyName === "autoImportSermons" && d.value.includes(playlistId));
+            const filteredByChannel = data.filter((d) => d.keyName === "channelId" && d.value === channelId);
+            const channelIds = ArrayHelper.getIds(filteredByChannel, "id");
+            const filtered = filteredByPlaylist.filter((d) => { const id = d.value.split("|#"); return channelIds.indexOf(id[1]) >= 0; });
+            if (filtered.length > 0) {
+                const split = filtered[0].value.split("|#");
+                const getChannelId = ArrayHelper.getOne(filteredByChannel, "id", split[1]);
+                result = [{ channel: getChannelId, ...filtered[0] }];
+            }
+        } else {
+            const filterByCategory = data.filter((d) => d.keyName === "autoImportSermons");
+            if (filterByCategory.length > 0) {
+                filterByCategory.forEach((row) => {
+                    const split = row.value.split("|#");
+                    const getchannel = ArrayHelper.getOne(data, "id", split[1]);
+                    result.push({ channel: getchannel, ...row });
+                })
+            }
+        }
+        return result;
+    }
+
+    public convertAllImports(data: any[]) {
+        const result: any[] = [];
+        data.forEach((d) => {
+            result.push({ id: d.id, churchId: d.churchId, keyName: d.keyName, playlistId: d.value.split("|#")[0], channelId: d?.channel?.value })
+        })
         return result;
     }
 }
