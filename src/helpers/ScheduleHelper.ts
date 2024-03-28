@@ -1,0 +1,55 @@
+import { DateHelper } from "@churchapps/apihelper";
+import { Repositories } from "../repositories";
+import { YouTubeHelper } from "./YouTubeHelper";
+import { Sermon } from "../models";
+
+export class ScheduleHelper {
+
+  public static async handleAutoImports() {
+    let settings = await Repositories.getCurrent().setting.loadAllPublicSettings();
+    settings = settings.filter((s: any) => s.value !== "");
+    const getAllImports = Repositories.getCurrent().setting.convertAllImports(Repositories.getCurrent().setting.getImports(settings));
+
+    if (getAllImports.length > 0) {
+      for (const importSetting of getAllImports) {
+        let videosToAdd;
+        const sermons = await Repositories.getCurrent().sermon.loadPublicAll(importSetting.churchId);
+        const sermonsFromPlaylist = sermons.filter((s) => s.playlistId === importSetting.playlistId && s.videoType === "youtube");
+        const videosFromChannel = await YouTubeHelper.getVideosFromChannel(importSetting.churchId, importSetting.channelId);
+
+        // list of videos that has already been added, to get data of last video added to the playlist.
+        const addedVideos = sermonsFromPlaylist.filter((sp) => {
+          return videosFromChannel.some((vc) => {
+            return sp.videoData === vc.videoData;
+          });
+        });
+
+        if (addedVideos.length > 0) {
+          const arrayOfDates = addedVideos.map((v) => DateHelper.toDate(v.publishDate).getTime());
+          const maxDate = new Date(Math.max(...arrayOfDates));
+          const availableVideosList = videosFromChannel.filter((vc) => vc.publishDate >= maxDate);
+          // If more than one video has been uploaded on the same day, remove the one that's all ready been added as sermon.
+          videosToAdd = availableVideosList.filter((v) => {
+            return !addedVideos.some((av) => {
+              return v.videoData === av.videoData;
+            });
+          });
+        } else {
+          // Auto import all the videos available in channel, if added videos are empty.
+          videosToAdd = videosFromChannel;
+        }
+
+        const sermonsToAdd = [...videosToAdd];
+        sermonsToAdd.forEach((s) => {
+          s.playlistId = importSetting.playlistId;
+          this.saveSermons(s);
+        });
+      }
+    }
+  }
+
+  public static async saveSermons(sermon: Sermon) {
+    await Repositories.getCurrent().sermon.save(sermon);
+  }
+
+}

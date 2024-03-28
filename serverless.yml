@@ -31,6 +31,13 @@ functions:
       - http: ANY {proxy+}
       - http: ANY /
     vpc: ${self:custom.vpcSettings.current}
+  nightly:
+    handler: lambda.nightly
+    events:
+      - schedule:
+        rate: cron(0 0 * * ? *)
+        enabled: true
+    vpc: ${self:custom.vpcSettings.current}
 
 plugins:
   - serverless-layers

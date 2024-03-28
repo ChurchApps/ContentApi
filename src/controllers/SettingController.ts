@@ -50,6 +50,25 @@ export class SettingController extends ContentBaseController {
     }
   }
 
+  @httpGet("/imports")
+  public async getAutoImportSettings(req: express.Request<{}, {}, null>, res: express.Response): Promise<interfaces.IHttpActionResult> {
+    return this.actionWrapper(req, res, async (au) => {
+      if (!au.checkAccess(Permissions.settings.edit)) return this.json({}, 401);
+      else {
+        const playlistId = req.query?.playlistId ? req.query.playlistId.toString() : "";
+        const channelId = req.query?.channelId ? req.query.channelId.toString() : "";
+        let result = await this.repositories.setting.loadByKeyNames(au.churchId, ["channelId", "autoImportSermons"]);
+        result = result.filter((r: any) => r.value !== ""); // remove rows with empty value
+        if (playlistId && channelId) {
+          const filteredData = this.repositories.setting.getImports(result, playlistId, channelId);
+          if (filteredData) return this.repositories.setting.convertAllImports(filteredData);
+        }
+        result = this.repositories.setting.getImports(result);
+        return this.repositories.setting.convertAllImports(result);
+      }
+    })
+  }
+
   private async saveSetting(setting: Setting) {
     if (setting.value.startsWith("data:image/")) setting = await this.saveImage(setting);
     setting = await this.repositories.setting.save(setting);
