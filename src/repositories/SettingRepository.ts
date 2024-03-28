@@ -32,6 +32,10 @@ export class SettingRepository {
         return DB.query("SELECT * FROM settings WHERE churchId=? AND public=?", [churchId, 1])
     }
 
+    public loadAllPublicSettings() {
+        return DB.query("SELECT * FROM settings WHERE public=1;", [])
+    }
+
     public loadMulipleChurches(keyNames: string[], churchIds: string[]) {
         return DB.query("SELECT * FROM settings WHERE keyName in (?) AND churchId IN (?) AND public=1", [keyNames, churchIds])
     }

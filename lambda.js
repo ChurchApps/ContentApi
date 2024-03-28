@@ -2,6 +2,7 @@ const { createServer, proxy } = require('aws-serverless-express');
 const { init } = require('./dist/app');
 const { Pool } = require('@churchapps/apihelper');
 const { Environment } = require('./dist/helpers/Environment');
+const { ScheduleHelper } = require('./dist/helpers/ScheduleHelper');
 
 const checkPool = async () => {
   if (!Environment.connectionString) {
@@ -21,7 +22,7 @@ const universal = function universal(event, context) {
 
 const nightly = async (event, context) => {
   await checkPool();
-  await AutomationHelper.checkAll();
+  await ScheduleHelper.handleAutoImports();
 }
 
 module.exports.universal = universal;
