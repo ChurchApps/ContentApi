@@ -35,7 +35,7 @@ functions:
     handler: lambda.nightly
     events:
       - schedule:
-          rate: cron(*/45 * * * ? *)
+          rate: cron(0 0 * * ? *)
           enabled: true
     vpc: ${self:custom.vpcSettings.current}
 
