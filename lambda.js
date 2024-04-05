@@ -25,5 +25,11 @@ const nightly = async (event, context) => {
   await ScheduleHelper.handleAutoImports();
 }
 
+const timer2Monday = async (event, context) => {
+  await checkPool();
+  await ScheduleHelper.updateServiceTimes();
+}
+
 module.exports.universal = universal;
 module.exports.nightly = nightly;
+module.exports.timer2Monday = timer2Monday;
