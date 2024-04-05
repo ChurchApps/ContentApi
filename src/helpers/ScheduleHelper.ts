@@ -1,7 +1,7 @@
 import { DateHelper } from "@churchapps/apihelper";
 import { Repositories } from "../repositories";
 import { YouTubeHelper } from "./YouTubeHelper";
-import { Sermon } from "../models";
+import { Sermon, StreamingService } from "../models";
 
 export class ScheduleHelper {
 
@@ -50,6 +50,20 @@ export class ScheduleHelper {
 
   public static async saveSermons(sermon: Sermon) {
     await Repositories.getCurrent().sermon.save(sermon);
+  }
+
+  public static async updateServiceTimes() {
+    const services = await Repositories.getCurrent().streamingService.loadAllRecurring();
+    services.forEach((s: StreamingService) => {
+      if (s.serviceTime < new Date()) {
+        s.serviceTime.setDate(s.serviceTime.getDate() + 7);
+        this.saveStreamingServices(s);
+      }
+    })
+  }
+
+  public static async saveStreamingServices(streamingService: StreamingService) {
+    await Repositories.getCurrent().streamingService.save(streamingService);
   }
 
 }

@@ -37,4 +37,8 @@ export class StreamingServiceRepository {
     return DB.query("SELECT * FROM streamingServices WHERE churchId=? ORDER BY serviceTime;", [churchId]);
   }
 
+  public loadAllRecurring(): Promise<StreamingService[]> {
+    return DB.query("SELECT * FROM streamingServices WHERE recurring=1 ORDER BY serviceTime;", []);
+  }
+
 }
