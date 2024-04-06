@@ -57,10 +57,11 @@ export class SettingController extends ContentBaseController {
       else {
         const playlistId = req.query?.playlistId ? req.query.playlistId.toString() : "";
         const channelId = req.query?.channelId ? req.query.channelId.toString() : "";
-        let result = await this.repositories.setting.loadByKeyNames(au.churchId, ["channelId", "autoImportSermons"]);
+        const type = req.query?.type ? req.query.type.toString() : "";
+        let result = await this.repositories.setting.loadByKeyNames(au.churchId, ["youtubeChannelId", "autoImportSermons"]);
         result = result.filter((r: any) => r.value !== ""); // remove rows with empty value
         if (playlistId && channelId) {
-          const filteredData = this.repositories.setting.getImports(result, playlistId, channelId);
+          const filteredData = this.repositories.setting.getImports(result, type, playlistId, channelId);
           if (filteredData) return this.repositories.setting.convertAllImports(filteredData);
         }
         result = this.repositories.setting.getImports(result);

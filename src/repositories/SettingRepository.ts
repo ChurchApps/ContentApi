@@ -60,11 +60,11 @@ export class SettingRepository {
         return result;
     }
 
-    public getImports(data: any[], playlistId?: string, channelId?: string) {
+    public getImports(data: any[], type?: string, playlistId?: string, channelId?: string) {
         let result: any[] = [];
         if (playlistId && channelId) {
             const filteredByPlaylist = data.filter((d) => d.keyName === "autoImportSermons" && d.value.includes(playlistId));
-            const filteredByChannel = data.filter((d) => d.keyName === "channelId" && d.value === channelId);
+            const filteredByChannel = data.filter((d) => d.keyName === "youtubeChannelId" && d.value === channelId);
             const channelIds = ArrayHelper.getIds(filteredByChannel, "id");
             const filtered = filteredByPlaylist.filter((d) => { const id = d.value.split("|#"); return channelIds.indexOf(id[1]) >= 0; });
             if (filtered.length > 0) {
@@ -75,7 +75,15 @@ export class SettingRepository {
         } else {
             const filterByCategory = data.filter((d) => d.keyName === "autoImportSermons");
             if (filterByCategory.length > 0) {
-                filterByCategory.forEach((row) => {
+                let filtered: any[] = [];
+                if (type === "youtube") {
+                    const filterByYoutube = data.filter((d) => d.keyName === "youtubeChannelId");
+                    const ids = ArrayHelper.getIds(filterByYoutube, "id");
+                    filtered = filterByCategory.filter((d) => { const id = d.value.split("|#"); return ids.indexOf(id[1]) >= 0; });
+                } else {
+                    filtered = filterByCategory;
+                }
+                filtered.forEach((row) => {
                     const split = row.value.split("|#");
                     const getchannel = ArrayHelper.getOne(data, "id", split[1]);
                     result.push({ channel: getchannel, ...row });
@@ -88,7 +96,7 @@ export class SettingRepository {
     public convertAllImports(data: any[]) {
         const result: any[] = [];
         data.forEach((d) => {
-            result.push({ id: d.id, churchId: d.churchId, keyName: d.keyName, playlistId: d.value.split("|#")[0], channelId: d?.channel?.value })
+            result.push({ id: d.id, churchId: d.churchId, keyName: d.keyName, playlistId: d.value.split("|#")[0], [d?.channel?.keyName]: d?.channel?.value });
         })
         return result;
     }

@@ -8,14 +8,18 @@ export class ScheduleHelper {
   public static async handleAutoImports() {
     let settings = await Repositories.getCurrent().setting.loadAllPublicSettings();
     settings = settings.filter((s: any) => s.value !== "");
-    const getAllImports = Repositories.getCurrent().setting.convertAllImports(Repositories.getCurrent().setting.getImports(settings));
+    await this.handleYouTubeImports(settings);
+  }
+
+  public static async handleYouTubeImports(settings: any) {
+    const getAllImports = Repositories.getCurrent().setting.convertAllImports(Repositories.getCurrent().setting.getImports(settings, "youtube"));
 
     if (getAllImports.length > 0) {
       for (const importSetting of getAllImports) {
         let videosToAdd;
         const sermons = await Repositories.getCurrent().sermon.loadPublicAll(importSetting.churchId);
         const sermonsFromPlaylist = sermons.filter((s) => s.playlistId === importSetting.playlistId && s.videoType === "youtube");
-        const videosFromChannel = await YouTubeHelper.getVideosFromChannel(importSetting.churchId, importSetting.channelId);
+        const videosFromChannel = await YouTubeHelper.getVideosFromChannel(importSetting.churchId, importSetting.youtubeChannelId);
 
         // list of videos that has already been added, to get data of last video added to the playlist.
         const addedVideos = sermonsFromPlaylist.filter((sp) => {
