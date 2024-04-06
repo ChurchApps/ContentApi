@@ -63,8 +63,9 @@ export class SettingRepository {
     public getImports(data: any[], type?: string, playlistId?: string, channelId?: string) {
         let result: any[] = [];
         if (playlistId && channelId) {
+            const filterType = type === "youtube" ? "youtubeChannelId" : "vimeoChannelId"
             const filteredByPlaylist = data.filter((d) => d.keyName === "autoImportSermons" && d.value.includes(playlistId));
-            const filteredByChannel = data.filter((d) => d.keyName === "youtubeChannelId" && d.value === channelId);
+            const filteredByChannel = data.filter((d) => d.keyName === filterType && d.value === channelId);
             const channelIds = ArrayHelper.getIds(filteredByChannel, "id");
             const filtered = filteredByPlaylist.filter((d) => { const id = d.value.split("|#"); return channelIds.indexOf(id[1]) >= 0; });
             if (filtered.length > 0) {
