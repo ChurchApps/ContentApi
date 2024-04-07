@@ -1,6 +1,7 @@
 import { DateHelper } from "@churchapps/apihelper";
 import { Repositories } from "../repositories";
 import { YouTubeHelper } from "./YouTubeHelper";
+import { VimeoHelper } from "./VimeoHelper";
 import { Sermon, StreamingService } from "../models";
 
 export class ScheduleHelper {
@@ -8,18 +9,20 @@ export class ScheduleHelper {
   public static async handleAutoImports() {
     let settings = await Repositories.getCurrent().setting.loadAllPublicSettings();
     settings = settings.filter((s: any) => s.value !== "");
-    await this.handleYouTubeImports(settings);
+    await this.handleImport(settings, "youtube");
+    await this.handleImport(settings, "vimeo");
   }
 
-  public static async handleYouTubeImports(settings: any) {
-    const getAllImports = Repositories.getCurrent().setting.convertAllImports(Repositories.getCurrent().setting.getImports(settings, "youtube"));
+  public static async handleImport(settings: any, type: "youtube" | "vimeo") {
+    const getAllImports = Repositories.getCurrent().setting.convertAllImports(Repositories.getCurrent().setting.getImports(settings, type));
 
     if (getAllImports.length > 0) {
       for (const importSetting of getAllImports) {
         let videosToAdd;
         const sermons = await Repositories.getCurrent().sermon.loadPublicAll(importSetting.churchId);
-        const sermonsFromPlaylist = sermons.filter((s) => s.playlistId === importSetting.playlistId && s.videoType === "youtube");
-        const videosFromChannel = await YouTubeHelper.getVideosFromChannel(importSetting.churchId, importSetting.youtubeChannelId);
+        const sermonsFromPlaylist = sermons.filter((s) => s.playlistId === importSetting.playlistId && s.videoType === type);
+        const getchannel = type === "youtube" ? await YouTubeHelper.getVideosFromChannel(importSetting.churchId, importSetting.youtubeChannelId) : await VimeoHelper.getVideosFromChannel(importSetting.churchId, importSetting.vimeoChannelId);
+        const videosFromChannel = getchannel;
 
         // list of videos that has already been added, to get data of last video added to the playlist.
         const addedVideos = sermonsFromPlaylist.filter((sp) => {

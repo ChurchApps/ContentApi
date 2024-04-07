@@ -81,6 +81,10 @@ export class SettingRepository {
                     const filterByYoutube = data.filter((d) => d.keyName === "youtubeChannelId");
                     const ids = ArrayHelper.getIds(filterByYoutube, "id");
                     filtered = filterByCategory.filter((d) => { const id = d.value.split("|#"); return ids.indexOf(id[1]) >= 0; });
+                } else if (type === "vimeo") {
+                    const filterByVimeo = data.filter((d) => d.keyName === "vimeoChannelId");
+                    const ids = ArrayHelper.getIds(filterByVimeo, "id");
+                    filtered = filterByCategory.filter((d) => { const id = d.value.split("|#"); return ids.indexOf(id[1]) >= 0; });
                 } else {
                     filtered = filterByCategory;
                 }
