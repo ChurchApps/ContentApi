@@ -63,8 +63,9 @@ export class SettingRepository {
     public getImports(data: any[], type?: string, playlistId?: string, channelId?: string) {
         let result: any[] = [];
         if (playlistId && channelId) {
+            const filterType = type === "youtube" ? "youtubeChannelId" : "vimeoChannelId"
             const filteredByPlaylist = data.filter((d) => d.keyName === "autoImportSermons" && d.value.includes(playlistId));
-            const filteredByChannel = data.filter((d) => d.keyName === "youtubeChannelId" && d.value === channelId);
+            const filteredByChannel = data.filter((d) => d.keyName === filterType && d.value === channelId);
             const channelIds = ArrayHelper.getIds(filteredByChannel, "id");
             const filtered = filteredByPlaylist.filter((d) => { const id = d.value.split("|#"); return channelIds.indexOf(id[1]) >= 0; });
             if (filtered.length > 0) {
@@ -79,6 +80,10 @@ export class SettingRepository {
                 if (type === "youtube") {
                     const filterByYoutube = data.filter((d) => d.keyName === "youtubeChannelId");
                     const ids = ArrayHelper.getIds(filterByYoutube, "id");
+                    filtered = filterByCategory.filter((d) => { const id = d.value.split("|#"); return ids.indexOf(id[1]) >= 0; });
+                } else if (type === "vimeo") {
+                    const filterByVimeo = data.filter((d) => d.keyName === "vimeoChannelId");
+                    const ids = ArrayHelper.getIds(filterByVimeo, "id");
                     filtered = filterByCategory.filter((d) => { const id = d.value.split("|#"); return ids.indexOf(id[1]) >= 0; });
                 } else {
                     filtered = filterByCategory;
