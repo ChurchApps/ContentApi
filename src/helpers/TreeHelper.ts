@@ -59,11 +59,11 @@ export class TreeHelper {
         e.styles = JSON.parse(e.stylesJSON);
       }
       catch {
-        e.answers = [];
-        e.styles = [];
+        e.answers = {};
+        e.styles = {};
       }
-      if (!e.answers) e.answers = [];
-      if (!e.styles) e.styles = [];
+      if (!e.answers) e.answers = {};
+      if (!e.styles) e.styles = {};
     })
   }
 
