@@ -155,7 +155,11 @@ export class ElementController extends ContentBaseController {
         const column: Element = { churchId: row.churchId, sectionId: row.sectionId, blockId: row.blockId, elementType: "column", sort: i + 1, parentId: row.id, answersJSON: JSON.stringify(answers) };
         await this.repositories.element.save(column);
         // populate row.elements here too, so it's available in the POST response.
-        row?.elements ? row.elements.push(column) : row.elements = [column];
+        if (row?.elements) {
+          row.elements.push(column);
+        } else {
+          row.elements = [column];
+        }
       }
     }
   }
