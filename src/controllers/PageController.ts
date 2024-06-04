@@ -117,7 +117,7 @@ export class PageController2 extends ContentBaseController {
       delete s.pageId;
       delete s.sort;
       s.elements?.forEach(e => {
-        delete e.id;
+        // delete e.id;
         delete e.churchId;
         delete e.sectionId;
         delete e.sort;
