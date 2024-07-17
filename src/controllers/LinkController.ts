@@ -62,6 +62,7 @@ export class LinkController extends ContentBaseController {
           }
         });
         links = await Promise.all(promises);
+        if (links.length>0) await this.repositories.link.sort(au.churchId, links[0].category, links[0].parentId);
         return this.json(links, 200);
       }
     });

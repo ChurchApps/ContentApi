@@ -1,5 +1,5 @@
 import { Link } from "../models";
-import { DB, UniqueIdHelper } from "@churchapps/apihelper";
+import { ArrayHelper, DB, UniqueIdHelper } from "@churchapps/apihelper";
 
 export class LinkRepository {
 
@@ -17,6 +17,21 @@ export class LinkRepository {
 
   public save(link: Link) {
     return link.id ? this.update(link) : this.create(link);
+  }
+
+  public async sort(churchId: string, category: string, parentId: string) {
+    const existing = await this.loadByCategory(churchId, category);
+    const filtered = ArrayHelper.getAll(existing, "parentId", parentId);
+    const toSave: Link[] = [];
+    filtered.forEach((link, index) => {
+      if (link.sort !== index) {
+        link.sort = index;
+        toSave.push(link);
+      }
+    });
+    const promises: Promise<Link>[] = [];
+    toSave.forEach((link) => promises.push(this.save(link)));
+    await Promise.all(promises);
   }
 
   private async create(link: Link) {
