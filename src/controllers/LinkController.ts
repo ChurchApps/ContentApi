@@ -17,6 +17,12 @@ export class LinkController extends ContentBaseController {
     });
   }
 
+  @httpGet("/:id")
+  public async get(@requestParam("id") id: string, req: express.Request<{}, {}, null>, res: express.Response): Promise<any> {
+    return this.actionWrapper(req, res, async (au) => {
+      return await this.repositories.link.load(au.churchId, id);
+    });
+  }
 
   @httpGet("/")
   public async loadAll(req: express.Request, res: express.Response): Promise<any> {

@@ -7,6 +7,10 @@ export class LinkRepository {
     return DB.query("SELECT * FROM links WHERE churchId=? order by sort", [churchId]);
   }
 
+  public load(churchId: string, id: string) {
+    return DB.queryOne("SELECT * FROM links WHERE id=? AND churchId=?;", [id, churchId]);
+  }
+
   public loadByCategory(churchId: string, category: string) {
     return DB.query("SELECT * FROM links WHERE churchId=? and category=? order by sort", [churchId, category]);
   }
