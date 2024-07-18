@@ -9,7 +9,7 @@ CREATE TABLE `links` (
   `linkData` varchar(255) DEFAULT NULL,
   `icon` varchar(45) DEFAULT NULL,
   `text` varchar(255) DEFAULT NULL,
-  `sort` char(11) DEFAULT NULL,
+  `sort` float DEFAULT NULL,
   `photo` varchar(255) DEFAULT NULL,
   `parentId` char(11) DEFAULT NULL,
   PRIMARY KEY (`id`),

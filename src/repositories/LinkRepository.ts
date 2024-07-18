@@ -24,8 +24,8 @@ export class LinkRepository {
     const filtered = ArrayHelper.getAll(existing, "parentId", parentId);
     const toSave: Link[] = [];
     filtered.forEach((link, index) => {
-      if (link.sort !== index*2) {
-        link.sort = index*2;
+      if (link.sort !== index) {
+        link.sort = index;
         toSave.push(link);
       }
     });
