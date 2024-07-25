@@ -67,7 +67,7 @@ export class SectionRepository {
   }
 
   public loadForPage(churchId: string, pageId: string) {
-    return DB.query("SELECT * FROM sections WHERE churchId=? AND pageId=? order by sort;", [churchId, pageId]);
+    return DB.query("SELECT * FROM sections WHERE churchId=? AND (pageId=? or pageId IS NULL) order by sort;", [churchId, pageId]);
   }
 
   public loadForZone(churchId: string, pageId: string, zone: string) {

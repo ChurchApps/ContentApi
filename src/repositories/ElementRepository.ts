@@ -102,7 +102,7 @@ export class ElementRepository {
     const sql = "SELECT e.* "
       + " FROM elements e"
       + " INNER JOIN sections s on s.id=e.sectionId"
-      + " WHERE s.pageId=? AND e.churchId=?"
+      + " WHERE (s.pageId=? OR s.pageId IS NULL) AND e.churchId=?"
       + " ORDER BY sort;";
     return DB.query(sql, [pageId, churchId]);
   }
