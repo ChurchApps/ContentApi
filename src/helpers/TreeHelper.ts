@@ -30,6 +30,7 @@ export class TreeHelper {
       const allBlockSections = await Repositories.getCurrent().section.loadForBlocks(churchId, blockIds);
       const allBlockElements = await Repositories.getCurrent().element.loadForBlocks(churchId, blockIds);
       this.populateAnswers(allBlockElements);
+      this.populateAnswers(allBlockSections);
 
       allElements.forEach(e => {
         if (e.answers?.targetBlockId) {
