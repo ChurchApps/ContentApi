@@ -23,6 +23,7 @@ export class BlockController extends ContentBaseController {
         ? await this.repositories.element.loadByBlockId(churchId, block.id)
         : await this.repositories.element.loadForBlock(churchId, block.id);*/
         TreeHelper.populateAnswers(allElements);
+        TreeHelper.populateAnswers(sections);
         result = block;
         result.sections = TreeHelper.buildTree(sections, allElements);
       }
