@@ -2,10 +2,6 @@ service: membership-api
 
 package:
   individually: true
-  patterns:
-    - '!node_modules/**'
-    - '!package-lock.json'
-    - '**'
 
 custom:
   env: ${lower(${opt:stage, self:provider.stage})}
@@ -51,6 +47,11 @@ functions:
     vpc: ${self:custom.vpcSettings.current}
     layers:
       - {Ref: DependenciesLambdaLayer}
+    package:
+      patterns:
+        - '!node_modules/**'
+        - '!package-lock.json'
+        - '**'
 
 plugins:
   - serverless-plugin-utils
