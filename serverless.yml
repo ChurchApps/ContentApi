@@ -1,4 +1,4 @@
-service: membership-api
+service: content-api
 
 package:
   individually: true
@@ -35,7 +35,7 @@ layers:
 
 functions:
   api:
-    name: membership-api-${sls:stage}-api
+    name: content-api-${sls:stage}-api
     handler: lambda.universal
     events:
       - http:
