@@ -80,7 +80,7 @@ export class EventController extends ContentBaseController {
     events.forEach(event => { event.exceptionDates=[]; });
     const result = await this.repositories.eventException.loadForEvents(events[0].churchId, eventIds);
     result.forEach((eventException:EventException) => {
-      const event = events.find(event => event.id === eventException.eventId);
+      const event = events.find(ev => ev.id === eventException.eventId);
       if (event) event.exceptionDates.push(eventException.exceptionDate);
     });
   }

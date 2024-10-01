@@ -19,3 +19,5 @@ export { CuratedCalendarController } from "./CuratedCalendarController";
 export { CuratedEventController } from "./CuratedEventController";
 
 export { SettingController } from "./SettingController";
+
+export { SupportController } from "./SupportController";
