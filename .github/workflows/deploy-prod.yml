@@ -2,7 +2,7 @@ on:
   release:
     types: [created]
   workflow_dispatch:
-
+  
 name: Deploy Prod
 
 env:
@@ -16,10 +16,13 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v2
-        with:
-          submodules: 'true'
 
-      - uses: actions/cache@v2
+      - uses: actions/setup-node@v2
+        with:
+          node-version: '18'
+
+      - name: Cache npm dependencies
+        uses: actions/cache@v2
         with:
           path: ~/.npm
           key: ${{ runner.os }}-node-${{ hashFiles('**/package-lock.json') }}
@@ -33,11 +36,29 @@ jobs:
           aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
           aws-region: us-east-2
 
-      - name: Setup Serverless
+      - name: Install dependencies
         run: |
-          export SERVERLESS_ACCESS_KEY="$SERVERLESS_ACCESS_KEY"
+          npm ci
+
+      - name: Check Serverless version
+        run: npx serverless --version
+
+      - name: Prepare Lambda Layer
+        run: |
+          mkdir -p layer/nodejs
+          cp package.json layer/nodejs/
+          cd layer/nodejs
+          npm install --production
+          cd ../..
 
       - name: Deploy API
         run: |
-          npm install
-          npm run deploy-prod
+          npm run build
+          npm run copy-assets
+          # npx serverless remove --stage Prod
+          npx serverless deploy --stage Prod --verbose --force
+
+      - name: Serverless package contents
+        run: |
+          npx serverless package --stage Prod
+          ls -R .serverless
