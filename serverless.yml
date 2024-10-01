@@ -51,26 +51,6 @@ functions:
     vpc: ${self:custom.vpcSettings.current}
     layers:
       - {Ref: DependenciesLambdaLayer}
-  nightly:
-    name: membership-api-${sls:stage}-nightly
-    handler: lambda.nightly
-    events:
-      - schedule:
-          rate: cron(0 0 * * ? *)
-          enabled: true
-    vpc: ${self:custom.vpcSettings.current}
-    layers:
-      - {Ref: DependenciesLambdaLayer}
-  timer2Monday:
-    name: membership-api-${sls:stage}-timer2Monday
-    handler: lambda.timer2Monday
-    events:
-      - schedule:
-          rate: cron(0 2 ? * MON *)
-          enabled: true
-    vpc: ${self:custom.vpcSettings.current}
-    layers:
-      - {Ref: DependenciesLambdaLayer}
 
 plugins:
   - serverless-plugin-utils
