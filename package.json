@@ -21,10 +21,10 @@
     "serverless-local": "serverless invoke local -f api"
   },
   "keywords": [],
-  "author": "Live Church Solutions",
+  "author": "ChurchApps",
   "dependencies": {
     "@aws-sdk/client-polly": "^3.658.0",
-    "@churchapps/apihelper": "0.0.15",
+    "@churchapps/apihelper": "0.0.16",
     "aws-serverless-express": "^3.4.0",
     "axios": "^1.3.4",
     "body-parser": "^1.19.1",
