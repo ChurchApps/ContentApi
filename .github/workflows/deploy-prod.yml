@@ -38,7 +38,7 @@ jobs:
 
       - name: Install dependencies
         run: |
-          npm ci
+          npm ci --production
 
       - name: Check Serverless version
         run: npx serverless --version
