@@ -14,9 +14,11 @@ export class Section {
   public targetBlockId?: string;
   public answersJSON?: string;
   public stylesJSON?: string;
+  public animationsJSON?: string;
 
   public answers?: any;
   public styles?: any;
+  public animations?: any;
   public elements?: Element[];
   public sections?: Section[];
 }

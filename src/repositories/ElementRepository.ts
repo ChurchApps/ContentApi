@@ -11,15 +11,15 @@ export class ElementRepository {
   private async create(element: Element) {
     element.id = UniqueIdHelper.shortId();
 
-    const sql = "INSERT INTO elements (id, churchId, sectionId, blockId, elementType, sort, parentId, answersJSON, stylesJSON) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?);";
-    const params = [element.id, element.churchId, element.sectionId, element.blockId, element.elementType, element.sort, element.parentId, element.answersJSON, element.stylesJSON];
+    const sql = "INSERT INTO elements (id, churchId, sectionId, blockId, elementType, sort, parentId, answersJSON, stylesJSON, animationsJSON) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?);";
+    const params = [element.id, element.churchId, element.sectionId, element.blockId, element.elementType, element.sort, element.parentId, element.answersJSON, element.stylesJSON, element.animationsJSON];
     await DB.query(sql, params);
     return element;
   }
 
   private async update(element: Element) {
-    const sql = "UPDATE elements SET sectionId=?, blockId=?, elementType=?, sort=?, parentId=?, answersJSON=?, stylesJSON=? WHERE id=? and churchId=?";
-    const params = [element.sectionId, element.blockId, element.elementType, element.sort, element.parentId, element.answersJSON, element.stylesJSON, element.id, element.churchId];
+    const sql = "UPDATE elements SET sectionId=?, blockId=?, elementType=?, sort=?, parentId=?, answersJSON=?, stylesJSON=?, animationsJSON=? WHERE id=? and churchId=?";
+    const params = [element.sectionId, element.blockId, element.elementType, element.sort, element.parentId, element.answersJSON, element.stylesJSON, element.animationsJSON, element.id, element.churchId];
     await DB.query(sql, params);
     return element;
   }
