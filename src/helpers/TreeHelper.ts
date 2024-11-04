@@ -58,13 +58,16 @@ export class TreeHelper {
       try {
         e.answers = JSON.parse(e.answersJSON);
         e.styles = JSON.parse(e.stylesJSON);
+        e.animations = JSON.parse(e.animationsJSON);
       }
       catch {
         e.answers = {};
         e.styles = {};
+        e.animations = {};
       }
       if (!e.answers) e.answers = {};
       if (!e.styles) e.styles = {};
+      if (!e.animations) e.animations = {};
     })
   }
 
