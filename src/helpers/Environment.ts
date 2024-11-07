@@ -9,6 +9,7 @@ export class Environment extends EnvironmentBase {
   static youTubeApiKey: string;
   static pexelsKey: string;
   static vimeoToken: string;
+  static messagingApi: string;
 
   static async init(environment: string) {
     let file = "dev.json";
@@ -23,6 +24,7 @@ export class Environment extends EnvironmentBase {
     await this.populateBase(data, "contentApi", environment);
 
     this.membershipApi = data.membershipApi;
+    this.messagingApi = process.env.MESSAGING_API || data.messagingApi;
     this.youTubeApiKey = process.env.YOUTUBE_API_KEY || await AwsHelper.readParameter(`/${environment}/youTubeApiKey`);
     this.pexelsKey = process.env.PEXELS_KEY || await AwsHelper.readParameter(`/${environment}/pexelsKey`);
     this.vimeoToken = process.env.VIMEO_TOKEN || await AwsHelper.readParameter(`/${environment}/vimeoToken`)

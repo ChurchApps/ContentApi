@@ -4,5 +4,6 @@
   "contentRoot": "http://localhost:3402",
   "mailSystem": "",
   "membershipApi": "http://localhost:8083",
-  "s3Bucket": ""
+  "s3Bucket": "",
+  "messagingApi": "http://localhost:8086"
 }
