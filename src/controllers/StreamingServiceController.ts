@@ -1,9 +1,11 @@
 import { controller, httpPost, httpGet, httpDelete, requestParam } from "inversify-express-utils";
 import express from "express";
+import axios from "axios";
 import { StreamingService } from "../models";
 import { ContentBaseController } from "./ContentBaseController";
 import { Permissions } from "../helpers/Permissions";
 import { EncryptionHelper, DateHelper } from "@churchapps/apihelper";
+import { Environment } from "../helpers";
 
 @controller("/streamingServices")
 export class StreamingServiceController extends ContentBaseController {
@@ -27,6 +29,8 @@ export class StreamingServiceController extends ContentBaseController {
         if (s.serviceTime < DateHelper.subtractHoursFromNow(6)) {
           if (!s.recurring) {
             promises.push(this.repositories.streamingService.delete(s.id, s.churchId));
+            // remove blocked Ips
+            promises.push(axios.post(Environment.messagingApi + "/blockedIps/clear", [{ serviceId: s.id, churchId: s.churchId }]));
             allServices.splice(index, 1)
           } else {
             s.serviceTime.setDate(s.serviceTime.getDate() + 7);
@@ -47,6 +51,8 @@ export class StreamingServiceController extends ContentBaseController {
       if (!au.checkAccess(Permissions.streamingServices.edit)) return this.json({}, 401);
       else {
         await this.repositories.streamingService.delete(id, au.churchId);
+        // remove blocked Ips
+        await axios.post(Environment.messagingApi + "/blockedIps/clear", [{ serviceId: id, churchId: au.churchId }]);
         return null;
       }
     });
