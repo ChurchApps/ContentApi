@@ -41,8 +41,8 @@ export class EventRepository {
 
   private async create(event: Event) {
     event.id = UniqueIdHelper.shortId();
-    const start = DateHelper.toMysqlDate(event.start);
-    const end = DateHelper.toMysqlDate(event.end);
+    const start = DateHelper.toUTCDate(event.start);
+    const end = DateHelper.toUTCDate(event.end);
     const sql = "INSERT INTO events (id, churchId, groupId, allDay, start, end, title, description, visibility, recurrenceRule) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?);";
     const params = [event.id, event.churchId, event.groupId, event.allDay, start, end, event.title, event.description, event.visibility, event.recurrenceRule];
     await DB.query(sql, params);
@@ -50,8 +50,8 @@ export class EventRepository {
   }
 
   private async update(event: Event) {
-    const start = DateHelper.toMysqlDate(event.start);
-    const end = DateHelper.toMysqlDate(event.end);
+    const start = DateHelper.toUTCDate(event.start);
+    const end = DateHelper.toUTCDate(event.end);
     const sql = "UPDATE events SET groupId=?, allDay=?, start=?, end=?, title=?, description=?, visibility=?, recurrenceRule=? WHERE id=? and churchId=?";
     const params = [event.groupId, event.allDay, start, end, event.title, event.description, event.visibility, event.recurrenceRule, event.id, event.churchId];
     await DB.query(sql, params);
