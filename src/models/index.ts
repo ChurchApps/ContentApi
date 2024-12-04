@@ -16,3 +16,5 @@ export { CuratedCalendar } from "./CuratedCalendar";
 export { CuratedEvent } from "./CuratedEvent";
 
 export { Setting } from "./Setting";
+
+export { Bible } from "./Bible";

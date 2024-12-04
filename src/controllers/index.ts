@@ -21,3 +21,5 @@ export { CuratedEventController } from "./CuratedEventController";
 export { SettingController } from "./SettingController";
 
 export { SupportController } from "./SupportController";
+
+export { BibleController } from "./BibleController";

@@ -14,6 +14,7 @@ import {
   CuratedEventRepository,
   LinkRepository,
   SettingRepository,
+  BibleRepository,
 } from ".";
 
 export class Repositories {
@@ -36,6 +37,8 @@ export class Repositories {
 
   public setting: SettingRepository;
 
+  public bible: BibleRepository;
+
   private static _current: Repositories = null;
   public static getCurrent = () => {
     if (Repositories._current === null) Repositories._current = new Repositories();
@@ -43,6 +46,7 @@ export class Repositories {
   }
 
   constructor() {
+    this.bible = new BibleRepository();
     this.block = new BlockRepository();
     this.globalStyle = new GlobalStyleRepository();
     this.curatedCalendar = new CuratedCalendarRepository();

@@ -17,5 +17,7 @@ export { CuratedEventRepository } from "./CuratedEventRepository";
 
 export { SettingRepository } from "./SettingRepository";
 
+export { BibleRepository } from "./BibleRepository";
+
 export { Repositories } from "./Repositories";
 
