@@ -22,4 +22,4 @@ export { SettingController } from "./SettingController";
 
 export { SupportController } from "./SupportController";
 
-export { BibleController } from "./BibleController";
+export { BibleTranslationController } from "./BibleTranslationController";

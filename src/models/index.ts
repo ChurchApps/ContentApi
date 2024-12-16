@@ -17,4 +17,6 @@ export { CuratedEvent } from "./CuratedEvent";
 
 export { Setting } from "./Setting";
 
-export { Bible } from "./Bible";
+export { BibleBook } from "./BibleBook";
+export { BibleTranslation } from "./BibleTranslation";
+export { BibleVerse } from "./BibleVerse";

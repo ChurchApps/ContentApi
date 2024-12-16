@@ -1,6 +1,6 @@
 import axios from "axios";
 import { Environment } from "./Environment";
-import { Bible } from "../models";
+import { BibleBook, BibleTranslation } from "../models";
 import { Repositories } from "../repositories";
 import { ArrayHelper } from "@churchapps/apihelper";
 
@@ -102,7 +102,7 @@ export class ApiBibleHelper {
     const data = await this.getContent(url);
     const result:any[] = [];
     data.data.content.forEach((c:any) => {
-      c.items.forEach((i:any) => {
+      c.items.forEach((i:any, idx:number) => {
         if (i.attrs?.verseId) {
           const parts = i.attrs.verseId.split(".");
           const verse = parseInt(parts[parts.length-1], 0);
@@ -110,7 +110,8 @@ export class ApiBibleHelper {
             result.push({
               id: i.attrs.verseId,
               number:verse,
-              text: i.text.trim()
+              text: i.text.trim(),
+              newParagraph: c.name === "para" && idx === 0
             });
           }
         }
@@ -128,8 +129,18 @@ export class ApiBibleHelper {
     if (!bible) throw new Error("Bible not found: " + abbreviation);
     const bibleId=bible.id;
 
+    const saveTranslation: BibleTranslation = {
+      name: bible.name,
+      abbreviation: bible.abbreviation,
+      source: "bible.api",
+      sourceKey: bible.id,
+      language: bible.language
+    }
+    await Repositories.getCurrent().bibleTranslation.save(saveTranslation);
+
     // const bible = await ApiBibleHelper.bible(bibleId);
     const books = await ApiBibleHelper.books(bible.id);
+
 
 
     const result:any = {
@@ -138,7 +149,9 @@ export class ApiBibleHelper {
       books: []
     }
 
+    let i = 0;
     for (const book of books) {
+      i++;
     // const book = books[0];
       const b:any = {
         number: book.number,
@@ -146,6 +159,16 @@ export class ApiBibleHelper {
         chapters: []
       }
       result.books.push(b);
+
+      /*
+      const saveBook:BibleBook = {
+        keyName: book.id,
+        name: book.name,
+        sort: book.number*10,
+      }
+      await Repositories.getCurrent().bibleBook.save(saveBook);
+      */
+
 
       const chapters = await ApiBibleHelper.chapters(bibleId, book.id);
       for (const chapter of chapters) {
@@ -155,19 +178,38 @@ export class ApiBibleHelper {
         }
         b.chapters.push(c);
 
+        const versePromises:Promise<any>[] = [];
         const passages = await ApiBibleHelper.passages(bibleId, chapter.id);
         for (const passage of passages) {
           const v:any = {
             number: passage.number,
-            text: passage.text
+            text: passage.text,
+            newParagraph: passage.newParagraph
           }
+
+
+          const saveVerse = {
+            book: book.id,
+            translation: abbreviation,
+            chapter: c.number,
+            verse: v.number,
+            content: v.text,
+            newParagraph: v.newParagraph
+          }
+
+          versePromises.push(Repositories.getCurrent().bibleVerse.save(saveVerse));
+
+
+
           c.verses.push(v);
         }
+        console.log("SAVING", book.id + " " + c.number);
+        await Promise.all(versePromises);
 
       }
 
     }
-
+/*
     const toSave:Bible = {
       source: "bible.api",
       sourceKey: bibleId,
@@ -176,7 +218,24 @@ export class ApiBibleHelper {
       content: JSON.stringify(result)
     }
     await Repositories.getCurrent().bible.save(toSave);
+    */
+/*
+    for (const book of books) {
+      for (const chapter of book.chapters) {
+        for (const verse of chapter.verses) {
 
+          const saveVerse = {
+            book: book.abbreviation,
+            chapter: chapter.number,
+            verse: verse.number,
+            content: verse.text,
+            newParagraph: verse.newParagraph
+          }
+          await Repositories.getCurrent().verse.save(saveVerse);
+        }
+      }
+    }
+*/
     console.log("Import Complete", new Date().toISOString());
   }
 

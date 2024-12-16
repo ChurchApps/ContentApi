@@ -14,7 +14,9 @@ import {
   CuratedEventRepository,
   LinkRepository,
   SettingRepository,
-  BibleRepository,
+  BibleVerseRepository,
+  BibleBookRepository,
+  BibleTranslationRepository,
 } from ".";
 
 export class Repositories {
@@ -37,7 +39,9 @@ export class Repositories {
 
   public setting: SettingRepository;
 
-  public bible: BibleRepository;
+  public bibleBook: BibleBookRepository;
+  public bibleTranslation: BibleTranslationRepository;
+  public bibleVerse: BibleVerseRepository;
 
   private static _current: Repositories = null;
   public static getCurrent = () => {
@@ -46,7 +50,9 @@ export class Repositories {
   }
 
   constructor() {
-    this.bible = new BibleRepository();
+    this.bibleBook = new BibleBookRepository();
+    this.bibleTranslation = new BibleTranslationRepository();
+    this.bibleVerse = new BibleVerseRepository();
     this.block = new BlockRepository();
     this.globalStyle = new GlobalStyleRepository();
     this.curatedCalendar = new CuratedCalendarRepository();
