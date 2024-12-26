@@ -1,5 +1,6 @@
 import { controller, httpPost, httpGet, interfaces, requestParam, httpDelete } from "inversify-express-utils";
 import express from "express";
+import * as ics from "ics";
 import { ContentBaseController } from "./ContentBaseController"
 import { Event, EventException } from "../models"
 import { Permissions } from "../helpers";
@@ -20,6 +21,22 @@ export class EventController extends ContentBaseController {
     return this.actionWrapper(req, res, async (au) => {
       const eventIds = req.query.eventIds ? req.query.eventIds.toString().split(",") : [];
       return await this.repositories.event.loadTimeline(au.churchId, au.groupIds, eventIds);
+    });
+  }
+
+  @httpGet("/subscribe")
+  public async subscribe(req: express.Request<{}, {}, null>, res: express.Response): Promise<interfaces.IHttpActionResult> {
+    return this.actionWrapper(req, res, async (au) => {
+      let newEvents: any[] = [];
+      if (req.query.groupId) {
+        const groupEvents = await this.repositories.event.loadForGroup(au.churchId, req.query.groupId.toString());
+        if (groupEvents && groupEvents.length > 0) newEvents = this.populateEventsForICS(groupEvents);
+      } else if (req.query.curatedCalendarId) {
+        const curatedEvents = await this.repositories.curatedEvent.loadForEvents(req.query.curatedCalendarId.toString(), au.churchId);
+        if (curatedEvents && curatedEvents.length > 0) newEvents = this.populateEventsForICS(curatedEvents);
+      }
+      const { error, value } = ics.createEvents(newEvents);
+      return { error, value };
     });
   }
 
@@ -83,6 +100,21 @@ export class EventController extends ContentBaseController {
       const event = events.find(ev => ev.id === eventException.eventId);
       if (event) event.exceptionDates.push(eventException.exceptionDate);
     });
+  }
+
+  private populateEventsForICS(events: Event[]) {
+    const result: any[] = [];
+    events.forEach((ev: Event) => {
+      const newEv: any = {};
+      newEv.start = ev.start.getTime();
+      newEv.end = ev.end.getTime();
+      newEv.title = ev.title;
+      newEv.description = ev.description || "";
+      newEv.recurrenceRule = ev.recurrenceRule || "";
+      newEv.exclusionDates = ev.exceptionDates || [];
+      result.push(newEv);
+    });
+    return result;
   }
 
 }
