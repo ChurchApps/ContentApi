@@ -26,17 +26,25 @@ export class EventController extends ContentBaseController {
 
   @httpGet("/subscribe")
   public async subscribe(req: express.Request<{}, {}, null>, res: express.Response): Promise<interfaces.IHttpActionResult> {
-    return this.actionWrapper(req, res, async (au) => {
+    return this.actionWrapperAnon(req, res, async () => {
       let newEvents: any[] = [];
       if (req.query.groupId) {
-        const groupEvents = await this.repositories.event.loadForGroup(au.churchId, req.query.groupId.toString());
+        const groupEvents = await this.repositories.event.loadForGroup(req.query.churchId.toString(), req.query.groupId.toString());
         if (groupEvents && groupEvents.length > 0) newEvents = this.populateEventsForICS(groupEvents);
       } else if (req.query.curatedCalendarId) {
-        const curatedEvents = await this.repositories.curatedEvent.loadForEvents(req.query.curatedCalendarId.toString(), au.churchId);
+        const curatedEvents = await this.repositories.curatedEvent.loadForEvents(req.query.curatedCalendarId.toString(), req.query.churchId.toString());
         if (curatedEvents && curatedEvents.length > 0) newEvents = this.populateEventsForICS(curatedEvents);
       }
       const { error, value } = ics.createEvents(newEvents);
-      return { error, value };
+
+      if (error) {
+        console.log("error: ", error);
+        res.status(500).send("Error generating calendar.");
+        return;
+      }
+
+      res.set("Content-Type", "text/calendar");
+      res.send(value);
     });
   }
 
