@@ -35,7 +35,11 @@ export class BlockRepository {
   }
 
   public loadAll(churchId: string) {
-    return DB.query("SELECT * FROM blocks WHERE churchId=?;", [churchId]);
+    return DB.query("SELECT * FROM blocks WHERE churchId=? ORDER BY name;", [churchId]);
+  }
+
+  public loadByBlockType(churchId: string, blockType:string) {
+    return DB.query("SELECT * FROM blocks WHERE churchId=? and blockType=? ORDER BY name;", [churchId, blockType]);
   }
 
 }

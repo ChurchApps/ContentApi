@@ -46,6 +46,13 @@ export class BlockController extends ContentBaseController {
     });
   }
 
+  @httpGet("/blockType/:blockType")
+  public async loadByType(@requestParam("blockType") blockType: string, req: express.Request, res: express.Response): Promise<any> {
+    return this.actionWrapper(req, res, async (au) => {
+      return await this.repositories.block.loadByBlockType(au.churchId, blockType);
+    });
+  }
+
   @httpPost("/")
   public async save(req: express.Request<{}, {}, Block[]>, res: express.Response): Promise<interfaces.IHttpActionResult> {
     return this.actionWrapper(req, res, async (au) => {
