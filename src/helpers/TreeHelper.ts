@@ -57,8 +57,8 @@ export class TreeHelper {
         footerBlockSections.forEach(s => {
           s.zone="siteFooter";
           const blockElements = ArrayHelper.getAll(allBlockElements, "blockId", footerBlocks[0].id);
-          s.elements = blockElements;
-          sections.push(s);
+          const tree = this.buildTree([s], blockElements);
+          sections.push(...tree);
         });
 
       }
