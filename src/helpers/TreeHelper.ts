@@ -1,4 +1,4 @@
-import { Section, Element } from "../models";
+import { Section, Element, Block } from "../models";
 import { ArrayHelper } from "@churchapps/apihelper";
 import { Repositories } from "../repositories";
 
@@ -24,6 +24,8 @@ export class TreeHelper {
 
   static async insertBlocks(sections: Section[], allElements: Element[], churchId: string) {
     const blockIds: string[] = [];
+    const footerBlocks:Block[] = await Repositories.getCurrent().block.loadByBlockType(churchId, "footerBlock");
+    footerBlocks.forEach(b => { blockIds.push(b.id) });
     sections.forEach(s => { if (s.targetBlockId) blockIds.push(s.targetBlockId) });
     allElements.forEach(e => { if (e.answers.targetBlockId) blockIds.push(e.answers.targetBlockId); });
     if (blockIds.length > 0) {
@@ -49,6 +51,14 @@ export class TreeHelper {
           s.sections = tree;
         }
       })
+
+      if (footerBlocks.length > 0) {
+        const footerBlockSections = ArrayHelper.getAll(allBlockSections, "blockId", footerBlocks[0].id);
+        footerBlockSections.forEach(s => {
+          s.zone="siteFooter";
+          sections.push(s);
+        });
+      }
 
     }
   }
