@@ -4,6 +4,7 @@ import { ContentBaseController } from "./ContentBaseController"
 import { Block, Element, Section } from "../models"
 import { Permissions } from "../helpers";
 import { TreeHelper } from "../helpers/TreeHelper";
+import { ArrayHelper } from "@churchapps/apihelper";
 
 @controller("/blocks")
 export class BlockController extends ContentBaseController {
@@ -50,6 +51,31 @@ export class BlockController extends ContentBaseController {
   public async loadByType(@requestParam("blockType") blockType: string, req: express.Request, res: express.Response): Promise<any> {
     return this.actionWrapper(req, res, async (au) => {
       return await this.repositories.block.loadByBlockType(au.churchId, blockType);
+    });
+  }
+
+  @httpGet("/public/footer/:churchId")
+  public async loadFooter(@requestParam("churchId") churchId: string, req: express.Request, res: express.Response): Promise<any> {
+    return this.actionWrapperAnon(req, res, async () => {
+      const footerBlocks = await this.repositories.block.loadByBlockType(churchId, "footerBlock");
+      const result:Section[] = [];
+      console.log("Footer Blocks", footerBlocks.length);
+      if (footerBlocks.length > 0) {
+        const blockIds: string[] = ArrayHelper.getIds(footerBlocks, "id");
+        const allBlockSections = await this.repositories.section.loadForBlocks(churchId, blockIds);
+        const allBlockElements = await this.repositories.element.loadForBlocks(churchId, blockIds);
+        console.log("All Block Sections", allBlockSections.length);
+
+        const footerBlockSections = ArrayHelper.getAll(allBlockSections, "blockId", footerBlocks[0].id);
+        footerBlockSections.forEach(s => {
+          s.zone="siteFooter";
+          const blockElements = ArrayHelper.getAll(allBlockElements, "blockId", footerBlocks[0].id);
+          const tree = TreeHelper.buildTree([s], blockElements);
+          result.push(...tree);
+        });
+      }
+      return result;
+
     });
   }
 
