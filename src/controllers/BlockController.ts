@@ -64,6 +64,8 @@ export class BlockController extends ContentBaseController {
         const blockIds: string[] = ArrayHelper.getIds(footerBlocks, "id");
         const allBlockSections = await this.repositories.section.loadForBlocks(churchId, blockIds);
         const allBlockElements = await this.repositories.element.loadForBlocks(churchId, blockIds);
+        TreeHelper.populateAnswers(allBlockElements);
+        TreeHelper.populateAnswers(allBlockSections);
         console.log("All Block Sections", allBlockSections.length);
 
         const footerBlockSections = ArrayHelper.getAll(allBlockSections, "blockId", footerBlocks[0].id);
