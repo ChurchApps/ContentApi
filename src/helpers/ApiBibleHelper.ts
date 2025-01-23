@@ -1,6 +1,6 @@
 import axios from "axios";
 import { Environment } from "./Environment";
-import { BibleBook, BibleTranslation } from "../models";
+import { BibleBook, BibleChapter, BibleTranslation } from "../models";
 import { Repositories } from "../repositories";
 import { ArrayHelper } from "@churchapps/apihelper";
 
@@ -36,6 +36,22 @@ export class ApiBibleHelper {
         abbreviation: d.abbreviation,
         name: d.name,
         sort: i
+      });
+    });
+    return result;
+  }
+
+  static async getChapters(translationKey: string, bookKey: string) {
+    const result: BibleChapter[] = [];
+    const url = this.baseUrl + "/bibles/" + translationKey + "/books/" + bookKey + "/chapters";
+    const data = await this.getContent(url);
+
+    data.data.forEach((d: any) => {
+      result.push({
+        translationKey,
+        bookKey,
+        keyName: d.id,
+        number: parseInt(d.number, 0) || 0
       });
     });
     return result;

@@ -10,12 +10,22 @@ export class BibleTranslationController extends ContentBaseController {
   @httpGet("/:translationKey/books")
   public async getBooks(@requestParam("translationKey") translationKey: string, req: express.Request<{}, {}, null>, res: express.Response): Promise<interfaces.IHttpActionResult> {
     return this.actionWrapperAnon(req, res, async () => {
-
-      console.log("MADE IT")
       let result = await this.repositories.bibleBook.loadAll(translationKey);
       if (result.length === 0) {
         result = await ApiBibleHelper.getBooks(translationKey);
         await this.repositories.bibleBook.saveAll(result);
+      }
+      return result;
+    });
+  }
+
+  @httpGet("/:translationKey/:bookKey/chapters")
+  public async getChapters(@requestParam("translationKey") translationKey: string, @requestParam("bookKey") bookKey: string, req: express.Request<{}, {}, null>, res: express.Response): Promise<interfaces.IHttpActionResult> {
+    return this.actionWrapperAnon(req, res, async () => {
+      let result = await this.repositories.bibleChapter.loadAll(translationKey, bookKey);
+      if (result.length === 0) {
+        result = await ApiBibleHelper.getChapters(translationKey, bookKey);
+        await this.repositories.bibleChapter.saveAll(result);
       }
       return result;
     });
