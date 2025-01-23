@@ -6,6 +6,14 @@ import { BibleTranslation } from "../models";
 @injectable()
 export class BibleTranslationRepository {
 
+  public saveAll(translations: BibleTranslation[]) {
+    const promises: Promise<BibleTranslation>[] = [];
+    translations.forEach(t => {
+      promises.push(this.save(t));
+    });
+    return Promise.all(promises);
+  }
+
   public save(translation: BibleTranslation) {
     return translation.id ? this.update(translation) : this.create(translation);
   }

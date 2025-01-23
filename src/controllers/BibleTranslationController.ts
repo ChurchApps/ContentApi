@@ -6,6 +6,24 @@ import { ApiBibleHelper } from "../helpers/ApiBibleHelper";
 @controller("/bibleTranslations")
 export class BibleTranslationController extends ContentBaseController {
 
+
+  @httpGet("/")
+  public async getAll(req: express.Request<{}, {}, null>, res: express.Response): Promise<interfaces.IHttpActionResult> {
+    return this.actionWrapperAnon(req, res, async () => {
+      let result = await this.repositories.bibleTranslation.loadAll();
+      if (result.length === 0) {
+        result = await ApiBibleHelper.getTranslations();
+        await this.repositories.bibleTranslation.saveAll(result);
+      }
+      return result;
+    });
+  }
+
+
+
+
+  /*Start Old Code*/
+
   /*
   @httpGet("/:id")
   public async get(@requestParam("id") id: string, req: express.Request<{}, {}, null>, res: express.Response): Promise<interfaces.IHttpActionResult> {
@@ -13,60 +31,56 @@ export class BibleTranslationController extends ContentBaseController {
       return await this.repositories.bible.load(id);
     });
   }*/
+  /*
+    @httpGet("/list")
+    public async list(req: express.Request<{}, {}, null>, res: express.Response): Promise<interfaces.IHttpActionResult> {
+      return this.actionWrapper(req, res, async (au) => {
+        return await ApiBibleHelper.list();
+      });
+    }
 
-  @httpGet("/list")
-  public async list(req: express.Request<{}, {}, null>, res: express.Response): Promise<interfaces.IHttpActionResult> {
-    return this.actionWrapper(req, res, async (au) => {
-      return await ApiBibleHelper.list();
-    });
-  }
 
-  @httpGet("/test")
-  public async test(req: express.Request<{}, {}, null>, res: express.Response): Promise<interfaces.IHttpActionResult> {
-    return this.actionWrapper(req, res, async (au) => {
-      return await ApiBibleHelper.passages("06125adad2d5898a-01","GEN.1");
-    });
-  }
 
-  @httpGet("/import/next")
-  public async importNext(req: express.Request<{}, {}, null>, res: express.Response): Promise<interfaces.IHttpActionResult> {
-    return this.actionWrapperAnon(req, res, async () => {
-      const apiList = await ApiBibleHelper.list();
-      const translations = await this.repositories.bibleTranslation.loadAll();
-      let abbreviation = "";
-      for (const api of apiList) {
-        let found = false;
-        for (const translation of translations) {
-          if (api.abbreviation === translation.abbreviation) {
-            found = true;
+    @httpGet("/test")
+    public async test(req: express.Request<{}, {}, null>, res: express.Response): Promise<interfaces.IHttpActionResult> {
+      return this.actionWrapper(req, res, async (au) => {
+        return await ApiBibleHelper.passages("06125adad2d5898a-01", "GEN.1");
+      });
+    }
+
+    @httpGet("/import/next")
+    public async importNext(req: express.Request<{}, {}, null>, res: express.Response): Promise<interfaces.IHttpActionResult> {
+      return this.actionWrapperAnon(req, res, async () => {
+        const apiList = await ApiBibleHelper.list();
+        const translations = await this.repositories.bibleTranslation.loadAll();
+        let abbreviation = "";
+        for (const api of apiList) {
+          let found = false;
+          for (const translation of translations) {
+            if (api.abbreviation === translation.abbreviation) {
+              found = true;
+              break;
+            }
+          }
+          if (!found) {
+            abbreviation = api.abbreviation;
             break;
           }
         }
-        if (!found) {
-          abbreviation = api.abbreviation;
-          break;
-        }
-      }
-      await ApiBibleHelper.import(abbreviation);
-      return {status:"done"};
-    });
-  }
+        await ApiBibleHelper.import(abbreviation);
+        return { status: "done" };
+      });
+    }
 
-  @httpGet("/import/:abbreviation")
-  public async full(@requestParam("abbreviation") abbreviation: string,req: express.Request<{}, {}, null>, res: express.Response): Promise<interfaces.IHttpActionResult> {
-    return this.actionWrapperAnon(req, res, async () => {
-      await ApiBibleHelper.import(abbreviation);
-      /*
-      const bible = await this.repositories.bible.loadByAbbreviation(abbreviation);
-      if (!bible) {
+    @httpGet("/import/:abbreviation")
+    public async full(@requestParam("abbreviation") abbreviation: string, req: express.Request<{}, {}, null>, res: express.Response): Promise<interfaces.IHttpActionResult> {
+      return this.actionWrapperAnon(req, res, async () => {
+        await ApiBibleHelper.import(abbreviation);
 
-        // bible = await this.repositories.bible.loadByAbbreviation(abbreviation);
-      }
-      // const result = JSON.parse(bible.content);
-      */
-      return {status:"done"};
-    });
-  }
+        return { status: "done" };
+      });
+    }
+    */
 
   /*
 
