@@ -8,9 +8,7 @@ export class BibleTranslationRepository {
 
   public saveAll(translations: BibleTranslation[]) {
     const promises: Promise<BibleTranslation>[] = [];
-    translations.forEach(t => {
-      promises.push(this.save(t));
-    });
+    translations.forEach(t => { promises.push(this.save(t)); });
     return Promise.all(promises);
   }
 
