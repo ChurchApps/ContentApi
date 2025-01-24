@@ -1,11 +1,10 @@
-import { controller, httpDelete, httpGet, httpPost, interfaces, requestParam } from "inversify-express-utils";
+import { controller, httpGet, interfaces, requestParam } from "inversify-express-utils";
 import express from "express";
 import { ContentBaseController } from "./ContentBaseController"
 import { ApiBibleHelper } from "../helpers/ApiBibleHelper";
-import { BibleTranslation } from "../models";
 
-@controller("/bibleTranslations")
-export class BibleTranslationController extends ContentBaseController {
+@controller("/bibles")
+export class BibleController extends ContentBaseController {
 
   @httpGet("/:translationKey/books")
   public async getBooks(@requestParam("translationKey") translationKey: string, req: express.Request<{}, {}, null>, res: express.Response): Promise<interfaces.IHttpActionResult> {
@@ -26,6 +25,19 @@ export class BibleTranslationController extends ContentBaseController {
       if (result.length === 0) {
         result = await ApiBibleHelper.getChapters(translationKey, bookKey);
         await this.repositories.bibleChapter.saveAll(result);
+      }
+      return result;
+    });
+  }
+
+  @httpGet("/:translationKey/chapter/:chapterKey/verses")
+  public async getVerses(@requestParam("translationKey") translationKey: string, @requestParam("chapterKey") chapterKey: string, req: express.Request<{}, {}, null>, res: express.Response): Promise<interfaces.IHttpActionResult> {
+    return this.actionWrapperAnon(req, res, async () => {
+      console.log("Made it");
+      let result = await this.repositories.bibleVerse.loadAll(translationKey, chapterKey);
+      if (result.length === 0) {
+        result = await ApiBibleHelper.getVerses(translationKey, chapterKey);
+        await this.repositories.bibleVerse.saveAll(result);
       }
       return result;
     });

@@ -1,8 +1,6 @@
 import axios from "axios";
 import { Environment } from "./Environment";
-import { BibleBook, BibleChapter, BibleTranslation } from "../models";
-import { Repositories } from "../repositories";
-import { ArrayHelper } from "@churchapps/apihelper";
+import { BibleBook, BibleChapter, BibleTranslation, BibleVerse } from "../models";
 
 export class ApiBibleHelper {
   static baseUrl: string = "https://api.scripture.api.bible/v1";
@@ -52,6 +50,23 @@ export class ApiBibleHelper {
         bookKey,
         keyName: d.id,
         number: parseInt(d.number, 0) || 0
+      });
+    });
+    return result;
+  }
+
+  static async getVerses(translationKey: string, chapterKey: string) {
+    const result: BibleVerse[] = [];
+    const url = this.baseUrl + "/bibles/" + translationKey + "/chapters/" + chapterKey + "/verses";
+    const data = await this.getContent(url);
+
+    data.data.forEach((d: any) => {
+      const parts = d.id.split(".");
+      result.push({
+        translationKey,
+        chapterKey,
+        keyName: d.id,
+        number: parseInt(parts[parts.length - 1], 0) || 0
       });
     });
     return result;

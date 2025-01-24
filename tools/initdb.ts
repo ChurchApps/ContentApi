@@ -28,7 +28,10 @@ const init = async () => {
   ]
 
   const bibleTables: { title: string, file: string }[] = [
-    { title: "Translations", file: "bibleTranslations.mysql" }
+    { title: "Translations", file: "bibleTranslations.mysql" },
+    { title: "Books", file: "bibleBooks.mysql" },
+    { title: "Chapters", file: "bibleChapters.mysql" },
+    { title: "Verses", file: "bibleVerses.mysql" }
   ]
 
   await initTables("Content", taskTables);
