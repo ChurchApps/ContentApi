@@ -1,7 +1,7 @@
-export class BibleVerse {
+export class BibleChapter {
   public id?: string;
   public translationKey?: string;
-  public chapterKey?: string;
-  public keyName?: number;
+  public bookKey?: string;
+  public keyName?: string;
   public number?: number;
 }

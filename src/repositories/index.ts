@@ -17,9 +17,11 @@ export { CuratedEventRepository } from "./CuratedEventRepository";
 
 export { SettingRepository } from "./SettingRepository";
 
-export { BibleBookRepository } from "./BibleBookRepository";
 export { BibleTranslationRepository } from "./BibleTranslationRepository";
+export { BibleBookRepository } from "./BibleBookRepository";
+export { BibleChapterRepository } from "./BibleChapterRepository";
 export { BibleVerseRepository } from "./BibleVerseRepository";
+export { BibleVerseTextTextRepository } from "./BibleVerseTextRepository";
 
 export { Repositories } from "./Repositories";
 

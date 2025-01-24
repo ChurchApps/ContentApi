@@ -6,6 +6,12 @@ import { BibleVerse } from "../models";
 @injectable()
 export class BibleVerseRepository {
 
+  public saveAll(verses: BibleVerse[]) {
+    const promises: Promise<BibleVerse>[] = [];
+    verses.forEach(v => { promises.push(this.save(v)); });
+    return Promise.all(promises);
+  }
+
   public save(verse: BibleVerse) {
     return verse.id ? this.update(verse) : this.create(verse);
   }
@@ -13,15 +19,15 @@ export class BibleVerseRepository {
   private async create(verse: BibleVerse) {
     verse.id = UniqueIdHelper.shortId();
 
-    const sql = "INSERT INTO bibleVerses (id, translation, book, chapter, verse, content, newParagraph) VALUES (?, ?, ?, ?, ?, ?, ?);";
-    const params = [verse.id, verse.translation, verse.book, verse.chapter, verse.verse, verse.content, verse.newParagraph];
+    const sql = "INSERT INTO bibleVerses (id, translationKey, chapterKey, keyName, number) VALUES (?, ?, ?, ?, ?);";
+    const params = [verse.id, verse.translationKey, verse.chapterKey, verse.keyName, verse.number];
     await DB.query(sql, params);
     return verse;
   }
 
   private async update(verse: BibleVerse) {
-    const sql = "UPDATE bibleVerses SET translation=?, book=?, chapter=?, verse=?, content=?, newParagraph=? WHERE id=?";
-    const params = [verse.translation, verse.book, verse.chapter, verse.verse, verse.content, verse.newParagraph, verse.id];
+    const sql = "UPDATE bibleVerses SET translationKey=?, chapterKey=?, keyName=?, number=? WHERE id=?";
+    const params = [verse.translationKey, verse.chapterKey, verse.keyName, verse.number, verse.id];
     await DB.query(sql, params);
     return verse;
   }
@@ -34,8 +40,8 @@ export class BibleVerseRepository {
     return DB.queryOne("SELECT * FROM bibleVerses WHERE id=?;", [id]);
   }
 
-  public loadAll() {
-    return DB.query("SELECT * FROM bibleVerses order by name;", []);
+  public loadAll(translationKey: string, chapterKey: string) {
+    return DB.query("SELECT * FROM bibleVerses WHERE translationKey=? and chapterKey=? order by number;", [translationKey, chapterKey]);
   }
 
 }

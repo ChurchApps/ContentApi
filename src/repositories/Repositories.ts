@@ -17,6 +17,8 @@ import {
   BibleVerseRepository,
   BibleBookRepository,
   BibleTranslationRepository,
+  BibleChapterRepository,
+  BibleVerseTextTextRepository,
 } from ".";
 
 export class Repositories {
@@ -39,9 +41,11 @@ export class Repositories {
 
   public setting: SettingRepository;
 
-  public bibleBook: BibleBookRepository;
   public bibleTranslation: BibleTranslationRepository;
+  public bibleBook: BibleBookRepository;
+  public bibleChapter: BibleChapterRepository;
   public bibleVerse: BibleVerseRepository;
+  public bibleVerseText: BibleVerseTextTextRepository;
 
   private static _current: Repositories = null;
   public static getCurrent = () => {
@@ -51,8 +55,10 @@ export class Repositories {
 
   constructor() {
     this.bibleBook = new BibleBookRepository();
+    this.bibleChapter = new BibleChapterRepository();
     this.bibleTranslation = new BibleTranslationRepository();
     this.bibleVerse = new BibleVerseRepository();
+    this.bibleVerseText = new BibleVerseTextTextRepository();
     this.block = new BlockRepository();
     this.globalStyle = new GlobalStyleRepository();
     this.curatedCalendar = new CuratedCalendarRepository();
