@@ -48,7 +48,8 @@ export class BibleController extends ContentBaseController {
     return this.actionWrapperAnon(req, res, async () => {
       const canCache = true;
       let result: BibleVerseText[] = [];
-      this.logLookup(req.ip, translationKey, startVerseKey, endVerseKey);
+      const ipAddress = (req.headers['x-forwarded-for'] || req.socket.remoteAddress).toString().split(",")[0]
+      this.logLookup(ipAddress, translationKey, startVerseKey, endVerseKey);
       if (canCache) result = await this.repositories.bibleVerseText.loadRange(translationKey, startVerseKey, endVerseKey);
       console.log(result.length)
       if (result.length === 0) {
