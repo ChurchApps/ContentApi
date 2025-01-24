@@ -5,5 +5,6 @@ CREATE TABLE `bibleVerseTexts` (
   `verseNumber` int DEFAULT NULL,
   `content` varchar(1000) DEFAULT NULL,
   `newParagraph` bit DEFAULT NULL,
-  PRIMARY KEY (`id`)
+  PRIMARY KEY (`id`),
+  KEY `ix_translationKey_verseKey` (`translationKey`,`verseKey`)
 ) ENGINE=InnoDB;
