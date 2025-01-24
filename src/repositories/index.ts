@@ -22,6 +22,7 @@ export { BibleBookRepository } from "./BibleBookRepository";
 export { BibleChapterRepository } from "./BibleChapterRepository";
 export { BibleVerseRepository } from "./BibleVerseRepository";
 export { BibleVerseTextTextRepository } from "./BibleVerseTextRepository";
+export { BibleLookupRepository } from "./BibleLookupRepository";
 
 export { Repositories } from "./Repositories";
 

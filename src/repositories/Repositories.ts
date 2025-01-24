@@ -19,6 +19,7 @@ import {
   BibleTranslationRepository,
   BibleChapterRepository,
   BibleVerseTextTextRepository,
+  BibleLookupRepository,
 } from ".";
 
 export class Repositories {
@@ -46,6 +47,7 @@ export class Repositories {
   public bibleChapter: BibleChapterRepository;
   public bibleVerse: BibleVerseRepository;
   public bibleVerseText: BibleVerseTextTextRepository;
+  public bibleLookup: BibleLookupRepository;
 
   private static _current: Repositories = null;
   public static getCurrent = () => {
@@ -59,6 +61,7 @@ export class Repositories {
     this.bibleTranslation = new BibleTranslationRepository();
     this.bibleVerse = new BibleVerseRepository();
     this.bibleVerseText = new BibleVerseTextTextRepository();
+    this.bibleLookup = new BibleLookupRepository();
     this.block = new BlockRepository();
     this.globalStyle = new GlobalStyleRepository();
     this.curatedCalendar = new CuratedCalendarRepository();

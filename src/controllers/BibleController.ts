@@ -48,6 +48,7 @@ export class BibleController extends ContentBaseController {
     return this.actionWrapperAnon(req, res, async () => {
       const canCache = true;
       let result: BibleVerseText[] = [];
+      this.logLookup(req.ip, translationKey, startVerseKey, endVerseKey);
       if (canCache) result = await this.repositories.bibleVerseText.loadRange(translationKey, startVerseKey, endVerseKey);
       console.log(result.length)
       if (result.length === 0) {
@@ -68,6 +69,16 @@ export class BibleController extends ContentBaseController {
       }
       return result;
     });
+  }
+
+  private async logLookup(ipAddress: string, translationKey: string, startVerseKey: string, endVerseKey: string) {
+    const lookup = {
+      translationKey,
+      ipAddress,
+      startVerseKey,
+      endVerseKey
+    };
+    await this.repositories.bibleLookup.save(lookup);
   }
 
 
