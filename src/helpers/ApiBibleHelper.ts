@@ -1,6 +1,7 @@
 import axios from "axios";
 import { Environment } from "./Environment";
 import { BibleBook, BibleChapter, BibleTranslation, BibleVerse, BibleVerseText } from "../models";
+import { ArrayHelper } from "@churchapps/apihelper";
 
 export class ApiBibleHelper {
   static baseUrl: string = "https://api.scripture.api.bible/v1";
@@ -76,6 +77,7 @@ export class ApiBibleHelper {
   static async getVerseText(translationKey: string, startVerseKey: string, endVerseKey: string) {
     const url = this.baseUrl + "/bibles/" + translationKey + "/verses/" + startVerseKey + "-" + endVerseKey
       + "?content-type=json&include-titles=false&include-verse-numbers=false";
+    console.log(url);
     const data = await this.getContent(url);
     const result: BibleVerseText[] = [];
     data.data.content.forEach((c: any) => {
@@ -84,13 +86,17 @@ export class ApiBibleHelper {
           const parts = i.attrs.verseId.split(".");
           const verse = parseInt(parts[parts.length - 1], 0) || 0;
           if (verse > 0) {
-            result.push({
-              translationKey,
-              verseKey: i.attrs.verseId,
-              verseNumber: verse,
-              content: i.text.trim(),
-              newParagraph: c.name === "para" && idx === 0
-            });
+            const existing = ArrayHelper.getOne(result, "verseKey", i.attrs.verseId)
+            if (existing) existing.content += " " + i.text.trim();
+            else {
+              result.push({
+                translationKey,
+                verseKey: i.attrs.verseId,
+                verseNumber: verse,
+                content: i.text.trim(),
+                newParagraph: c.name === "para" && idx === 0
+              });
+            }
           }
         }
       })
