@@ -14,6 +14,7 @@ export class ApiBibleHelper {
     data.data.forEach((d: any) => {
       const translation: BibleTranslation = {
         name: d.name,
+        nameLocal: d.nameLocal,
         abbreviation: d.abbreviation,
         description: d.description,
         language: d.language.id,

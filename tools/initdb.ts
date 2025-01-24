@@ -31,7 +31,9 @@ const init = async () => {
     { title: "Translations", file: "bibleTranslations.mysql" },
     { title: "Books", file: "bibleBooks.mysql" },
     { title: "Chapters", file: "bibleChapters.mysql" },
-    { title: "Verses", file: "bibleVerses.mysql" }
+    { title: "Verses", file: "bibleVerses.mysql" },
+    { title: "Verse Texts", file: "bibleVerseTexts.mysql" },
+    { title: "Lookups", file: "bibleLookups.mysql" }
   ]
 
   await initTables("Content", taskTables);
