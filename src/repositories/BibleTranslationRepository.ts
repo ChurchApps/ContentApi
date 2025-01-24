@@ -19,15 +19,15 @@ export class BibleTranslationRepository {
   private async create(translation: BibleTranslation) {
     translation.id = UniqueIdHelper.shortId();
 
-    const sql = "INSERT INTO bibleTranslations (id, abbreviation, name, source, sourceKey, language) VALUES (?, ?, ?, ?, ?, ?);";
-    const params = [translation.id, translation.abbreviation, translation.name, translation.source, translation.sourceKey, translation.language];
+    const sql = "INSERT INTO bibleTranslations (id, abbreviation, name, description, source, sourceKey, language) VALUES (?, ?, ?, ?, ?, ?, ?);";
+    const params = [translation.id, translation.abbreviation, translation.name, translation.description, translation.source, translation.sourceKey, translation.language];
     await DB.query(sql, params);
     return translation;
   }
 
   private async update(translation: BibleTranslation) {
-    const sql = "UPDATE bibleTranslations SET abbreviation=?, name=?, source=?, sourceKey=?, language=? WHERE id=?";
-    const params = [translation.abbreviation, translation.name, translation.source, translation.sourceKey, translation.language, translation.id];
+    const sql = "UPDATE bibleTranslations SET abbreviation=?, name=?, description=?, source=?, sourceKey=?, language=? WHERE id=?";
+    const params = [translation.abbreviation, translation.name, translation.description, translation.source, translation.sourceKey, translation.language, translation.id];
     await DB.query(sql, params);
     return translation;
   }

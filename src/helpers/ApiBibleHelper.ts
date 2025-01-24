@@ -15,6 +15,7 @@ export class ApiBibleHelper {
       result.push({
         name: d.name,
         abbreviation: d.abbreviation,
+        description: d.description,
         language: d.language.id,
         source: "bible.api",
         sourceKey: d.id

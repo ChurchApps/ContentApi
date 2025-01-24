@@ -5,4 +5,5 @@ export class BibleTranslation {
   public source?: string;
   public sourceKey?: string;
   public language?: string;
+  public description?: string;
 }
