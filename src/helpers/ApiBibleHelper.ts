@@ -1,6 +1,6 @@
 import axios from "axios";
 import { Environment } from "./Environment";
-import { BibleBook, BibleChapter, BibleTranslation, BibleVerse } from "../models";
+import { BibleBook, BibleChapter, BibleTranslation, BibleVerse, BibleVerseText } from "../models";
 
 export class ApiBibleHelper {
   static baseUrl: string = "https://api.scripture.api.bible/v1";
@@ -71,6 +71,36 @@ export class ApiBibleHelper {
     });
     return result;
   }
+
+
+  static async getVerseText(translationKey: string, startVerseKey: string, endVerseKey: string) {
+    const url = this.baseUrl + "/bibles/" + translationKey + "/verses/" + startVerseKey + "-" + endVerseKey
+      + "?content-type=json&include-titles=false&include-verse-numbers=false";
+    const data = await this.getContent(url);
+    const result: BibleVerseText[] = [];
+    data.data.content.forEach((c: any) => {
+      c.items.forEach((i: any, idx: number) => {
+        if (i.attrs?.verseId) {
+          const parts = i.attrs.verseId.split(".");
+          const verse = parseInt(parts[parts.length - 1], 0) || 0;
+          if (verse > 0) {
+            result.push({
+              translationKey,
+              verseKey: i.attrs.verseId,
+              verseNumber: verse,
+              content: i.text.trim(),
+              newParagraph: c.name === "para" && idx === 0
+            });
+          }
+        }
+      })
+    });
+    return result;
+  }
+
+
+
+
 
   /*Start old code*/
 
@@ -153,7 +183,7 @@ export class ApiBibleHelper {
     const url = this.baseUrl + "/bibles/" + bibleId + "/passages/" + chapterId
       + "?content-type=json&include-titles=false&include-verse-numbers=false";
     const data = await this.getContent(url);
-    const result: any[] = [];
+    const result: BibleVerseText[] = [];
     data.data.content.forEach((c: any) => {
       c.items.forEach((i: any, idx: number) => {
         if (i.attrs?.verseId) {
@@ -161,9 +191,8 @@ export class ApiBibleHelper {
           const verse = parseInt(parts[parts.length - 1], 0);
           if (verse > 0) {
             result.push({
-              id: i.attrs.verseId,
-              number: verse,
-              text: i.text.trim(),
+              verseKey: i.attrs.verseId,
+              content: i.text.trim(),
               newParagraph: c.name === "para" && idx === 0
             });
           }

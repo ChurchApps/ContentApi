@@ -20,5 +20,5 @@ export { Setting } from "./Setting";
 export { BibleTranslation } from "./BibleTranslation";
 export { BibleBook } from "./BibleBook";
 export { BibleChapter } from "./BibleChapter";
-
 export { BibleVerse } from "./BibleVerse";
+export { BibleVerseText } from "./BibleVerseText";
