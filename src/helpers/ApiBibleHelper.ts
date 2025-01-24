@@ -12,14 +12,23 @@ export class ApiBibleHelper {
     const data = await this.getContent(url);
 
     data.data.forEach((d: any) => {
-      result.push({
+      const translation: BibleTranslation = {
         name: d.name,
         abbreviation: d.abbreviation,
         description: d.description,
         language: d.language.id,
         source: "bible.api",
-        sourceKey: d.id
+        sourceKey: d.id,
+        countryList: []
+      }
+
+
+      d.countries.forEach((c: any) => {
+        translation.countryList.push(c.id.toLowerCase());
       });
+      translation.countries = translation.countryList.join(",");
+
+      result.push(translation);
     });
     return result;
   }

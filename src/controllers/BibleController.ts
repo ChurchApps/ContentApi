@@ -2,7 +2,7 @@ import { controller, httpGet, interfaces, requestParam } from "inversify-express
 import express from "express";
 import { ContentBaseController } from "./ContentBaseController"
 import { ApiBibleHelper } from "../helpers/ApiBibleHelper";
-import { BibleVerseText } from "../models";
+import { BibleTranslation, BibleVerseText } from "../models";
 
 @controller("/bibles")
 export class BibleController extends ContentBaseController {
@@ -68,6 +68,10 @@ export class BibleController extends ContentBaseController {
         result = await ApiBibleHelper.getTranslations();
         await this.repositories.bibleTranslation.saveAll(result);
       }
+      result.forEach((r: BibleTranslation) => {
+        r.countryList = r.countries?.split(",").map((c: string) => c.trim());
+        delete r.countries;
+      })
       return result;
     });
   }

@@ -6,5 +6,6 @@ CREATE TABLE `bibleTranslations` (
   `source` varchar(45)   DEFAULT NULL,
   `sourceKey` varchar(45)   DEFAULT NULL,
   `language` varchar(45)   DEFAULT NULL,
+  `countries` varchar(255)   DEFAULT NULL,
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB;

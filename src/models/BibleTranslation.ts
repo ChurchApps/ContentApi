@@ -6,4 +6,6 @@ export class BibleTranslation {
   public sourceKey?: string;
   public language?: string;
   public description?: string;
+  public countries?: string;
+  public countryList?: string[];
 }
