@@ -6,6 +6,6 @@ CREATE TABLE `pages` (
   `url` varchar(255) DEFAULT NULL,
   `title` varchar(255) DEFAULT NULL,
   `layout` varchar(45) DEFAULT NULL,
-  PRIMARY KEY (`id`)
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `uq_churchId_url` (`churchId`,`url`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
-
