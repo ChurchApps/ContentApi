@@ -35,6 +35,13 @@ export class ApiBibleHelper {
     return result;
   }
 
+  static async search(translationKey: string, query: string) {
+    const url = this.baseUrl + "/bibles/" + translationKey + "/search?query=" + encodeURIComponent(query);
+    const data = await this.getContent(url);
+
+    return data;
+  }
+
   static async getBooks(translationKey: string) {
     const result: BibleBook[] = [];
     const url = this.baseUrl + "/bibles/" + translationKey + "/books";

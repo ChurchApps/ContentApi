@@ -7,6 +7,15 @@ import { BibleTranslation, BibleVerseText } from "../models";
 @controller("/bibles")
 export class BibleController extends ContentBaseController {
 
+  @httpGet("/:translationKey/search")
+  public async search(@requestParam("translationKey") translationKey: string, req: express.Request<{}, {}, null>, res: express.Response): Promise<interfaces.IHttpActionResult> {
+    return this.actionWrapperAnon(req, res, async () => {
+      const query = req.query.query as string;
+      const result = await ApiBibleHelper.search(translationKey, query);
+      return result;
+    });
+  }
+
   @httpGet("/:translationKey/books")
   public async getBooks(@requestParam("translationKey") translationKey: string, req: express.Request<{}, {}, null>, res: express.Response): Promise<interfaces.IHttpActionResult> {
     return this.actionWrapperAnon(req, res, async () => {
