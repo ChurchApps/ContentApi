@@ -2,6 +2,7 @@ import axios from "axios";
 import { Environment } from "./Environment";
 import { BibleBook, BibleChapter, BibleTranslation, BibleVerse, BibleVerseText } from "../models";
 import { ArrayHelper } from "@churchapps/apihelper";
+import { parse } from "dotenv";
 
 export class ApiBibleHelper {
   static baseUrl: string = "https://api.scripture.api.bible/v1";
@@ -93,27 +94,46 @@ export class ApiBibleHelper {
     const result: BibleVerseText[] = [];
     data.data.content.forEach((c: any) => {
       c.items.forEach((i: any, idx: number) => {
-        if (i.attrs?.verseId) {
-          const parts = i.attrs.verseId.split(".");
-          const verse = parseInt(parts[parts.length - 1], 0) || 0;
-          if (verse > 0) {
-            const existing = ArrayHelper.getOne(result, "verseKey", i.attrs.verseId)
-            if (existing) existing.content += " " + i.text.trim();
-            else {
-              result.push({
-                translationKey,
-                verseKey: i.attrs.verseId,
-                verseNumber: verse,
-                content: i.text.trim(),
-                newParagraph: c.name === "para" && idx === 0
-              });
-            }
-          }
-        }
+        this.parseVerseItem(i, c, idx, result, translationKey);
       })
     });
     return result;
   }
+
+  static parseVerseItem(item: any, parent: any, index: number, result: BibleVerseText[], translationKey: string) {
+    if (item.attrs?.verseId) {
+      const parts = item.attrs.verseId.split(".");
+      const verse = parseInt(parts[parts.length - 1], 0) || 0;
+
+      if (verse > 0 && item.text.trim().length > 0) {
+        const existing = ArrayHelper.getOne(result, "verseKey", item.attrs.verseId)
+        if (existing) {
+          const firstChar = item.text.trim().charAt(0);
+          const regex = /^[a-zA-Z0-9]+$/;
+          if (regex.test(firstChar)) existing.content += " " + item.text.trim();
+          else existing.content += item.text.trim();
+        }
+        else {
+          result.push({
+            translationKey,
+            verseKey: item.attrs.verseId,
+            verseNumber: verse,
+            content: item.text.trim(),
+            newParagraph: parent.name === "para" && index === 0
+          });
+        }
+      }
+    }
+
+    // console.log(item);
+    if (item.items) {
+      item.items.forEach((i: any, idx: number) => {
+        this.parseVerseItem(i, item, idx, result, translationKey);
+      });
+    }
+
+  }
+
 
 
   static async getContent(url: string) {
