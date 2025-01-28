@@ -3,6 +3,7 @@ import express from "express";
 import { ContentBaseController } from "./ContentBaseController"
 import { ApiBibleHelper } from "../helpers/ApiBibleHelper";
 import { BibleTranslation, BibleVerseText } from "../models";
+import { ArrayHelper } from "@churchapps/apihelper";
 
 @controller("/bibles")
 export class BibleController extends ContentBaseController {
@@ -99,6 +100,28 @@ export class BibleController extends ContentBaseController {
         }
       }
       return result;
+    });
+  }
+
+  @httpGet("/updateTranslations")
+  public async updateTranslations(req: express.Request<{}, {}, null>, res: express.Response): Promise<interfaces.IHttpActionResult> {
+    return this.actionWrapperAnon(req, res, async () => {
+      const dbResult = await this.repositories.bibleTranslation.loadAll();
+      const apiResult = await ApiBibleHelper.getTranslations();
+      const toSave: BibleTranslation[] = [];
+
+      apiResult.forEach((r: BibleTranslation) => {
+        const existing = ArrayHelper.getOne(dbResult, "sourceKey", r.sourceKey);
+        if (!existing) {
+          r.countryList = r.countries?.split(",").map((c: string) => c.trim());
+          delete r.countries;
+          toSave.push(r);
+        }
+      });
+
+      await this.repositories.bibleTranslation.saveAll(toSave);
+
+      return toSave;
     });
   }
 
