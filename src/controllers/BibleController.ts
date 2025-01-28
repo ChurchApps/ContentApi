@@ -63,7 +63,15 @@ export class BibleController extends ContentBaseController {
       console.log(result.length)
       if (result.length === 0) {
         result = await ApiBibleHelper.getVerseText(translationKey, startVerseKey, endVerseKey);
-        if (canCache) await this.repositories.bibleVerseText.saveAll(result);
+        if (canCache) {
+          result.forEach((r: BibleVerseText) => {
+            const parts = r.verseKey.split(".");
+            r.bookKey = parts[0];
+            r.chapterNumber = parseInt(parts[1], 0);
+            r.verseNumber = parseInt(parts[2], 0);
+          });
+          await this.repositories.bibleVerseText.saveAll(result);
+        }
       }
       return result;
     });
