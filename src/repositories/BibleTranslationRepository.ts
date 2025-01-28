@@ -19,15 +19,15 @@ export class BibleTranslationRepository {
   private async create(translation: BibleTranslation) {
     translation.id = UniqueIdHelper.shortId();
 
-    const sql = "INSERT INTO bibleTranslations (id, abbreviation, name, nameLocal, description, source, sourceKey, language, countries) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?);";
-    const params = [translation.id, translation.abbreviation, translation.name, translation.nameLocal, translation.description, translation.source, translation.sourceKey, translation.language, translation.countries];
+    const sql = "INSERT INTO bibleTranslations (id, abbreviation, name, nameLocal, description, source, sourceKey, language, countries, copyright) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?);";
+    const params = [translation.id, translation.abbreviation, translation.name, translation.nameLocal, translation.description, translation.source, translation.sourceKey, translation.language, translation.countries, translation.copyright];
     await DB.query(sql, params);
     return translation;
   }
 
   private async update(translation: BibleTranslation) {
-    const sql = "UPDATE bibleTranslations SET abbreviation=?, name=?, nameLocal=?, description=?, source=?, sourceKey=?, language=?, countries=? WHERE id=?";
-    const params = [translation.abbreviation, translation.name, translation.nameLocal, translation.description, translation.source, translation.sourceKey, translation.language, translation.countries, translation.id];
+    const sql = "UPDATE bibleTranslations SET abbreviation=?, name=?, nameLocal=?, description=?, source=?, sourceKey=?, language=?, countries=?, copyright=? WHERE id=?";
+    const params = [translation.abbreviation, translation.name, translation.nameLocal, translation.description, translation.source, translation.sourceKey, translation.language, translation.countries, translation.copyright, translation.id];
     await DB.query(sql, params);
     return translation;
   }
@@ -40,8 +40,16 @@ export class BibleTranslationRepository {
     return DB.queryOne("SELECT * FROM bibleTranslations WHERE id=?;", [id]);
   }
 
+  public loadBySourceKey(source: string, sourceKey: string) {
+    return DB.queryOne("SELECT * FROM bibleTranslations WHERE source=? and sourceKey=?;", [source, sourceKey]);
+  }
+
   public loadAll() {
     return DB.query("SELECT * FROM bibleTranslations order by name;", []);
+  }
+
+  public loadNeedingCopyrights() {
+    return DB.query("SELECT * FROM bibleTranslations where copyright is null;", []);
   }
 
 }

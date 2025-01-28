@@ -9,4 +9,5 @@ export class BibleTranslation {
   public description?: string;
   public countries?: string;
   public countryList?: string[];
+  public copyright?: string;
 }

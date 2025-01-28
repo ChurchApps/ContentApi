@@ -16,6 +16,31 @@ export class BibleController extends ContentBaseController {
     });
   }
 
+  @httpGet("/updateCopyrights")
+  public async updateCopyrights(req: express.Request<{}, {}, null>, res: express.Response): Promise<interfaces.IHttpActionResult> {
+    return this.actionWrapperAnon(req, res, async () => {
+      const translations = await this.repositories.bibleTranslation.loadNeedingCopyrights();
+      for (const translation of translations) {
+        const copyright = await ApiBibleHelper.getCopyright(translation.sourceKey);
+        console.log(translation.name, copyright);
+        translation.copyright = copyright || "";
+        await this.repositories.bibleTranslation.save(translation);
+      }
+      return [];
+    });
+  }
+
+  @httpGet("/:translationKey/updateCopyright")
+  public async updateCopyright(@requestParam("translationKey") translationKey: string, req: express.Request<{}, {}, null>, res: express.Response): Promise<interfaces.IHttpActionResult> {
+    return this.actionWrapperAnon(req, res, async () => {
+      const copyright = await ApiBibleHelper.getCopyright(translationKey);
+      const bible = await this.repositories.bibleTranslation.loadBySourceKey("api.bible", translationKey);
+      bible.copyright = copyright || "";
+      await this.repositories.bibleTranslation.save(bible);
+      return bible;
+    });
+  }
+
   @httpGet("/:translationKey/books")
   public async getBooks(@requestParam("translationKey") translationKey: string, req: express.Request<{}, {}, null>, res: express.Response): Promise<interfaces.IHttpActionResult> {
     return this.actionWrapperAnon(req, res, async () => {
