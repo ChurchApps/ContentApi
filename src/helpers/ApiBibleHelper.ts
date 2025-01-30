@@ -7,11 +7,11 @@ export class ApiBibleHelper {
   static baseUrl: string = "https://api.scripture.api.bible/v1";
 
   static attributionRequired: string[] = [
-    "a81b73293d3080c9-01", //AMP
-    "e3f420b9665abaeb-01", //LBLA
-    "a761ca71e0b3ddcf-01", //NASB2020
-    "b8ee27bcd1cae43a-01", //NASB95
-    "ce11b813f9a27e20-01" //NBLA
+    "a81b73293d3080c9-01", // AMP
+    "e3f420b9665abaeb-01", // LBLA
+    "a761ca71e0b3ddcf-01", // NASB2020
+    "b8ee27bcd1cae43a-01", // NASB95
+    "ce11b813f9a27e20-01" // NBLA
   ]
 
   static async getCopyright(translationKey: string) {
