@@ -8,6 +8,14 @@ import { ArrayHelper } from "@churchapps/apihelper";
 @controller("/bibles")
 export class BibleController extends ContentBaseController {
 
+  noCache: string[] = [
+    "a81b73293d3080c9-01", //AMP
+    "e3f420b9665abaeb-01", //LBLA
+    "a761ca71e0b3ddcf-01", //NASB2020
+    "b8ee27bcd1cae43a-01", //NASB95
+    "ce11b813f9a27e20-01" //NBLA
+  ]
+
   @httpGet("/:translationKey/search")
   public async search(@requestParam("translationKey") translationKey: string, req: express.Request<{}, {}, null>, res: express.Response): Promise<interfaces.IHttpActionResult> {
     return this.actionWrapperAnon(req, res, async () => {
@@ -81,12 +89,12 @@ export class BibleController extends ContentBaseController {
   @httpGet("/:translationKey/verses/:startVerseKey-:endVerseKey")
   public async getVerseText(@requestParam("translationKey") translationKey: string, @requestParam("startVerseKey") startVerseKey: string, @requestParam("endVerseKey") endVerseKey: string, req: express.Request<{}, {}, null>, res: express.Response): Promise<interfaces.IHttpActionResult> {
     return this.actionWrapperAnon(req, res, async () => {
-      const canCache = true;
+      const canCache = !this.noCache.includes(translationKey);
       let result: BibleVerseText[] = [];
       const ipAddress = (req.headers['x-forwarded-for'] || req.socket.remoteAddress).toString().split(",")[0]
       this.logLookup(ipAddress, translationKey, startVerseKey, endVerseKey);
+
       if (canCache) result = await this.repositories.bibleVerseText.loadRange(translationKey, startVerseKey, endVerseKey);
-      console.log(result.length)
       if (result.length === 0) {
         result = await ApiBibleHelper.getVerseText(translationKey, startVerseKey, endVerseKey);
         if (canCache) {
