@@ -5,14 +5,14 @@ import { ArrayHelper } from "@churchapps/apihelper";
 
 export class ApiBibleHelper {
   static baseUrl: string = "https://api.scripture.api.bible/v1";
-  /*
-  static translationCopyrights: { [key: string]: string } = {
-    "a81b73293d3080c9-01": "Amplified® Bible Copyright © 2015 by The Lockman Foundation, La Habra, CA 90631 All rights reserved. http://www.lockman.org",
-    "e3f420b9665abaeb-01": "La Biblia de las Américas Copyright © 1986, 1995, 1997 by The Lockman Foundation Derechos Reservados All Rights Reserved",
-    "a761ca71e0b3ddcf-01": "NEW AMERICAN STANDARD BIBLE® NASB® Copyright © 1960, 1971, 1977,1995, 2020 by The Lockman Foundation A Corporation Not for Profit La Habra, CA All Rights Reserved www.lockman.org",
-    "b8ee27bcd1cae43a-01": "NEW AMERICAN STANDARD BIBLE® NASB® Copyright © 1960,1962,1963,1968,1971,1972,1973,1975,1977,1995 by The Lockman Foundation A Corporation Not for Profit La Habra, CA All Rights Reserved www.lockman.org",
-    "ce11b813f9a27e20-01": "Nueva Biblia de las Américas Copyright © 2005 by The Lockman Foundation La Habra, California 90631 Sociedad no comercial Derechos Reservados (All Rights Reserved) http://www.NuevaBiblia.com (Español) http://www.lockman.org (English) Versión de texto 2019 Texto derivado de La Biblia de las Américas © Copyright 1986, 1995, 1997 by The Lockman Foundation"
-  }*/
+
+  static attributionRequired: string[] = [
+    "a81b73293d3080c9-01", //AMP
+    "e3f420b9665abaeb-01", //LBLA
+    "a761ca71e0b3ddcf-01", //NASB2020
+    "b8ee27bcd1cae43a-01", //NASB95
+    "ce11b813f9a27e20-01" //NBLA
+  ]
 
   static async getCopyright(translationKey: string) {
     const books = await ApiBibleHelper.getBooks(translationKey);
@@ -30,6 +30,7 @@ export class ApiBibleHelper {
 
     data.data.forEach((d: any) => {
       const translation: BibleTranslation = {
+        attributionRequired: this.attributionRequired.indexOf(d.id) >= 0,
         name: d.name,
         nameLocal: d.nameLocal,
         abbreviation: d.abbreviation,

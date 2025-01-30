@@ -19,15 +19,15 @@ export class BibleTranslationRepository {
   private async create(translation: BibleTranslation) {
     translation.id = UniqueIdHelper.shortId();
 
-    const sql = "INSERT INTO bibleTranslations (id, abbreviation, name, nameLocal, description, source, sourceKey, language, countries, copyright) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?);";
-    const params = [translation.id, translation.abbreviation, translation.name, translation.nameLocal, translation.description, translation.source, translation.sourceKey, translation.language, translation.countries, translation.copyright];
+    const sql = "INSERT INTO bibleTranslations (id, abbreviation, name, nameLocal, description, source, sourceKey, language, countries, copyright, attributionRequired) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?);";
+    const params = [translation.id, translation.abbreviation, translation.name, translation.nameLocal, translation.description, translation.source, translation.sourceKey, translation.language, translation.countries, translation.copyright, translation.attributionRequired];
     await DB.query(sql, params);
     return translation;
   }
 
   private async update(translation: BibleTranslation) {
-    const sql = "UPDATE bibleTranslations SET abbreviation=?, name=?, nameLocal=?, description=?, source=?, sourceKey=?, language=?, countries=?, copyright=? WHERE id=?";
-    const params = [translation.abbreviation, translation.name, translation.nameLocal, translation.description, translation.source, translation.sourceKey, translation.language, translation.countries, translation.copyright, translation.id];
+    const sql = "UPDATE bibleTranslations SET abbreviation=?, name=?, nameLocal=?, description=?, source=?, sourceKey=?, language=?, countries=?, copyright=?, attributionRequired=? WHERE id=?";
+    const params = [translation.abbreviation, translation.name, translation.nameLocal, translation.description, translation.source, translation.sourceKey, translation.language, translation.countries, translation.copyright, translation.attributionRequired, translation.id];
     await DB.query(sql, params);
     return translation;
   }

@@ -10,4 +10,5 @@ export class BibleTranslation {
   public countries?: string;
   public countryList?: string[];
   public copyright?: string;
+  public attributionRequired?: boolean;
 }
