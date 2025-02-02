@@ -76,6 +76,7 @@ export class CuratedEventController extends ContentBaseController {
       if (!au.checkAccess(Permissions.content.edit)) return this.json({}, 401);
       else {
         await this.repositories.curatedEvent.delete(au.churchId, id);
+        return this.json({});
       }
     });
   }
@@ -86,6 +87,7 @@ export class CuratedEventController extends ContentBaseController {
       if (!au.checkAccess(Permissions.content.edit)) return this.json({}, 401);
       else {
         await this.repositories.curatedEvent.deleteByEventId(au.churchId, curatedCalendarId, eventId);
+        return this.json({});
       }
     })
   }
@@ -96,6 +98,7 @@ export class CuratedEventController extends ContentBaseController {
       if (!au.checkAccess(Permissions.content.edit)) return this.json({}, 401);
       else {
         await this.repositories.curatedEvent.deleteByGroupId(au.churchId, curatedCalendarId, groupId);
+        return this.json({});
       }
     })
   }

@@ -43,6 +43,7 @@ export class CuratedCalendarController extends ContentBaseController {
       if (!au.checkAccess(Permissions.content.edit)) return this.json({}, 401);
       else {
         await this.repositories.curatedCalendar.delete(au.churchId, id);
+        return this.json({});
       }
     });
   }
