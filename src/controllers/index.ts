@@ -23,3 +23,6 @@ export { SettingController } from "./SettingController";
 export { SupportController } from "./SupportController";
 
 export { BibleController } from "./BibleController";
+
+export { SongDetailsController } from "./SongDetailsController";
+export { SongController } from "./SongController";

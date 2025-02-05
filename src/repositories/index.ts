@@ -24,5 +24,8 @@ export { BibleVerseRepository } from "./BibleVerseRepository";
 export { BibleVerseTextTextRepository } from "./BibleVerseTextRepository";
 export { BibleLookupRepository } from "./BibleLookupRepository";
 
+export { SongDetailRepository } from "./SongDetailRepository";
+export { SongRepository } from "./SongRepository";
+
 export { Repositories } from "./Repositories";
 

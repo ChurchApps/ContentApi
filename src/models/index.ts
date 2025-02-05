@@ -23,3 +23,6 @@ export { BibleChapter } from "./BibleChapter";
 export { BibleVerse } from "./BibleVerse";
 export { BibleVerseText } from "./BibleVerseText";
 export { BibleLookup } from "./BibleLookup";
+
+export { SongDetail } from "./SongDetail";
+export { Song } from "./Song";

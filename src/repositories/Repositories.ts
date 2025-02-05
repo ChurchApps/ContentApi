@@ -20,6 +20,8 @@ import {
   BibleChapterRepository,
   BibleVerseTextTextRepository,
   BibleLookupRepository,
+  SongDetailRepository,
+  SongRepository
 } from ".";
 
 export class Repositories {
@@ -49,6 +51,9 @@ export class Repositories {
   public bibleVerseText: BibleVerseTextTextRepository;
   public bibleLookup: BibleLookupRepository;
 
+  public songDetail: SongDetailRepository;
+  public song: SongRepository;
+
   private static _current: Repositories = null;
   public static getCurrent = () => {
     if (Repositories._current === null) Repositories._current = new Repositories();
@@ -77,5 +82,7 @@ export class Repositories {
     this.sermon = new SermonRepository();
     this.streamingService = new StreamingServiceRepository();
     this.setting = new SettingRepository();
+    this.songDetail = new SongDetailRepository();
+    this.song = new SongRepository();
   }
 }
