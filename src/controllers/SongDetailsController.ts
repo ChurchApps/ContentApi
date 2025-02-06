@@ -1,4 +1,4 @@
-import { controller, httpGet, httpPost, interfaces, } from "inversify-express-utils";
+import { controller, httpGet, httpPost, interfaces, requestParam, } from "inversify-express-utils";
 import express from "express";
 import { ContentBaseController } from "./ContentBaseController";
 import { MusicBrainzHelper } from "../helpers/MusicBrainzHelper";
@@ -7,6 +7,7 @@ import { SongDetail } from "../models";
 
 @controller("/songDetails")
 export class SongDetailsController extends ContentBaseController {
+
 
   @httpGet("/search")
   public async search(req: express.Request<{}, {}, null>, res: express.Response): Promise<interfaces.IHttpActionResult> {
@@ -17,8 +18,17 @@ export class SongDetailsController extends ContentBaseController {
     })
   }
 
+
+  @httpGet("/:id")
+  public async get(@requestParam("id") id: string, req: express.Request<{}, {}, null>, res: express.Response): Promise<any> {
+    return this.actionWrapper(req, res, async (au) => {
+      return await this.repositories.songDetail.load(id);
+    });
+  }
+
+
   @httpGet("/")
-  public async get(req: express.Request<{}, {}, null>, res: express.Response): Promise<interfaces.IHttpActionResult> {
+  public async getAll(req: express.Request<{}, {}, null>, res: express.Response): Promise<interfaces.IHttpActionResult> {
     return this.actionWrapper(req, res, async (au) => {
       return await this.repositories.songDetail.loadForChurch(au.churchId);
     })

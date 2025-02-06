@@ -29,7 +29,7 @@ export class PlaylistRepository {
   }
 
   public loadById(id: string, churchId: string): Promise<Playlist> {
-    return DB.queryOne("SELECT * FROM playlists WHERE id=? AND churchId=?;", [id]);
+    return DB.queryOne("SELECT * FROM playlists WHERE id=? AND churchId=?;", [id, churchId]);
   }
 
   public loadAll(churchId: string): Promise<Playlist[]> {

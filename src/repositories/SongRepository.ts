@@ -41,8 +41,8 @@ export class SongRepository {
     return DB.queryOne("SELECT * FROM songs WHERE churchId=? ORDER BY title;", [churchId]);
   }
 
-  public load(id: string) {
-    return DB.queryOne("SELECT * FROM songs WHERE id=?;", [id]);
+  public load(churchId: string, id: string) {
+    return DB.queryOne("SELECT * FROM songs WHERE id=? AND churchId=?;", [id, churchId]);
   }
 
   public loadBySongDetailId(churchId: string, songDetailId: string) {

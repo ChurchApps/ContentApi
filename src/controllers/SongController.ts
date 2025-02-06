@@ -1,4 +1,4 @@
-import { controller, httpPost, httpGet, interfaces } from "inversify-express-utils";
+import { controller, httpPost, httpGet, interfaces, requestParam } from "inversify-express-utils";
 import express from "express";
 import { Song } from "../models";
 import { ContentBaseController } from "./ContentBaseController";
@@ -9,8 +9,15 @@ import { Permissions } from "../helpers";
 @controller("/songs")
 export class SongController extends ContentBaseController {
 
+  @httpGet("/:id")
+  public async get(@requestParam("id") id: string, req: express.Request<{}, {}, null>, res: express.Response): Promise<any> {
+    return this.actionWrapper(req, res, async (au) => {
+      return await this.repositories.song.load(au.churchId, id);
+    });
+  }
+
   @httpGet("/")
-  public async get(req: express.Request<{}, {}, null>, res: express.Response): Promise<interfaces.IHttpActionResult> {
+  public async getAll(req: express.Request<{}, {}, null>, res: express.Response): Promise<interfaces.IHttpActionResult> {
     return this.actionWrapper(req, res, async (au) => {
       if (!au.checkAccess(Permissions.content.edit)) return this.json({}, 401);
       else {
