@@ -58,7 +58,10 @@ export class SectionController extends ContentBaseController {
         const section = await this.repositories.section.load(au.churchId, id);
         await this.repositories.section.delete(au.churchId, id);
         if (section.blockId) await this.repositories.section.updateSortForBlock(section.churchId, section.blockId);
-        else await this.repositories.section.updateSort(section.churchId, section.pageId, section.zone);
+        else {
+          await this.repositories.section.updateSort(section.churchId, section.pageId, section.zone);
+          return this.json({});
+        }
       }
     });
   }

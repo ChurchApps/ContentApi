@@ -44,6 +44,7 @@ export class GalleryController extends ContentBaseController {
       if (!au.checkAccess(Permissions.content.edit)) return this.json({}, 401);
       else {
         await FileStorageHelper.remove(au.churchId + "/gallery/" + folder + "/" + image);
+        return this.json({});
       }
     });
   }
