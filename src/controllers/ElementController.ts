@@ -58,6 +58,7 @@ export class ElementController extends ContentBaseController {
       if (!au.checkAccess(Permissions.content.edit)) return this.json({}, 401);
       else {
         await this.repositories.element.delete(au.churchId, id);
+        return this.json({});
       }
     });
   }

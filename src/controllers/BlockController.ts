@@ -103,6 +103,7 @@ export class BlockController extends ContentBaseController {
       if (!au.checkAccess(Permissions.content.edit)) return this.json({}, 401);
       else {
         await this.repositories.block.delete(au.churchId, id);
+        return this.json({});
       }
     });
   }

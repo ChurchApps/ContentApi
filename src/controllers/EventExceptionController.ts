@@ -36,6 +36,7 @@ export class EventExceptionController extends ContentBaseController {
       if (!au.checkAccess(Permissions.content.edit)) return this.json({}, 401);
       else {
         await this.repositories.eventException.delete(au.churchId, id);
+        return this.json({});
       }
     });
   }

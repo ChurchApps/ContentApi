@@ -55,6 +55,7 @@ export class GlobalStyleController extends ContentBaseController {
       if (!au.checkAccess(Permissions.content.edit)) return this.json({}, 401);
       else {
         await this.repositories.globalStyle.delete(id, au.churchId);
+        return this.json({});
       }
     });
   }
