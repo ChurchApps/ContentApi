@@ -45,4 +45,16 @@ export class SongDetailsController extends ContentBaseController {
     })
   }
 
+  @httpPost("/")
+  public async save(req: express.Request<{}, {}, SongDetail[]>, res: express.Response): Promise<interfaces.IHttpActionResult> {
+    return this.actionWrapper(req, res, async (au) => {
+      const promises: Promise<SongDetail>[] = [];
+      req.body.forEach(sd => {
+        promises.push(this.repositories.songDetail.save(sd));
+      });
+      const result = await Promise.all(promises);
+      return result;
+    });
+  }
+
 }

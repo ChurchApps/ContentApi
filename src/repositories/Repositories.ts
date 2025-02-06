@@ -21,7 +21,8 @@ import {
   BibleVerseTextTextRepository,
   BibleLookupRepository,
   SongDetailRepository,
-  SongRepository
+  SongRepository,
+  ArrangementRepository
 } from ".";
 
 export class Repositories {
@@ -51,6 +52,7 @@ export class Repositories {
   public bibleVerseText: BibleVerseTextTextRepository;
   public bibleLookup: BibleLookupRepository;
 
+  public arrangement: ArrangementRepository;
   public songDetail: SongDetailRepository;
   public song: SongRepository;
 
@@ -61,6 +63,7 @@ export class Repositories {
   }
 
   constructor() {
+    this.arrangement = new ArrangementRepository();
     this.bibleBook = new BibleBookRepository();
     this.bibleChapter = new BibleChapterRepository();
     this.bibleTranslation = new BibleTranslationRepository();

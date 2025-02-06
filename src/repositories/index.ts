@@ -26,6 +26,7 @@ export { BibleLookupRepository } from "./BibleLookupRepository";
 
 export { SongDetailRepository } from "./SongDetailRepository";
 export { SongRepository } from "./SongRepository";
+export { ArrangementRepository } from "./ArrangementRepository";
 
 export { Repositories } from "./Repositories";
 
