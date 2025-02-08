@@ -9,6 +9,17 @@ import { Permissions } from "../helpers";
 @controller("/songs")
 export class SongController extends ContentBaseController {
 
+
+  @httpGet("/search")
+  public async search(req: express.Request<{}, {}, null>, res: express.Response): Promise<interfaces.IHttpActionResult> {
+    return this.actionWrapper(req, res, async (au) => {
+      const query = req.query.q as string;
+      const results = await this.repositories.song.search(query);
+      console.log("Made it", query, results);
+      return results;
+    })
+  }
+
   @httpGet("/:id")
   public async get(@requestParam("id") id: string, req: express.Request<{}, {}, null>, res: express.Response): Promise<any> {
     return this.actionWrapper(req, res, async (au) => {
@@ -25,6 +36,7 @@ export class SongController extends ContentBaseController {
       }
     })
   }
+
 
   @httpPost("/create")
   public async create(req: express.Request<{}, {}, Song>, res: express.Response): Promise<interfaces.IHttpActionResult> {

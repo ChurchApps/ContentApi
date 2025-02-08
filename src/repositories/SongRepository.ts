@@ -49,4 +49,12 @@ export class SongRepository {
     return DB.queryOne("SELECT * FROM songs where churchId=? and songDetailId=?;", [churchId, songDetailId]);
   }
 
+  public search(query: string) {
+    const q = "%" + query.replace(/ /g, "%") + "%";
+    const sql = "SELECT sd.*, s.id as songId FROM songs s"
+      + " INNER JOIN songDetails sd on sd.id=s.songDetailId"
+      + " where (concat(sd.title, ' ', sd.artist) like ? or concat(sd.artist, ' ', sd.title) like ?);";
+    return DB.query(sql, [q, q]);
+  }
+
 }
