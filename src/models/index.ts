@@ -26,4 +26,5 @@ export { BibleLookup } from "./BibleLookup";
 
 export { Arrangement } from "./Arrangement";
 export { SongDetail } from "./SongDetail";
+export { SongDetailLink } from "./SongDetailLink";
 export { Song } from "./Song";

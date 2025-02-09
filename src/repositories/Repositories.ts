@@ -22,7 +22,8 @@ import {
   BibleLookupRepository,
   SongDetailRepository,
   SongRepository,
-  ArrangementRepository
+  ArrangementRepository,
+  SongDetailLinkRepository
 } from ".";
 
 export class Repositories {
@@ -54,6 +55,7 @@ export class Repositories {
 
   public arrangement: ArrangementRepository;
   public songDetail: SongDetailRepository;
+  public songDetailLink: SongDetailLinkRepository;
   public song: SongRepository;
 
   private static _current: Repositories = null;
@@ -86,6 +88,7 @@ export class Repositories {
     this.streamingService = new StreamingServiceRepository();
     this.setting = new SettingRepository();
     this.songDetail = new SongDetailRepository();
+    this.songDetailLink = new SongDetailLinkRepository();
     this.song = new SongRepository();
   }
 }
