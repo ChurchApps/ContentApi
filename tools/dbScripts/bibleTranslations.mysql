@@ -9,5 +9,7 @@ CREATE TABLE `bibleTranslations` (
   `language` varchar(45)   DEFAULT NULL,
   `countries` varchar(255)   DEFAULT NULL,
   `copyright` varchar(1000)   DEFAULT NULL,
+  `attributionRequired` bit DEFAULT NULL,
+  `attributionString` VARCHAR(1000) DEFAULT NULL,
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB;
