@@ -31,6 +31,7 @@ export class ApiBibleHelper {
     data.data.forEach((d: any) => {
       const translation: BibleTranslation = {
         attributionRequired: this.attributionRequired.indexOf(d.id) >= 0,
+        attributionString: "",
         name: d.name,
         nameLocal: d.nameLocal,
         abbreviation: d.abbreviation,
