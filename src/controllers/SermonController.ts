@@ -107,7 +107,13 @@ export class SermonController extends ContentBaseController {
               name: sermon.title,
               description: sermon.description,
               image: sermon.thumbnail,
-              playlists: ["https://contentapi.churchapps.org/sermons/public/tvFeed/" + churchId + "/" + sermon.id]
+              playlists: [
+                {
+                  id: "watch",
+                  name: "Watch",
+                  apiUrl: "https://contentapi.churchapps.org/sermons/public/tvFeed/" + churchId + "/" + sermon.id
+                }
+              ]
             };
             playlistNode.children.push(sermonNode);
           }
