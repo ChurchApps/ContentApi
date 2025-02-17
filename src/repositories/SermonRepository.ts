@@ -29,7 +29,7 @@ export class SermonRepository {
   }
 
   public loadById(id: string, churchId: string): Promise<Sermon> {
-    return DB.queryOne("SELECT * FROM sermons WHERE id=? AND churchId=?;", [id]);
+    return DB.queryOne("SELECT * FROM sermons WHERE id=? AND churchId=?;", [id, churchId]);
   }
 
   public loadAll(churchId: string): Promise<Sermon[]> {
@@ -42,8 +42,8 @@ export class SermonRepository {
 
   public async loadTimeline(sermonIds: string[]) {
     const sql = "select 'sermon' as postType, id as postId, title, description, thumbnail"
-    + " from sermons"
-    + " where id in (?)";
+      + " from sermons"
+      + " where id in (?)";
 
     const params = [sermonIds];
     const result = await DB.query(sql, params);
