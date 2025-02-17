@@ -64,7 +64,7 @@ export class SermonController extends ContentBaseController {
               {
                 id: sermon.id,
                 name: sermon.title,
-                seconds: sermon.duration,
+                seconds: sermon.duration || 3600 * 24,
                 type: "stream",
                 loop: false,
                 files: [
