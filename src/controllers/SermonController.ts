@@ -62,7 +62,13 @@ export class SermonController extends ContentBaseController {
             name: "FreeShow",
             description: "Connect to FreeShow",
             image: "https://freeshow.app/images/favicon.png",
-            childrenApi: "https://contentapi.churchapps.org/sermons/public/freeshowSample"
+            playlists: [
+              {
+                id: "fsPlaylist",
+                name: "Pair",
+                apiUrl: "https://contentapi.churchapps.org/sermons/public/freeshowSample"
+              }
+            ]
           }
           //
         ]
