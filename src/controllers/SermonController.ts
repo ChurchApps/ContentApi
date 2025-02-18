@@ -9,6 +9,32 @@ import { FileStorageHelper } from "@churchapps/apihelper";
 @controller("/sermons")
 export class SermonController extends ContentBaseController {
 
+  @httpGet("/public/freeshowSample")
+  public async getFreeShow(@requestParam("churchId") churchId: string, req: express.Request<{}, {}, null>, res: express.Response): Promise<any> {
+    return this.actionWrapper(req, res, async (au) => {
+      const result = {
+        id: "freeshow",
+        name: "FreeShow",
+        prefetch: false,
+        playOrder: "sequential",
+        messages: [
+          {
+            name: "Stage Show",
+            thumbnail: "",
+            slides: [
+              {
+                seconds: 3600,
+                type: "web",
+                loop: false,
+                files: ["http://192.168.68.74:5511/"]
+              }
+            ]
+          }
+        ]
+      }
+      return result;
+    });
+  }
 
   @httpGet("/public/tvWrapper/:churchId")
   public async getTvWrapper(@requestParam("churchId") churchId: string, req: express.Request<{}, {}, null>, res: express.Response): Promise<any> {
@@ -36,7 +62,7 @@ export class SermonController extends ContentBaseController {
             name: "FreeShow",
             description: "Connect to FreeShow",
             image: "https://freeshow.app/images/favicon.png",
-            childrenApi: "https://api.lessons.church/programs/public/tree"
+            childrenApi: "https://contentapi.churchapps.org/sermons/public/freeshowSample"
           }
           //
         ]
