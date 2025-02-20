@@ -41,7 +41,7 @@ export class SermonController extends ContentBaseController {
     return this.actionWrapper(req, res, async (au) => {
       const result = {
         treeLabels: ["Content Type"],
-        categories: [
+        playlists: [
           {
             id: "sermons",
             name: "Sermons",
@@ -62,13 +62,7 @@ export class SermonController extends ContentBaseController {
             name: "FreeShow",
             description: "Connect to FreeShow",
             image: "https://freeshow.app/images/favicon.png",
-            playlists: [
-              {
-                id: "fsPlaylist",
-                name: "Pair",
-                apiUrl: "https://contentapi.churchapps.org/sermons/public/freeshowSample"
-              }
-            ]
+            apiUrl: "https://contentapi.churchapps.org/sermons/public/freeshowSample"
           }
           //
         ]
@@ -139,13 +133,7 @@ export class SermonController extends ContentBaseController {
               name: sermon.title,
               description: sermon.description,
               image: sermon.thumbnail,
-              playlists: [
-                {
-                  id: "watch",
-                  name: "Watch",
-                  apiUrl: "https://contentapi.churchapps.org/sermons/public/tvFeed/" + churchId + "/" + sermon.id
-                }
-              ]
+              apiUrl: "https://contentapi.churchapps.org/sermons/public/tvFeed/" + churchId + "/" + sermon.id
             };
             playlistNode.children.push(sermonNode);
           }
