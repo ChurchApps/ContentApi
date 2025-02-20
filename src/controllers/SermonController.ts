@@ -114,7 +114,7 @@ export class SermonController extends ContentBaseController {
 
       const result: any = {
         treeLabels: ["Series", "Sermon"],
-        categories: []
+        playlists: []
       }
 
       playlists.forEach((playlist: Playlist) => {
@@ -139,7 +139,7 @@ export class SermonController extends ContentBaseController {
           }
         });
 
-        result.categories.push(playlistNode);
+        result.playlists.push(playlistNode);
       });
       return result;
     });
