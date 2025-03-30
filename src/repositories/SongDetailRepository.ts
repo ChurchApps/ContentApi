@@ -18,17 +18,15 @@ export class SongDetailRepository {
 
   private async create(songDetail: SongDetail) {
     songDetail.id = UniqueIdHelper.shortId();
-
-    const sql = "INSERT INTO songDetails (id, musicBrainzId, title, artist, album, language, thumbnail, releaseDate, bpm, keySignature, seconds) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?);";
-    const params = [songDetail.id, songDetail.musicBrainzId, songDetail.title, songDetail.artist, songDetail.album, songDetail.language, songDetail.thumbnail, songDetail.releaseDate, songDetail.bpm, songDetail.keySignature, songDetail.seconds];
-    console.log(sql, params);
+    const sql = "INSERT INTO songDetails (id, praiseChartsId, title, artist, album, language, thumbnail, releaseDate, bpm, keySignature, seconds, meter, tones) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?);";
+    const params = [songDetail.id, songDetail.praiseChartsId, songDetail.title, songDetail.artist, songDetail.album, songDetail.language, songDetail.thumbnail, songDetail.releaseDate, songDetail.bpm, songDetail.keySignature, songDetail.seconds, songDetail.meter, songDetail.tones];
     await DB.query(sql, params);
     return songDetail;
   }
 
   private async update(songDetail: SongDetail) {
-    const sql = "UPDATE songDetails SET musicBrainzId=?, title=?, artist=?, album=?, language=?, thumbnail=?, releaseDate=?, bpm=?, keySignature=?, seconds=? WHERE id=?";
-    const params = [songDetail.musicBrainzId, songDetail.title, songDetail.artist, songDetail.album, songDetail.language, songDetail.thumbnail, songDetail.releaseDate, songDetail.bpm, songDetail.keySignature, songDetail.seconds, songDetail.id];
+    const sql = "UPDATE songDetails SET praiseChartsId=?, title=?, artist=?, album=?, language=?, thumbnail=?, releaseDate=?, bpm=?, keySignature=?, seconds=?, meter=?, tones=? WHERE id=?";
+    const params = [songDetail.praiseChartsId, songDetail.title, songDetail.artist, songDetail.album, songDetail.language, songDetail.thumbnail, songDetail.releaseDate, songDetail.bpm, songDetail.keySignature, songDetail.seconds, songDetail.meter, songDetail.tones, songDetail.id];
     await DB.query(sql, params);
     return songDetail;
   }
@@ -46,8 +44,8 @@ export class SongDetailRepository {
     return DB.query("SELECT * FROM songDetails where title + ' ' + artist like ? or artist + ' ' + title like ?;", [q, q]);
   }
 
-  public loadByMusicBrainzId(mbId: string) {
-    return DB.queryOne("SELECT * FROM songDetails where musicBrainzId=?;", [mbId]);
+  public loadByPraiseChartsId(praiseChartsId: string) {
+    return DB.queryOne("SELECT * FROM songDetails where praiseChartsId=?;", [praiseChartsId]);
   }
 
   public loadForChurch(churchId: string) {

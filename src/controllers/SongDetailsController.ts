@@ -1,8 +1,8 @@
 import { controller, httpGet, httpPost, interfaces, requestParam, } from "inversify-express-utils";
 import express from "express";
 import { ContentBaseController } from "./ContentBaseController";
-import { MusicBrainzHelper } from "../helpers/MusicBrainzHelper";
-import { SongDetail } from "../models";
+import { SongDetail, SongDetailLink } from "../models";
+import { PraiseChartsHelper } from "../helpers/PraiseChartsHelper";
 
 
 @controller("/songDetails")
@@ -13,7 +13,7 @@ export class SongDetailsController extends ContentBaseController {
   public async search(req: express.Request<{}, {}, null>, res: express.Response): Promise<interfaces.IHttpActionResult> {
     return this.actionWrapper(req, res, async (au) => {
       const query = req.query.q as string;
-      const results = await MusicBrainzHelper.search(query);
+      const results = await PraiseChartsHelper.search(query);
       return results;
     })
   }
@@ -38,10 +38,18 @@ export class SongDetailsController extends ContentBaseController {
   public async post(req: express.Request<{}, {}, SongDetail>, res: express.Response): Promise<interfaces.IHttpActionResult> {
     return this.actionWrapper(req, res, async (au) => {
       const sd = req.body;
-      if (!sd.musicBrainzId) return null;
-      const existing = await this.repositories.songDetail.loadByMusicBrainzId(sd.musicBrainzId);
+      if (!sd.praiseChartsId) return null;
+      const existing = await this.repositories.songDetail.loadByPraiseChartsId(sd.praiseChartsId);
       if (existing) return existing;
-      else return await this.repositories.songDetail.save(sd);
+      else {
+        const { songDetails, links } = await PraiseChartsHelper.load(sd.praiseChartsId);
+        const result = await this.repositories.songDetail.save(songDetails);
+        links.forEach(async link => {
+          link.songDetailId = result.id;
+          await this.repositories.songDetailLink.save(link);
+        });
+        return result;
+      }
     })
   }
 

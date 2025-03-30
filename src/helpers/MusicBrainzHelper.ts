@@ -1,6 +1,7 @@
 import { SongDetail } from "../models";
 
 export class MusicBrainzHelper {
+  /*
   static async search(query: string) {
     const url = `https://musicbrainz.org/ws/2/recording/?query=${encodeURIComponent(query)}&fmt=json`;
     const userAgent = "ChurchApps https://churchapps.org/"
@@ -37,5 +38,5 @@ export class MusicBrainzHelper {
     const url = `https://coverartarchive.org/release/${releaseMbId}/front-250.jpg`;
     return url;
   }
-
+*/
 }

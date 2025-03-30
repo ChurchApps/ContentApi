@@ -1,7 +1,7 @@
 
 export class SongDetail {
   id?: string;
-  musicBrainzId?: string;
+  praiseChartsId?: string;
   title?: string;
   artist?: string;
   album?: string;
@@ -10,5 +10,7 @@ export class SongDetail {
   releaseDate?: Date;
   bpm?: string;
   keySignature?: string;
-  seconds: number;
+  seconds?: number;
+  meter?: string;
+  tones?: string;
 }

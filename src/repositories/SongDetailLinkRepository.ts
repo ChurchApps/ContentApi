@@ -20,7 +20,6 @@ export class SongDetailLinkRepository {
     link.id = UniqueIdHelper.shortId();
     const sql = "INSERT INTO songDetailLinks (id, songDetailId, service, serviceKey, url) VALUES (?, ?, ?, ?, ?);";
     const params = [link.id, link.songDetailId, link.service, link.serviceKey, link.url || null];
-    console.log(sql, params);
     await DB.query(sql, params);
     return link;
   }
