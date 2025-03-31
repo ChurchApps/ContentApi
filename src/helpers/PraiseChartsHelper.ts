@@ -45,8 +45,8 @@ export class PraiseChartsHelper {
   }
 
 
-  static searchCatalogAuth(query: string, accessToken: string, accessTokenSecret: string) {
-    const url = `https://api.praisecharts.com/v1.0/catalog/search?q=${encodeURIComponent(query)}`;
+  static searchLibraryAuth(query: string, accessToken: string, accessTokenSecret: string) {
+    const url = `https://api.praisecharts.com/v1.0/library/search?q=${encodeURIComponent(query)}`;
     return new Promise((resolve, reject) => {
       const oauth = this.getOAuth();
       oauth.get(url, accessToken, accessTokenSecret, (err, data) => {
@@ -57,43 +57,6 @@ export class PraiseChartsHelper {
   }
 
 
-
-  /*
-  static async loadLibrary(verifier: string) {
-
-
-  }*/
-
-  static async runExample() {
-    try {
-      // Step 1
-      const { oauthToken, oauthTokenSecret } = await this.getRequestToken("https://churchapps.org/");
-      console.log("Authorize URL:", this.getAuthorizeUrl(oauthToken));
-      console.log("Save oauthTokenSecret and wait for user to authorize...");
-
-      // You'll need to get the oauth_verifier manually after redirect
-      const oauthVerifier = "obtained_from_redirect_query";
-
-      // Step 2
-      const { accessToken, accessTokenSecret } = await this.getAccessToken(oauthToken, oauthTokenSecret, oauthVerifier);
-
-      // Step 3
-      const result = await this.searchCatalogAuth("blessed", accessToken, accessTokenSecret);
-      console.log("Search Results:", result);
-    } catch (error) {
-      console.error("OAuth flow error:", error);
-    }
-  }
-
-
-  /*
-      oauth.get("https://api.praisecharts.com/v1.0/catalog/search", "your_access_token", "your_access_secret", function (error: any, data: any, response: any) {
-        if (error) {
-          console.error(error);
-        } else {
-          console.log(data);
-        }
-      });*/
 
 
   static async search(query: string) {

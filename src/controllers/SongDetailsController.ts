@@ -47,6 +47,20 @@ export class SongDetailsController extends ContentBaseController {
     })
   }
 
+  @httpGet("/praiseCharts/library")
+  public async praiseChartsCatalog(req: express.Request<{}, {}, null>, res: express.Response): Promise<interfaces.IHttpActionResult> {
+    return this.actionWrapper(req, res, async (au) => {
+
+      const settings: Setting[] = await this.repositories.setting.loadUser(au.churchId, au.id);
+      const token = settings.find(s => s.keyName === "praiseChartsAccessToken")?.value;
+      const secret = settings.find(s => s.keyName === "praiseChartsAccessTokenSecret")?.value;
+
+      const result = await PraiseChartsHelper.searchLibraryAuth("", token, secret);
+
+      return result;
+    })
+  }
+
   @httpGet("/:id")
   public async get(@requestParam("id") id: string, req: express.Request<{}, {}, null>, res: express.Response): Promise<any> {
     return this.actionWrapper(req, res, async (au) => {
