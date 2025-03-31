@@ -11,6 +11,8 @@ export class Environment extends EnvironmentBase {
   static vimeoToken: string;
   static messagingApi: string;
   static apiBibleKey: string;
+  static praiseChartsConsumerKey: string;
+  static praiseChartsConsumerSecret: string;
 
   static async init(environment: string) {
     let file = "dev.json";
@@ -30,6 +32,8 @@ export class Environment extends EnvironmentBase {
     this.pexelsKey = process.env.PEXELS_KEY || await AwsHelper.readParameter(`/${environment}/pexelsKey`);
     this.vimeoToken = process.env.VIMEO_TOKEN || await AwsHelper.readParameter(`/${environment}/vimeoToken`)
     this.apiBibleKey = process.env.API_BIBLE_KEY || await AwsHelper.readParameter(`/${environment}/apiBibleKey`);
+    this.praiseChartsConsumerKey = process.env.PRAISECHARTS_CONSUMER_KEY || await AwsHelper.readParameter(`/${environment}/praiseChartsConsumerKey`);
+    this.praiseChartsConsumerSecret = process.env.PRAISECHARTS_CONSUMER_SECRET || await AwsHelper.readParameter(`/${environment}/praiseChartsConsumerSecret`);
   }
 
 }

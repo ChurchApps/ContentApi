@@ -1,6 +1,95 @@
 import { SongDetail, SongDetailLink } from "../models";
+import OAuth from "oauth";
+import { Environment } from "./Environment";
+
 
 export class PraiseChartsHelper {
+
+  static getOAuth() {
+    const requestTokenUrl = "https://api.praisecharts.com/oauth/request_token";
+    const accessTokenUrl = "https://api.praisecharts.com/oauth/access_token";
+
+    console.log(requestTokenUrl, accessTokenUrl, Environment.praiseChartsConsumerKey, Environment.praiseChartsConsumerSecret, "1.0", null, "HMAC-SHA1")
+    const oauth = new OAuth.OAuth(requestTokenUrl, accessTokenUrl, Environment.praiseChartsConsumerKey, Environment.praiseChartsConsumerSecret, "1.0A", "http://localhost:8081/test", "HMAC-SHA1");
+    return oauth;
+  }
+
+  static getRequestToken(): Promise<{ oauthToken: string, oauthTokenSecret: string }> {
+    return new Promise((resolve, reject) => {
+      const oauth = this.getOAuth();
+      console.log("oauth is", JSON.stringify(oauth));
+      oauth.getOAuthRequestToken((err, oauthToken, oauthTokenSecret) => {
+        console.log("Got request token", oauthToken, oauthTokenSecret);
+        console.log("Error is", err);
+        if (err) return reject(err);
+        console.log("No error");
+        resolve({ oauthToken, oauthTokenSecret });
+      });
+    });
+  }
+
+  static getAuthorizeUrl(oauthToken: string) {
+    return `https://api.praisecharts.com/oauth/authorize?oauth_token=${oauthToken}`;
+  }
+
+  static getAccessToken(oauthToken: string, oauthTokenSecret: string, oauthVerifier: string): Promise<{ accessToken: string, accessTokenSecret: string }> {
+    return new Promise((resolve, reject) => {
+      const oauth = this.getOAuth();
+      oauth.getOAuthAccessToken(
+        oauthToken,
+        oauthTokenSecret,
+        oauthVerifier,
+        (err, accessToken, accessTokenSecret) => {
+          if (err) return reject(err);
+          resolve({ accessToken, accessTokenSecret });
+        }
+      );
+    });
+  }
+
+  static searchCatalogAuth(query: string, accessToken: string, accessTokenSecret: string) {
+    const url = `https://api.praisecharts.com/v1.0/catalog/search?q=${encodeURIComponent(query)}`;
+    return new Promise((resolve, reject) => {
+      const oauth = this.getOAuth();
+      oauth.get(url, accessToken, accessTokenSecret, (err, data) => {
+        if (err) return reject(err);
+        resolve(JSON.parse(data as string));
+      });
+    });
+  }
+
+  static async runExample() {
+    try {
+      // Step 1
+      const { oauthToken, oauthTokenSecret } = await this.getRequestToken();
+      console.log("Authorize URL:", this.getAuthorizeUrl(oauthToken));
+      console.log("Save oauthTokenSecret and wait for user to authorize...");
+
+      // You'll need to get the oauth_verifier manually after redirect
+      const oauthVerifier = "obtained_from_redirect_query";
+
+      // Step 2
+      const { accessToken, accessTokenSecret } = await this.getAccessToken(oauthToken, oauthTokenSecret, oauthVerifier);
+
+      // Step 3
+      const result = await this.searchCatalogAuth("blessed", accessToken, accessTokenSecret);
+      console.log("Search Results:", result);
+    } catch (error) {
+      console.error("OAuth flow error:", error);
+    }
+  }
+
+
+  /*
+      oauth.get("https://api.praisecharts.com/v1.0/catalog/search", "your_access_token", "your_access_secret", function (error: any, data: any, response: any) {
+        if (error) {
+          console.error(error);
+        } else {
+          console.log(data);
+        }
+      });*/
+
+
   static async search(query: string) {
     const includes = "&arr_includes[]=id"
       + "&arr_includes[]=details.title"
