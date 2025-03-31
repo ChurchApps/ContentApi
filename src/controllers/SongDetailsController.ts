@@ -3,7 +3,7 @@ import express from "express";
 import { ContentBaseController } from "./ContentBaseController";
 import { SongDetail, SongDetailLink } from "../models";
 import { PraiseChartsHelper } from "../helpers/PraiseChartsHelper";
-
+import { MusicBrainzHelper } from "../helpers/MusicBrainzHelper";
 
 @controller("/songDetails")
 export class SongDetailsController extends ContentBaseController {
@@ -43,6 +43,9 @@ export class SongDetailsController extends ContentBaseController {
       if (existing) return existing;
       else {
         const { songDetails, links } = await PraiseChartsHelper.load(sd.praiseChartsId);
+        await MusicBrainzHelper.appendDetails(songDetails, links);
+
+
         const result = await this.repositories.songDetail.save(songDetails);
         links.forEach(async link => {
           link.songDetailId = result.id;
