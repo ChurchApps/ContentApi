@@ -1,4 +1,4 @@
-import { controller, httpPost, httpGet, interfaces, requestParam } from "inversify-express-utils";
+import { controller, httpPost, httpGet, interfaces, requestParam, httpDelete } from "inversify-express-utils";
 import express from "express";
 import { Setting } from "../models";
 import { ContentBaseController } from "./ContentBaseController";
@@ -9,6 +9,13 @@ import { FileStorageHelper } from "@churchapps/apihelper";
 @controller("/settings")
 export class SettingController extends ContentBaseController {
 
+  @httpGet("/my")
+  public async my(req: express.Request<{}, {}, null>, res: express.Response): Promise<interfaces.IHttpActionResult> {
+    return this.actionWrapper(req, res, async (au) => {
+      return this.repositories.setting.convertAllToModel(au.churchId, await this.repositories.setting.loadUser(au.churchId, au.id));
+    })
+  }
+
   @httpGet("/")
   public async get(req: express.Request<{}, {}, null>, res: express.Response): Promise<interfaces.IHttpActionResult> {
     return this.actionWrapper(req, res, async (au) => {
@@ -16,6 +23,20 @@ export class SettingController extends ContentBaseController {
       else {
         return this.repositories.setting.convertAllToModel(au.churchId, await this.repositories.setting.loadAll(au.churchId));
       }
+    })
+  }
+
+  @httpPost("/my")
+  public async postMy(req: express.Request<{}, {}, Setting[]>, res: express.Response): Promise<interfaces.IHttpActionResult> {
+    return this.actionWrapper(req, res, async (au) => {
+      const promises: Promise<Setting>[] = []
+      req.body.forEach(setting => {
+        setting.churchId = au.churchId;
+        setting.userId = au.id;
+        promises.push(this.saveSetting(setting));
+      })
+      const result = await Promise.all(promises);
+      return this.repositories.setting.convertAllToModel(au.churchId, result);
     })
   }
 
@@ -68,6 +89,14 @@ export class SettingController extends ContentBaseController {
         return this.repositories.setting.convertAllImports(result);
       }
     })
+  }
+
+  @httpDelete("/my/:id")
+  public async delete(@requestParam("id") id: string, req: express.Request, res: express.Response): Promise<void> {
+    return this.actionWrapper(req, res, async (au) => {
+      await this.repositories.setting.deleteForUser(au.churchId, au.id, id);
+      return this.json({ success: true });
+    });
   }
 
   private async saveSetting(setting: Setting) {

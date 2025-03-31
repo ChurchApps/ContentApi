@@ -18,16 +18,13 @@ export class SongDetailsController extends ContentBaseController {
     })
   }
 
-  @httpGet("/test")
-  public async getTest(req: express.Request<{}, {}, null>, res: express.Response): Promise<interfaces.IHttpActionResult> {
+  @httpGet("/praiseCharts/authUrl")
+  public async praiseChartsAuthUrl(req: express.Request<{}, {}, null>, res: express.Response): Promise<interfaces.IHttpActionResult> {
     return this.actionWrapperAnon(req, res, async () => {
-      console.log("Made it to test endpoint");
-      const { oauthToken, oauthTokenSecret } = await PraiseChartsHelper.getRequestToken();
-      console.log("Got request token:", oauthToken, oauthTokenSecret);
-      const authorizeUrl = PraiseChartsHelper.getAuthorizeUrl(oauthToken);
-      // return { oauthToken, oauthTokenSecret, authorizeUrl };
-      console.log("Authorize URL:", authorizeUrl);
-      return { authorizeUrl: JSON.stringify(authorizeUrl) };
+      const returnUrl = req.query.returnUrl as string;
+      const { oauthToken, oauthTokenSecret } = await PraiseChartsHelper.getRequestToken(returnUrl);
+      const authUrl = PraiseChartsHelper.getAuthorizeUrl(oauthToken);
+      return { authUrl };
     })
   }
 

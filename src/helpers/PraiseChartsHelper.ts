@@ -5,24 +5,19 @@ import { Environment } from "./Environment";
 
 export class PraiseChartsHelper {
 
-  static getOAuth() {
+  static getOAuth(returnUrl?: string) {
     const requestTokenUrl = "https://api.praisecharts.com/oauth/request_token";
     const accessTokenUrl = "https://api.praisecharts.com/oauth/access_token";
-
-    console.log(requestTokenUrl, accessTokenUrl, Environment.praiseChartsConsumerKey, Environment.praiseChartsConsumerSecret, "1.0", null, "HMAC-SHA1")
-    const oauth = new OAuth.OAuth(requestTokenUrl, accessTokenUrl, Environment.praiseChartsConsumerKey, Environment.praiseChartsConsumerSecret, "1.0A", "http://localhost:8081/test", "HMAC-SHA1");
+    const oauth = new OAuth.OAuth(requestTokenUrl, accessTokenUrl, Environment.praiseChartsConsumerKey, Environment.praiseChartsConsumerSecret, "1.0A", returnUrl || "https://churchapps.org/", "HMAC-SHA1");
     return oauth;
   }
 
-  static getRequestToken(): Promise<{ oauthToken: string, oauthTokenSecret: string }> {
+  static getRequestToken(returnUrl: string): Promise<{ oauthToken: string, oauthTokenSecret: string }> {
     return new Promise((resolve, reject) => {
-      const oauth = this.getOAuth();
-      console.log("oauth is", JSON.stringify(oauth));
+      const oauth = this.getOAuth(returnUrl);
       oauth.getOAuthRequestToken((err, oauthToken, oauthTokenSecret) => {
-        console.log("Got request token", oauthToken, oauthTokenSecret);
-        console.log("Error is", err);
+        if (err) console.log("Error is", err);
         if (err) return reject(err);
-        console.log("No error");
         resolve({ oauthToken, oauthTokenSecret });
       });
     });
@@ -61,7 +56,7 @@ export class PraiseChartsHelper {
   static async runExample() {
     try {
       // Step 1
-      const { oauthToken, oauthTokenSecret } = await this.getRequestToken();
+      const { oauthToken, oauthTokenSecret } = await this.getRequestToken("https://churchapps.org/");
       console.log("Authorize URL:", this.getAuthorizeUrl(oauthToken));
       console.log("Save oauthTokenSecret and wait for user to authorize...");
 
