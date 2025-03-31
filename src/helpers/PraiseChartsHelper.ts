@@ -1,6 +1,7 @@
-import { SongDetail, SongDetailLink } from "../models";
+import { Setting, SongDetail, SongDetailLink } from "../models";
 import OAuth from "oauth";
 import { Environment } from "./Environment";
+import { Repositories } from "../repositories";
 
 
 export class PraiseChartsHelper {
@@ -29,18 +30,20 @@ export class PraiseChartsHelper {
 
   static getAccessToken(oauthToken: string, oauthTokenSecret: string, oauthVerifier: string): Promise<{ accessToken: string, accessTokenSecret: string }> {
     return new Promise((resolve, reject) => {
-      const oauth = this.getOAuth();
+      const oauth = this.getOAuth("http://localhost:3101/pingback");
       oauth.getOAuthAccessToken(
         oauthToken,
         oauthTokenSecret,
         oauthVerifier,
         (err, accessToken, accessTokenSecret) => {
+          if (err) console.log("Error is", err);
           if (err) return reject(err);
           resolve({ accessToken, accessTokenSecret });
         }
       );
     });
   }
+
 
   static searchCatalogAuth(query: string, accessToken: string, accessTokenSecret: string) {
     const url = `https://api.praisecharts.com/v1.0/catalog/search?q=${encodeURIComponent(query)}`;
@@ -52,6 +55,14 @@ export class PraiseChartsHelper {
       });
     });
   }
+
+
+
+  /*
+  static async loadLibrary(verifier: string) {
+
+
+  }*/
 
   static async runExample() {
     try {

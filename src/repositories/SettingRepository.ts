@@ -5,6 +5,12 @@ import { Setting } from "../models";
 @injectable()
 export class SettingRepository {
 
+  public saveAll(settings: Setting[]) {
+    const promises: Promise<Setting>[] = [];
+    settings.forEach(s => { promises.push(this.save(s)); });
+    return Promise.all(promises);
+  }
+
   public save(setting: Setting) {
     return setting.id ? this.update(setting) : this.create(setting);
   }

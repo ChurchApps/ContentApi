@@ -1,7 +1,7 @@
 import { controller, httpGet, httpPost, interfaces, requestParam, } from "inversify-express-utils";
 import express from "express";
 import { ContentBaseController } from "./ContentBaseController";
-import { SongDetail, SongDetailLink } from "../models";
+import { Setting, SongDetail, SongDetailLink } from "../models";
 import { PraiseChartsHelper } from "../helpers/PraiseChartsHelper";
 import { MusicBrainzHelper } from "../helpers/MusicBrainzHelper";
 
@@ -24,7 +24,26 @@ export class SongDetailsController extends ContentBaseController {
       const returnUrl = req.query.returnUrl as string;
       const { oauthToken, oauthTokenSecret } = await PraiseChartsHelper.getRequestToken(returnUrl);
       const authUrl = PraiseChartsHelper.getAuthorizeUrl(oauthToken);
-      return { authUrl };
+      return { authUrl, oauthToken, oauthTokenSecret };
+    })
+  }
+
+  @httpGet("/praiseCharts/access")
+  public async praiseChartsTest(req: express.Request<{}, {}, null>, res: express.Response): Promise<interfaces.IHttpActionResult> {
+    return this.actionWrapper(req, res, async (au) => {
+      const verifier = req.query.verifier as string;
+      const token = req.query.token as string;
+      const secret = req.query.secret as string;
+      const result = await PraiseChartsHelper.getAccessToken(token, secret, verifier);
+
+      const settings: Setting[] = [
+        { keyName: "praiseChartsAccessToken", value: result.accessToken, userId: au.id, churchId: au.churchId },
+        { keyName: "praiseChartsAccessTokenSecret", value: result.accessTokenSecret, userId: au.id, churchId: au.churchId }
+      ];
+
+      await this.repositories.setting.saveAll(settings);
+
+      return result;
     })
   }
 
