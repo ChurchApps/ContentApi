@@ -9,12 +9,20 @@ import { MusicBrainzHelper } from "../helpers/MusicBrainzHelper";
 export class SongDetailsController extends ContentBaseController {
 
 
-  @httpGet("/search")
+  @httpGet("/praiseCharts/search")
   public async search(req: express.Request<{}, {}, null>, res: express.Response): Promise<interfaces.IHttpActionResult> {
     return this.actionWrapper(req, res, async (au) => {
       const query = req.query.q as string;
       const results = await PraiseChartsHelper.search(query);
       return results;
+    })
+  }
+
+  @httpGet("/praiseCharts/raw/:id")
+  public async load(@requestParam("id") id: string, req: express.Request<{}, {}, null>, res: express.Response): Promise<interfaces.IHttpActionResult> {
+    return this.actionWrapper(req, res, async (au) => {
+      const result = await PraiseChartsHelper.loadRaw(id);
+      return result;
     })
   }
 
