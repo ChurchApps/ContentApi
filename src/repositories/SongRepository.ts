@@ -19,16 +19,16 @@ export class SongRepository {
   private async create(song: Song) {
     song.id = UniqueIdHelper.shortId();
 
-    const sql = "INSERT INTO songs (id, churchId, songDetailId, dateAdded) VALUES (?, ?, ?, ?);";
-    const params = [song.id, song.churchId, song.songDetailId, song.dateAdded];
+    const sql = "INSERT INTO songs (id, churchId, name, dateAdded) VALUES (?, ?, ?, ?);";
+    const params = [song.id, song.churchId, song.name, song.dateAdded];
     console.log(sql, params);
     await DB.query(sql, params);
     return song;
   }
 
   private async update(song: Song) {
-    const sql = "UPDATE songs SET songDetailId=?, dateAdded=? WHERE id=? and churchId=?";
-    const params = [song.songDetailId, song.dateAdded, song.id, song.churchId];
+    const sql = "UPDATE songs SET name=?, dateAdded=? WHERE id=? and churchId=?";
+    const params = [song.name, song.dateAdded, song.id, song.churchId];
     await DB.query(sql, params);
     return song;
   }
@@ -45,14 +45,11 @@ export class SongRepository {
     return DB.queryOne("SELECT * FROM songs WHERE id=? AND churchId=?;", [id, churchId]);
   }
 
-  public loadBySongDetailId(churchId: string, songDetailId: string) {
-    return DB.queryOne("SELECT * FROM songs where churchId=? and songDetailId=?;", [churchId, songDetailId]);
-  }
-
   public search(query: string) {
     const q = "%" + query.replace(/ /g, "%") + "%";
     const sql = "SELECT sd.*, s.id as songId FROM songs s"
-      + " INNER JOIN songDetails sd on sd.id=s.songDetailId"
+      + " INNER JOIN arrangement a on a.songId=s.id"
+      + " INNER JOIN songDetails sd on sd.id=a.songDetailId"
       + " where (concat(sd.title, ' ', sd.artist) like ? or concat(sd.artist, ' ', sd.title) like ?);";
     return DB.query(sql, [q, q]);
   }

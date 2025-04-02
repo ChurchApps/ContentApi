@@ -51,7 +51,8 @@ export class SongDetailRepository {
   public loadForChurch(churchId: string) {
     const sql = "SELECT sd.*, s.Id as songId, s.churchId"
       + " FROM songs s"
-      + " INNER JOIN songDetails sd on sd.id=s.songDetailId"
+      + " INNER JOIN arrangements a on a.songId=s.id"
+      + " INNER JOIN songDetails sd on sd.id=a.songDetailId"
       + " WHERE s.churchId=?"
     return DB.query(sql, [churchId]);
   }

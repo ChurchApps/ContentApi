@@ -37,18 +37,18 @@ export class SongController extends ContentBaseController {
     })
   }
 
-
-  @httpPost("/create")
-  public async create(req: express.Request<{}, {}, Song>, res: express.Response): Promise<interfaces.IHttpActionResult> {
-    return this.actionWrapper(req, res, async (au) => {
-      const song = req.body;
-      song.churchId = au.churchId;
-      if (!song.songDetailId) return null;
-      const existing = await this.repositories.song.loadBySongDetailId(au.churchId, song.songDetailId);
-      if (existing) return existing;
-      else return await this.repositories.song.save(song);
-    })
-  }
+  /*
+    @httpPost("/create")
+    public async create(req: express.Request<{}, {}, Song>, res: express.Response): Promise<interfaces.IHttpActionResult> {
+      return this.actionWrapper(req, res, async (au) => {
+        const song = req.body;
+        song.churchId = au.churchId;
+        if (!song.songDetailId) return null;
+        const existing = await this.repositories.song.loadBySongDetailId(au.churchId, song.songDetailId);
+        if (existing) return existing;
+        else return await this.repositories.song.save(song);
+      })
+    }*/
 
   @httpPost("/")
   public async post(req: express.Request<{}, {}, Song[]>, res: express.Response): Promise<interfaces.IHttpActionResult> {
