@@ -26,6 +26,16 @@ export class SongDetailsController extends ContentBaseController {
     })
   }
 
+  @httpGet("/praiseCharts/arrangement/raw/:id")
+  public async arrangement(@requestParam("id") id: string, req: express.Request<{}, {}, null>, res: express.Response): Promise<interfaces.IHttpActionResult> {
+    return this.actionWrapper(req, res, async (au) => {
+      const { token, secret } = await PraiseChartsHelper.loadUserTokens(au);
+      const result = await PraiseChartsHelper.loadArrangmentRaw(id, token, secret);
+      return result;
+    })
+  }
+
+
   @httpGet("/praiseCharts/download")
   public async download(req: express.Request<{}, {}, null>, res: express.Response) {
     const au = this.authUser();

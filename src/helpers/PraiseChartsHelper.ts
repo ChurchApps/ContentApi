@@ -6,6 +6,13 @@ import https from "https";
 
 export class PraiseChartsHelper {
 
+  static async loadUserTokens(au: any) {
+    const settings: Setting[] = await Repositories.getCurrent().setting.loadUser(au.churchId, au.id);
+    const token = settings.find(s => s.keyName === "praiseChartsAccessToken")?.value;
+    const secret = settings.find(s => s.keyName === "praiseChartsAccessTokenSecret")?.value;
+    return { token, secret };
+  }
+
   static getOAuth(returnUrl?: string) {
     const requestTokenUrl = "https://api.praisecharts.com/oauth/request_token";
     const accessTokenUrl = "https://api.praisecharts.com/oauth/access_token";
@@ -44,6 +51,15 @@ export class PraiseChartsHelper {
     });
   }
 
+  static async oAuthGet(url: string, accessToken: string, accessTokenSecret: string) {
+    return new Promise((resolve, reject) => {
+      const oauth = this.getOAuth();
+      oauth.get(url, accessToken, accessTokenSecret, (err, data) => {
+        if (err) return reject(err);
+        resolve(JSON.parse(data as string));
+      });
+    });
+  }
 
   static searchLibraryAuth(query: string, accessToken: string, accessTokenSecret: string) {
     const url = `https://api.praisecharts.com/v1.0/library/search?q=${encodeURIComponent(query)}`;
@@ -55,9 +71,6 @@ export class PraiseChartsHelper {
       });
     });
   }
-
-
-
 
   static async search(query: string) {
     const includes = "&arr_includes[]=id"
@@ -79,29 +92,24 @@ export class PraiseChartsHelper {
 
   static async download(skus: string[], accessToken: string, accessTokenSecret: string) {
     const url = `https://api.praisecharts.com/v1.0/download?skus=${encodeURIComponent(skus.join(","))}`;
-    const oauth = this.getOAuth(); // instance of OAuth.OAuth
-
+    const oauth = this.getOAuth();
     const authHeader = oauth.authHeader(url, accessToken, accessTokenSecret, "GET");
 
     return new Promise((resolve, reject) => {
-      const req = https.request(url, {
-        method: "GET",
-        headers: {
-          Authorization: authHeader,
-        }
-      }, (res) => {
+      const req = https.request(url, { method: "GET", headers: { Authorization: authHeader } }, (res) => {
         const chunks: Buffer[] = [];
-
         res.on("data", chunk => chunks.push(chunk));
-        res.on("end", () => {
-          const buffer = Buffer.concat(chunks);
-          resolve(buffer);
-        });
+        res.on("end", () => { const buffer = Buffer.concat(chunks); resolve(buffer); });
       });
 
       req.on("error", reject);
       req.end();
     });
+  }
+
+  static async loadArrangmentRaw(id: string, accessToken: string, accessTokenSecret: string) {
+    const url = `https://api.praisecharts.com/v1.0/library/import-arrangement/${id}`;
+    return this.oAuthGet(url, accessToken, accessTokenSecret);
   }
 
   static async loadRaw(id: string) {
@@ -150,14 +158,12 @@ export class PraiseChartsHelper {
   }
 
   private static appendDetails(item: any, sd: SongDetail) {
-    console.log("Item is", item);
     sd.bpm = item.bpm;
     sd.keySignature = item.details.original_key;
     sd.seconds = item.seconds;
     sd.thumbnail = ""; // Can only use for PC branded search
     sd.meter = item.details.meter;
     sd.tones = item.details.keys;
-
   }
 
   private static getLinks(item: any) {
