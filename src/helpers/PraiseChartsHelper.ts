@@ -79,8 +79,7 @@ export class PraiseChartsHelper {
       + "&arr_includes[]=details.album.title"
       + "&arr_includes[]=details.album.images.md.url";
     const url = `https://api.praisecharts.com/v1.0/catalog/search?q=${encodeURIComponent(query)}${includes}`;
-    const userAgent = "ChurchApps https://churchapps.org/"
-    const response = await fetch(url, { headers: { "User-Agent": userAgent } });
+    const response = await fetch(url);
     if (response.ok) {
       const data = await response.json();
       return this.convertItemsToSongDetails(data.arrangements.items);
@@ -112,10 +111,15 @@ export class PraiseChartsHelper {
     return this.oAuthGet(url, accessToken, accessTokenSecret);
   }
 
-  static async loadRaw(id: string) {
+  static async loadSongFromLibrary(id: string, accessToken: string, accessTokenSecret: string) {
+    const url = `https://api.praisecharts.com/v1.0/library/search?q=${encodeURIComponent(id)}`;
+    const data: any = await this.oAuthGet(url, accessToken, accessTokenSecret);
+    return data;
+  }
+
+  static async loadSongFromCatalog(id: string) {
     const url = `https://api.praisecharts.com/v1.0/catalog/search?q=${encodeURIComponent(id)}`;
-    const userAgent = "ChurchApps https://churchapps.org/"
-    const response = await fetch(url, { headers: { "User-Agent": userAgent } });
+    const response = await fetch(url);
     if (response.ok) {
       const data = await response.json();
       return data.arrangements.items[0];
@@ -126,8 +130,7 @@ export class PraiseChartsHelper {
 
   static async load(id: string) {
     const url = `https://api.praisecharts.com/v1.0/catalog/search?q=${encodeURIComponent(id)}`;
-    const userAgent = "ChurchApps https://churchapps.org/"
-    const response = await fetch(url, { headers: { "User-Agent": userAgent } });
+    const response = await fetch(url);
     if (response.ok) {
       const data = await response.json();
       const songDetails = this.convertItemToSongDetail(data.arrangements.items[0]);
