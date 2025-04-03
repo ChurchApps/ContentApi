@@ -56,7 +56,8 @@ export class SongDetailsController extends ContentBaseController {
   public async arrangement(@requestParam("id") id: string, req: express.Request<{}, {}, null>, res: express.Response): Promise<interfaces.IHttpActionResult> {
     return this.actionWrapper(req, res, async (au) => {
       const { token, secret } = await PraiseChartsHelper.loadUserTokens(au);
-      const result = await PraiseChartsHelper.loadArrangmentRaw(id, token, secret);
+      const keys = req.query.keys.toString().split(",");
+      const result = await PraiseChartsHelper.loadArrangmentRaw(id, keys, token, secret);
       return result;
     })
   }

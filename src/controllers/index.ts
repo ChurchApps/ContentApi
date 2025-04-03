@@ -25,6 +25,7 @@ export { SupportController } from "./SupportController";
 export { BibleController } from "./BibleController";
 
 export { ArrangementController } from "./ArrangementController";
+export { ArrangementKeyController } from "./ArrangementKeyController";
 export { SongDetailsController } from "./SongDetailsController";
 export { SongDetailLinkController } from "./SongDetailLinkController";
 export { SongController } from "./SongController";

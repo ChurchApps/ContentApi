@@ -23,7 +23,8 @@ import {
   SongDetailRepository,
   SongRepository,
   ArrangementRepository,
-  SongDetailLinkRepository
+  SongDetailLinkRepository,
+  ArrangementKeyRepository
 } from ".";
 
 export class Repositories {
@@ -54,6 +55,7 @@ export class Repositories {
   public bibleLookup: BibleLookupRepository;
 
   public arrangement: ArrangementRepository;
+  public arrangementKey: ArrangementKeyRepository;
   public songDetail: SongDetailRepository;
   public songDetailLink: SongDetailLinkRepository;
   public song: SongRepository;
@@ -66,6 +68,7 @@ export class Repositories {
 
   constructor() {
     this.arrangement = new ArrangementRepository();
+    this.arrangementKey = new ArrangementKeyRepository();
     this.bibleBook = new BibleBookRepository();
     this.bibleChapter = new BibleChapterRepository();
     this.bibleTranslation = new BibleTranslationRepository();

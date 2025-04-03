@@ -106,8 +106,10 @@ export class PraiseChartsHelper {
     });
   }
 
-  static async loadArrangmentRaw(id: string, accessToken: string, accessTokenSecret: string) {
-    const url = `https://api.praisecharts.com/v1.0/library/import-arrangement/${id}`;
+  static async loadArrangmentRaw(id: string, keys: string[], accessToken: string, accessTokenSecret: string) {
+    let url = `https://api.praisecharts.com/v1.0/library/import-arrangement/${id}`;
+    if (keys.length > 0) url += "?keys[]=" + keys.join(",");
+    console.log("url is", url);
     return this.oAuthGet(url, accessToken, accessTokenSecret);
   }
 
