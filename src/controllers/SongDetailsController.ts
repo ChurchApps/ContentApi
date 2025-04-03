@@ -26,6 +26,22 @@ export class SongDetailsController extends ContentBaseController {
     })
   }
 
+  @httpGet("/praiseCharts/download")
+  public async download(req: express.Request<{}, {}, null>, res: express.Response) {
+    const au = this.authUser();
+    const settings: Setting[] = await this.repositories.setting.loadUser(au.churchId, au.id);
+    const token = settings.find(s => s.keyName === "praiseChartsAccessToken")?.value;
+    const secret = settings.find(s => s.keyName === "praiseChartsAccessTokenSecret")?.value;
+
+    const pdfBuffer = await PraiseChartsHelper.download(req.query.skus.toString().split(','), token, secret);
+
+    res.setHeader("Content-Type", "application/pdf");
+    res.setHeader("Content-Disposition", `attachment; filename="praisecharts.pdf"`);
+
+    res.send(pdfBuffer); // this safely sends the raw binary
+
+  }
+
   @httpGet("/praiseCharts/authUrl")
   public async praiseChartsAuthUrl(req: express.Request<{}, {}, null>, res: express.Response): Promise<interfaces.IHttpActionResult> {
     return this.actionWrapperAnon(req, res, async () => {

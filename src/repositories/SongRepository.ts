@@ -21,7 +21,6 @@ export class SongRepository {
 
     const sql = "INSERT INTO songs (id, churchId, name, dateAdded) VALUES (?, ?, ?, ?);";
     const params = [song.id, song.churchId, song.name, song.dateAdded];
-    console.log(sql, params);
     await DB.query(sql, params);
     return song;
   }

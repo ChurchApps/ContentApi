@@ -76,6 +76,22 @@ export class PraiseChartsHelper {
     }
   }
 
+
+  static async download(skus: string[], accessToken: string, accessTokenSecret: string) {
+    const url = `https://api.praisecharts.com/v1.0/download?skus=${encodeURIComponent(skus.join(","))}`;
+    return new Promise((resolve, reject) => {
+      const oauth = this.getOAuth();
+
+      oauth.get(url, accessToken, accessTokenSecret, (err, data, resp) => {
+        if (err) return reject(err);
+        // Convert to Buffer (because `data` is a string, but we want binary-safe output)
+        const buffer = Buffer.isBuffer(data) ? data : Buffer.from(data, 'binary');
+        resolve(buffer);
+        // resolve(data as any); // Cast to any to avoid TypeScript error
+      });
+    });
+  }
+
   static async loadRaw(id: string) {
     const url = `https://api.praisecharts.com/v1.0/catalog/search?q=${encodeURIComponent(id)}`;
     const userAgent = "ChurchApps https://churchapps.org/"
