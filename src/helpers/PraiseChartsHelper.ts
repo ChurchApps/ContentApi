@@ -2,7 +2,7 @@ import { Setting, SongDetail, SongDetailLink } from "../models";
 import OAuth from "oauth";
 import { Environment } from "./Environment";
 import { Repositories } from "../repositories";
-
+import https from "https";
 
 export class PraiseChartsHelper {
 
@@ -79,16 +79,28 @@ export class PraiseChartsHelper {
 
   static async download(skus: string[], accessToken: string, accessTokenSecret: string) {
     const url = `https://api.praisecharts.com/v1.0/download?skus=${encodeURIComponent(skus.join(","))}`;
-    return new Promise((resolve, reject) => {
-      const oauth = this.getOAuth();
+    const oauth = this.getOAuth(); // instance of OAuth.OAuth
 
-      oauth.get(url, accessToken, accessTokenSecret, (err, data, resp) => {
-        if (err) return reject(err);
-        // Convert to Buffer (because `data` is a string, but we want binary-safe output)
-        const buffer = Buffer.isBuffer(data) ? data : Buffer.from(data, 'binary');
-        resolve(buffer);
-        // resolve(data as any); // Cast to any to avoid TypeScript error
+    const authHeader = oauth.authHeader(url, accessToken, accessTokenSecret, "GET");
+
+    return new Promise((resolve, reject) => {
+      const req = https.request(url, {
+        method: "GET",
+        headers: {
+          Authorization: authHeader,
+        }
+      }, (res) => {
+        const chunks: Buffer[] = [];
+
+        res.on("data", chunk => chunks.push(chunk));
+        res.on("end", () => {
+          const buffer = Buffer.concat(chunks);
+          resolve(buffer);
+        });
       });
+
+      req.on("error", reject);
+      req.end();
     });
   }
 
