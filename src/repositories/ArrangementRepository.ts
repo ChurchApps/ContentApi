@@ -49,4 +49,8 @@ export class ArrangementRepository {
     return DB.query("SELECT * FROM arrangements where churchId=? and songId=?;", [churchId, songId]);
   }
 
+  public loadBySongDetailId(churchId: string, songDetailId: string) {
+    return DB.query("SELECT * FROM arrangements where churchId=? and songDetailId=?;", [churchId, songDetailId]);
+  }
+
 }

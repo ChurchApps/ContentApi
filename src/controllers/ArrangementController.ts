@@ -26,6 +26,16 @@ export class ArrangementController extends ContentBaseController {
     })
   }
 
+  @httpGet("/songDetail/:songDetailId")
+  public async getBySongDetail(@requestParam("songDetailId") songDetailId: string, req: express.Request<{}, {}, null>, res: express.Response): Promise<interfaces.IHttpActionResult> {
+    return this.actionWrapper(req, res, async (au) => {
+      if (!au.checkAccess(Permissions.content.edit)) return this.json({}, 401);
+      else {
+        return await this.repositories.arrangement.loadBySongDetailId(au.churchId, songDetailId);
+      }
+    })
+  }
+
   @httpGet("/")
   public async getAll(req: express.Request<{}, {}, null>, res: express.Response): Promise<interfaces.IHttpActionResult> {
     return this.actionWrapper(req, res, async (au) => {
