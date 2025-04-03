@@ -109,18 +109,19 @@ export class PraiseChartsHelper {
   static async loadArrangmentRaw(id: string, keys: string[], accessToken: string, accessTokenSecret: string) {
     let url = `https://api.praisecharts.com/v1.0/library/import-arrangement/${id}`;
     if (keys.length > 0) url += "?keys[]=" + keys.join(",");
-    console.log("url is", url);
     return this.oAuthGet(url, accessToken, accessTokenSecret);
   }
 
-  static async loadSongFromLibrary(id: string, accessToken: string, accessTokenSecret: string) {
-    const url = `https://api.praisecharts.com/v1.0/library/search?q=${encodeURIComponent(id)}`;
+  static async loadSongFromLibrary(id: string, keys: string[], accessToken: string, accessTokenSecret: string) {
+    let url = `https://api.praisecharts.com/v1.0/library/search?q=${encodeURIComponent(id)}`;
+    if (keys.length > 0) url += "&keys[]=" + keys.join(",");
     const data: any = await this.oAuthGet(url, accessToken, accessTokenSecret);
     return data;
   }
 
-  static async loadSongFromCatalog(id: string) {
-    const url = `https://api.praisecharts.com/v1.0/catalog/search?q=${encodeURIComponent(id)}`;
+  static async loadSongFromCatalog(id: string, keys: string[]) {
+    let url = `https://api.praisecharts.com/v1.0/catalog/search?q=${encodeURIComponent(id)}`;
+    if (keys.length > 0) url += "&keys[]=" + keys.join(",");
     const response = await fetch(url);
     if (response.ok) {
       const data = await response.json();

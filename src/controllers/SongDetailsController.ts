@@ -22,14 +22,14 @@ export class SongDetailsController extends ContentBaseController {
   public async products(@requestParam("id") id: string, req: express.Request<{}, {}, null>, res: express.Response): Promise<interfaces.IHttpActionResult> {
     return this.actionWrapper(req, res, async (au) => {
       const { token, secret } = await PraiseChartsHelper.loadUserTokens(au);
+      const keys = (req.query.keys) ? req.query.keys.toString().split(",") : [];
       const data = (token)
-        ? await PraiseChartsHelper.loadSongFromLibrary(id, token, secret)
-        : await PraiseChartsHelper.loadSongFromCatalog(id);
+        ? await PraiseChartsHelper.loadSongFromLibrary(id, keys, token, secret)
+        : await PraiseChartsHelper.loadSongFromCatalog(id, keys);
       let products = [];
       if (data.in_library?.items?.length > 0) products = data.in_library?.items[0].products;
       else if (data.other_results?.items?.length > 0) products = data.other_results?.items[0].products;
       else if (data.arrangements?.items?.length > 0) products = data.arrangements.items[0].products;
-
       return products;
     })
   }
@@ -56,7 +56,7 @@ export class SongDetailsController extends ContentBaseController {
   public async arrangement(@requestParam("id") id: string, req: express.Request<{}, {}, null>, res: express.Response): Promise<interfaces.IHttpActionResult> {
     return this.actionWrapper(req, res, async (au) => {
       const { token, secret } = await PraiseChartsHelper.loadUserTokens(au);
-      const keys = req.query.keys.toString().split(",");
+      const keys = (req.query.keys) ? req.query.keys.toString().split(",") : [];
       const result = await PraiseChartsHelper.loadArrangmentRaw(id, keys, token, secret);
       return result;
     })
