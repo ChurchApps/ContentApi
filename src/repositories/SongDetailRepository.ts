@@ -54,6 +54,7 @@ export class SongDetailRepository {
       + " INNER JOIN arrangements a on a.songId=s.id"
       + " INNER JOIN songDetails sd on sd.id=a.songDetailId"
       + " WHERE s.churchId=?"
+      + " ORDER BY sd.title, sd.artist;";
     return DB.query(sql, [churchId]);
   }
 
