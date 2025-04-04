@@ -77,13 +77,20 @@ export class SongDetailsController extends ContentBaseController {
     const settings: Setting[] = await this.repositories.setting.loadUser(au.churchId, au.id);
     const token = settings.find(s => s.keyName === "praiseChartsAccessToken")?.value;
     const secret = settings.find(s => s.keyName === "praiseChartsAccessTokenSecret")?.value;
-    const fileBuffer = await PraiseChartsHelper.download(req.query.skus.toString().split(','), token, secret);
+    const fileBuffer: any = await PraiseChartsHelper.download(req.query.skus.toString().split(','), req.query.keys.toString().split(','), token, secret);
 
     let fileName = "praisecharts.pdf";
-    const mimeType = "application/pdf";
+    let mimeType = "application/pdf";
     if (req.query.file_name) {
       fileName = req.query.file_name.toString();
     }
+    const fileType = fileName.split('.')[1].toLowerCase();
+    switch (fileType) {
+      case "zip":
+        mimeType = "application/zip";
+        break;
+    }
+    console.log("Byte length", fileBuffer.length);
 
     res.setHeader("Content-Type", mimeType);
     res.setHeader("Content-Disposition", `attachment; filename="${fileName}"`);

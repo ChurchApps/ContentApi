@@ -90,10 +90,12 @@ export class PraiseChartsHelper {
   }
 
 
-  static async download(skus: string[], accessToken: string, accessTokenSecret: string) {
-    const url = `https://api.praisecharts.com/v1.0/download?skus=${encodeURIComponent(skus.join(","))}`;
+  static async download(skus: string[], keys: string[], accessToken: string, accessTokenSecret: string) {
+    let url = `https://api.praisecharts.com/v1.0/download?skus[]=${encodeURIComponent(skus.join(","))}`;
+    if (keys.length > 0) url += "&keys[]=" + keys.join(",");
     const oauth = this.getOAuth();
     const authHeader = oauth.authHeader(url, accessToken, accessTokenSecret, "GET");
+    console.log("URL", url)
 
     return new Promise((resolve, reject) => {
       const req = https.request(url, { method: "GET", headers: { Authorization: authHeader } }, (res) => {
