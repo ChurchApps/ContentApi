@@ -48,21 +48,15 @@ export class LinkController extends ContentBaseController {
         let links: Link[] = req.body;
         const promises: Promise<Link>[] = [];
         links.forEach((link) => {
-          if (link.churchId === au.churchId) {
-            promises.push(
-              this.repositories.link.save(link).then(async (l) => {
-                l.churchId = au.churchId;
-                /*
-                if (l.photo !== undefined && l.photo.startsWith("data:image/png;base64,")) {
-                  await this.savePhoto(au.churchId, l)
-                }*/
-                return link;
-              })
-            );
-          }
+          link.churchId = au.churchId;
+
+          promises.push(
+            this.repositories.link.save(link).then(async (l) => { return link; })
+          );
+
         });
         links = await Promise.all(promises);
-        if (links.length>0) await this.repositories.link.sort(au.churchId, links[0].category, links[0].parentId);
+        if (links.length > 0) await this.repositories.link.sort(au.churchId, links[0].category, links[0].parentId);
         return this.json(links, 200);
       }
     });
