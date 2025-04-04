@@ -37,6 +37,7 @@ export class PraiseChartsHelper {
 
   static getAccessToken(oauthToken: string, oauthTokenSecret: string, oauthVerifier: string): Promise<{ accessToken: string, accessTokenSecret: string }> {
     return new Promise((resolve, reject) => {
+      console.log("Getting access token", oauthToken, oauthTokenSecret, oauthVerifier);
       const oauth = this.getOAuth("http://localhost:3101/pingback");
       oauth.getOAuthAccessToken(
         oauthToken,
