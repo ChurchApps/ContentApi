@@ -29,3 +29,4 @@ export { ArrangementKeyController } from "./ArrangementKeyController";
 export { SongDetailsController } from "./SongDetailsController";
 export { SongDetailLinkController } from "./SongDetailLinkController";
 export { SongController } from "./SongController";
+export { PraiseChartsController } from "./PraiseChartsController";
