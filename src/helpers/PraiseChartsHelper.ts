@@ -134,6 +134,17 @@ export class PraiseChartsHelper {
     }
   }
 
+  static async loadRaw(id: string) {
+    const url = `https://api.praisecharts.com/v1.0/catalog/search?q=${encodeURIComponent(id)}`;
+    const response = await fetch(url);
+    if (response.ok) {
+      const data = await response.json();
+      return data.arrangements.items[0];
+    } else {
+      throw new Error(`Error fetching data from PraiseCharts: ${response.statusText}`);
+    }
+  }
+
   static async load(id: string) {
     const url = `https://api.praisecharts.com/v1.0/catalog/search?q=${encodeURIComponent(id)}`;
     const response = await fetch(url);

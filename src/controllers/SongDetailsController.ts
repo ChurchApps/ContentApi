@@ -8,6 +8,13 @@ import { MusicBrainzHelper } from "../helpers/MusicBrainzHelper";
 @controller("/songDetails")
 export class SongDetailsController extends ContentBaseController {
 
+  @httpGet("/praiseCharts/raw/:id")
+  public async raw(@requestParam("id") id: string, req: express.Request<{}, {}, null>, res: express.Response): Promise<interfaces.IHttpActionResult> {
+    return this.actionWrapper(req, res, async (au) => {
+      return PraiseChartsHelper.loadRaw(id);
+    })
+  }
+
   @httpGet("/praiseCharts/hasAccount")
   public async hasPraiseChartsAccount(@requestParam("id") id: string, req: express.Request<{}, {}, null>, res: express.Response): Promise<interfaces.IHttpActionResult> {
     return this.actionWrapper(req, res, async (au) => {

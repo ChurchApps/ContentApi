@@ -26,7 +26,7 @@ export class ArrangementRepository {
   }
 
   private async update(arrangement: Arrangement) {
-    const sql = "UPDATE arrangements SET songId=?, songDetailId=? name=?, lyrics=? WHERE id=? and churchId=?";
+    const sql = "UPDATE arrangements SET songId=?, songDetailId=?, name=?, lyrics=? WHERE id=? and churchId=?";
     const params = [arrangement.songId, arrangement.songDetailId, arrangement.name, arrangement.lyrics, arrangement.id, arrangement.churchId];
     console.log(sql, params);
     await DB.query(sql, params);
