@@ -90,7 +90,8 @@ export class PraiseChartsController extends ContentBaseController {
     return this.actionWrapperAnon(req, res, async () => {
       const returnUrl = req.query.returnUrl as string;
       const { oauthToken, oauthTokenSecret } = await PraiseChartsHelper.getRequestToken(returnUrl);
-      const authUrl = PraiseChartsHelper.getAuthorizeUrl(oauthToken);
+      let authUrl = PraiseChartsHelper.getAuthorizeUrl(oauthToken);
+      authUrl += "&XID=churchapps";
       return { authUrl, oauthToken, oauthTokenSecret };
     })
   }
