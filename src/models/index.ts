@@ -25,6 +25,7 @@ export { BibleVerseText } from "./BibleVerseText";
 export { BibleLookup } from "./BibleLookup";
 
 export { Arrangement } from "./Arrangement";
+export { ArrangementKey } from "./ArrangementKey";
 export { SongDetail } from "./SongDetail";
 export { SongDetailLink } from "./SongDetailLink";
 export { Song } from "./Song";

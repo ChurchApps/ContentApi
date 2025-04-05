@@ -2,6 +2,7 @@ import { controller, httpGet, httpPost, interfaces, requestParam, } from "invers
 import express from "express";
 import { ContentBaseController } from "./ContentBaseController";
 import { SongDetailLink } from "../models";
+import { MusicBrainzHelper } from "../helpers/MusicBrainzHelper";
 
 
 @controller("/songDetailLinks")
@@ -30,6 +31,17 @@ export class SongDetailLinkController extends ContentBaseController {
         promises.push(this.repositories.songDetailLink.save(sd));
       });
       const result = await Promise.all(promises);
+
+      if (result[0].service === "MusicBrainz") {
+        console.log("APPENDING MUSIC BRAINS")
+        const sd = await this.repositories.songDetail.load(result[0].songDetailId);
+        if (sd) {
+          await MusicBrainzHelper.appendDetailsById(sd, result[0].serviceKey);
+          console.log(sd);
+          await this.repositories.songDetail.save(sd);
+        }
+      }
+
       return result;
     });
   }

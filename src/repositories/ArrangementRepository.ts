@@ -19,16 +19,15 @@ export class ArrangementRepository {
   private async create(arrangement: Arrangement) {
     arrangement.id = UniqueIdHelper.shortId();
 
-    const sql = "INSERT INTO arrangements (id, churchId, songId, name, lyrics) VALUES (?, ?, ?, ?, ?);";
-    const params = [arrangement.id, arrangement.churchId, arrangement.songId, arrangement.name, arrangement.lyrics];
+    const sql = "INSERT INTO arrangements (id, churchId, songId, songDetailId, name, lyrics) VALUES (?, ?, ?, ?, ?, ?);";
+    const params = [arrangement.id, arrangement.churchId, arrangement.songId, arrangement.songDetailId, arrangement.name, arrangement.lyrics];
     await DB.query(sql, params);
     return arrangement;
   }
 
   private async update(arrangement: Arrangement) {
-    const sql = "UPDATE arrangements SET songId=?, name=?, lyrics=? WHERE id=? and churchId=?";
-    const params = [arrangement.songId, arrangement.name, arrangement.lyrics, arrangement.id, arrangement.churchId];
-    console.log(sql, params);
+    const sql = "UPDATE arrangements SET songId=?, songDetailId=?, name=?, lyrics=? WHERE id=? and churchId=?";
+    const params = [arrangement.songId, arrangement.songDetailId, arrangement.name, arrangement.lyrics, arrangement.id, arrangement.churchId];
     await DB.query(sql, params);
     return arrangement;
   }
@@ -47,6 +46,10 @@ export class ArrangementRepository {
 
   public loadBySongId(churchId: string, songId: string) {
     return DB.query("SELECT * FROM arrangements where churchId=? and songId=?;", [churchId, songId]);
+  }
+
+  public loadBySongDetailId(churchId: string, songDetailId: string) {
+    return DB.query("SELECT * FROM arrangements where churchId=? and songDetailId=?;", [churchId, songDetailId]);
   }
 
 }

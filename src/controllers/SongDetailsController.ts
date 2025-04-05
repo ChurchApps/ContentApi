@@ -1,23 +1,12 @@
 import { controller, httpGet, httpPost, interfaces, requestParam, } from "inversify-express-utils";
 import express from "express";
 import { ContentBaseController } from "./ContentBaseController";
-import { SongDetail, SongDetailLink } from "../models";
+import { SongDetail } from "../models";
 import { PraiseChartsHelper } from "../helpers/PraiseChartsHelper";
 import { MusicBrainzHelper } from "../helpers/MusicBrainzHelper";
 
 @controller("/songDetails")
 export class SongDetailsController extends ContentBaseController {
-
-
-  @httpGet("/search")
-  public async search(req: express.Request<{}, {}, null>, res: express.Response): Promise<interfaces.IHttpActionResult> {
-    return this.actionWrapper(req, res, async (au) => {
-      const query = req.query.q as string;
-      const results = await PraiseChartsHelper.search(query);
-      return results;
-    })
-  }
-
 
   @httpGet("/:id")
   public async get(@requestParam("id") id: string, req: express.Request<{}, {}, null>, res: express.Response): Promise<any> {
