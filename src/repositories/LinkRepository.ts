@@ -38,7 +38,6 @@ export class LinkRepository {
     link.id = UniqueIdHelper.shortId();
     const query = "INSERT INTO links (id, churchId, category, url, linkType, linkData, photo, icon, text, sort, parentId) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?);";
     const params = [link.id, link.churchId, link.category, link.url, link.linkType, link.linkData, link.photo, link.icon, link.text, link.sort, link.parentId];
-    console.log(query, params);
     await DB.query(query, params)
     return link;
   }
