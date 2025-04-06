@@ -5,6 +5,8 @@ const { Environment } = require('./dist/helpers/Environment');
 const { ScheduleHelper } = require('./dist/helpers/ScheduleHelper');
 const binaryMimeTypes = ['application/pdf', 'application/zip'];
 
+let server; //Global cache
+
 const checkPool = async () => {
   if (!Environment.connectionString) {
     await Environment.init(process.env.APP_ENV)
@@ -14,8 +16,10 @@ const checkPool = async () => {
 
 const universal = function universal(event, context) {
   checkPool().then(() => {
+    if (server) return proxy(server, event, context);
+    
     init().then(app => {
-      const server = createServer(app, null, binaryMimeTypes);
+      server = createServer(app, null, binaryMimeTypes);
       return proxy(server, event, context);
     });
   });
