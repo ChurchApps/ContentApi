@@ -80,9 +80,33 @@ export class PraiseChartsController extends ContentBaseController {
     }
     console.log("Byte length", fileBuffer.length);
 
-    res.setHeader("Content-Type", mimeType);
-    res.setHeader("Content-Disposition", `attachment; filename="${fileName}"`);
-    res.send(fileBuffer); // this safely sends the raw binary
+
+    // Detect if running under AWS Lambda by checking for specific env vars
+    const isLambda = !!process.env.AWS_LAMBDA_FUNCTION_NAME;
+
+    if (isLambda) {
+      // Special handling for Lambda/API Gateway
+      const base64Data = fileBuffer.toString('base64');
+
+      // @ts-ignore
+      res.lambda = {
+        statusCode: 200,
+        headers: {
+          "Content-Type": mimeType,
+          "Content-Disposition": `attachment; filename="${fileName}"`,
+        },
+        isBase64Encoded: true,
+        body: base64Data,
+      };
+      res.end();
+    } else {
+      // Standard Express (local dev or traditional server)
+      res.setHeader("Content-Type", mimeType);
+      res.setHeader("Content-Disposition", `attachment; filename="${fileName}"`);
+      res.send(fileBuffer); // send raw binary
+    }
+
+
   }
 
   @httpGet("/authUrl")
