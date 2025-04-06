@@ -15,7 +15,6 @@ custom:
         - subnet-01a6b61d749d10c46
     current: ${ternary(${self:custom.env}, prod, ${self:custom.vpcSettings.prod}, ~)}
 
-
 provider:
   name: aws
   runtime: nodejs18.x
@@ -26,6 +25,9 @@ provider:
     role: arn:aws:iam::428019619026:role/ChurchAppsRole
   environment:
     APP_ENV: ${self:custom.env}
+  binaryMediaTypes:
+    - application/pdf
+    - application/zip
 
 layers:
   dependencies:
@@ -48,12 +50,14 @@ functions:
           method: ANY
     vpc: ${self:custom.vpcSettings.current}
     layers:
-      - {Ref: DependenciesLambdaLayer}
+      - {
+          Ref: DependenciesLambdaLayer
+        }
     package:
       patterns:
-        - '!node_modules/**'
-        - '!package-lock.json'
-        - '**'
+        - "!node_modules/**"
+        - "!package-lock.json"
+        - "**"
   nightly:
     name: membership-api-${sls:stage}-nightly
     handler: lambda.nightly
@@ -63,11 +67,13 @@ functions:
           enabled: true
     vpc: ${self:custom.vpcSettings.current}
     layers:
-      - {Ref: DependenciesLambdaLayer}
+      - {
+          Ref: DependenciesLambdaLayer
+        }
     package:
       patterns:
-        - '!node_modules/**'
-        - '!package-lock.json'
+        - "!node_modules/**"
+        - "!package-lock.json"
   timer2Monday:
     name: membership-api-${sls:stage}-timer2Monday
     handler: lambda.timer2Monday
@@ -77,11 +83,13 @@ functions:
           enabled: true
     vpc: ${self:custom.vpcSettings.current}
     layers:
-      - {Ref: DependenciesLambdaLayer}
+      - {
+          Ref: DependenciesLambdaLayer
+        }
     package:
       patterns:
-        - '!node_modules/**'
-        - '!package-lock.json'
+        - "!node_modules/**"
+        - "!package-lock.json"
 
 plugins:
   - serverless-plugin-utils

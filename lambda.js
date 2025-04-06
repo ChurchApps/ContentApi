@@ -3,6 +3,7 @@ const { init } = require('./dist/app');
 const { Pool } = require('@churchapps/apihelper');
 const { Environment } = require('./dist/helpers/Environment');
 const { ScheduleHelper } = require('./dist/helpers/ScheduleHelper');
+const binaryMimeTypes = ['application/pdf', 'application/zip'];
 
 const checkPool = async () => {
   if (!Environment.connectionString) {
@@ -14,7 +15,7 @@ const checkPool = async () => {
 const universal = function universal(event, context) {
   checkPool().then(() => {
     init().then(app => {
-      const server = createServer(app);
+      const server = createServer(app, null, binaryMimeTypes);
       return proxy(server, event, context);
     });
   });
