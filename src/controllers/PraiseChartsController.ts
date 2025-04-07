@@ -3,6 +3,10 @@ import express from "express";
 import { ContentBaseController } from "./ContentBaseController";
 import { Setting } from "../models";
 import { PraiseChartsHelper } from "../helpers/PraiseChartsHelper";
+import * as path from "path";
+import * as fs from "fs";
+import { AwsHelper } from "@churchapps/apihelper";
+import { Environment } from "../helpers";
 
 @controller("/praiseCharts")
 export class PraiseChartsController extends ContentBaseController {
@@ -58,6 +62,20 @@ export class PraiseChartsController extends ContentBaseController {
     })
   }
 
+  static async saveLocalFile(fileName: string, fileBuffer: any) {
+    const publicDownloadsDir = path.join(__dirname, "..", "public", "downloads", "praiseCharts");
+    const filePath = path.join(publicDownloadsDir, fileName);
+    console.log("File path", filePath)
+    fs.mkdirSync(publicDownloadsDir, { recursive: true });
+    fs.writeFileSync(filePath, fileBuffer);
+    return `/public/downloads/praiseCharts/${fileName}`;
+  }
+
+  static async saveS3File(fileName: string, mimeType: string, fileBuffer: any) {
+    const pathName = `/downloads/praiseCharts/${fileName}`;
+    await AwsHelper.S3Upload(pathName, mimeType, fileBuffer);
+    return pathName;
+  }
 
   @httpGet("/download")
   public async download(req: express.Request<{}, {}, null>, res: express.Response) {
@@ -68,23 +86,43 @@ export class PraiseChartsController extends ContentBaseController {
     const fileBuffer: any = await PraiseChartsHelper.download(req.query.skus.toString().split(','), req.query.keys.toString().split(','), token, secret);
 
     let fileName = "praisecharts.pdf";
-    let mimeType = "application/pdf";
     if (req.query.file_name) {
       fileName = req.query.file_name.toString();
     }
+    let mimeType = "application/pdf";
     const fileType = fileName.split('.')[1].toLowerCase();
     switch (fileType) {
       case "zip":
         mimeType = "application/zip";
         break;
     }
-    console.log("Byte length", fileBuffer.length);
 
-    res.setHeader("Content-Type", mimeType);
-    res.setHeader("Content-Disposition", `attachment; filename="${fileName}"`);
-    res.send(fileBuffer); // this safely sends the raw binary
+    const redirectUrl = (process.env.SERVER_PORT) ?
+      await PraiseChartsController.saveLocalFile(fileName, fileBuffer) :
+      await PraiseChartsController.saveS3File(fileName, mimeType, fileBuffer);
+
+    return { redirectUrl };
   }
 
+
+
+  /*
+
+      let mimeType = "application/pdf";
+
+      const fileType = fileName.split('.')[1].toLowerCase();
+      switch (fileType) {
+        case "zip":
+          mimeType = "application/zip";
+          break;
+      }
+      console.log("Byte length", fileBuffer.length);
+
+      res.setHeader("Content-Type", mimeType);
+      res.setHeader("Content-Disposition", `attachment; filename="${fileName}"`);
+      res.send(fileBuffer); // this safely sends the raw binary
+    }
+  */
   @httpGet("/authUrl")
   public async praiseChartsAuthUrl(req: express.Request<{}, {}, null>, res: express.Response): Promise<interfaces.IHttpActionResult> {
     return this.actionWrapperAnon(req, res, async () => {

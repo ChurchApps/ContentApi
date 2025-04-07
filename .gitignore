@@ -1,6 +1,8 @@
 *.bat
 /content/
 
+/public/*
+
 # Logs
 logs
 *.log
