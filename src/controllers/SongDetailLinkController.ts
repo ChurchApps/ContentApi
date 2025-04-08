@@ -1,4 +1,4 @@
-import { controller, httpGet, httpPost, interfaces, requestParam, } from "inversify-express-utils";
+import { controller, httpDelete, httpGet, httpPost, interfaces, requestParam, } from "inversify-express-utils";
 import express from "express";
 import { ContentBaseController } from "./ContentBaseController";
 import { SongDetailLink } from "../models";
@@ -33,16 +33,23 @@ export class SongDetailLinkController extends ContentBaseController {
       const result = await Promise.all(promises);
 
       if (result[0].service === "MusicBrainz") {
-        console.log("APPENDING MUSIC BRAINS")
         const sd = await this.repositories.songDetail.load(result[0].songDetailId);
         if (sd) {
           await MusicBrainzHelper.appendDetailsById(sd, result[0].serviceKey);
-          console.log(sd);
           await this.repositories.songDetail.save(sd);
         }
       }
 
       return result;
+    });
+  }
+
+
+  @httpDelete("/:id")
+  public async delete(@requestParam("id") id: string, req: express.Request, res: express.Response): Promise<void> {
+    return this.actionWrapper(req, res, async (au) => {
+      await this.repositories.songDetailLink.delete(id);
+      return null;
     });
   }
 

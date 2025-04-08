@@ -23,7 +23,7 @@ export class MusicBrainzHelper {
   }
 
   static async load(id: string) {
-    const url = `https://musicbrainz.org/ws/2/recording/${encodeURIComponent(id)}?fmt=json`;
+    const url = `https://musicbrainz.org/ws/2/recording/${encodeURIComponent(id)}?fmt=json&inc=artist-credits+isrcs+releases`;
     const userAgent = "ChurchApps https://churchapps.org/"
     const response = await fetch(url, { headers: { "User-Agent": userAgent } });
     if (response.ok) {
