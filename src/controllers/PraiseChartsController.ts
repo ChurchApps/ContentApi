@@ -57,6 +57,7 @@ export class PraiseChartsController extends ContentBaseController {
     return this.actionWrapper(req, res, async (au) => {
       const { token, secret } = await PraiseChartsHelper.loadUserTokens(au);
       const keys = (req.query.keys) ? req.query.keys.toString().split(",") : [];
+      if (!token) return { error: "No access token" };
       const result = await PraiseChartsHelper.loadArrangmentRaw(id, keys, token, secret);
       return result;
     })
