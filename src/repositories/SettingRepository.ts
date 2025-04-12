@@ -36,7 +36,7 @@ export class SettingRepository {
   }
 
   public loadAll(churchId: string) {
-    return DB.query("SELECT * FROM settings WHERE churchId=? and userId null;", [churchId]);
+    return DB.query("SELECT * FROM settings WHERE churchId=? and userId is null;", [churchId]);
   }
 
   public loadUser(churchId: string, userId: string) {
