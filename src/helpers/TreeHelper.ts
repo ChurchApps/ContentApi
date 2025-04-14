@@ -84,6 +84,21 @@ export class TreeHelper {
     })
   }
 
+  static async convertToBlock(section: Section, blockName: string) {
+    const sec = { ...section };
+    const block = await Repositories.getCurrent().block.save({ churchId: sec.churchId, blockType: "sectionBlock", name: blockName || "" });
+    sec.id = undefined;
+    sec.pageId = undefined;
+    sec.blockId = block.id;
+    const result = await Repositories.getCurrent().section.save(sec);
+    const promises:Promise<Element>[] = [];
+    sec.elements?.forEach(e => {
+      promises.push(this.duplicateElement(e, result.id, null, block.id));
+    });
+    await Promise.all(promises);
+    return result;
+  }
+
   static async duplicateSection(section:Section) {
     const sec = {...section};
     sec.id = undefined;
@@ -96,16 +111,17 @@ export class TreeHelper {
     return result;
   }
 
-  static async duplicateElement(element: Element, sectionId: string, parentId: string) {
+  static async duplicateElement(element: Element, sectionId: string, parentId: string, blockId?: string) {
     const el = {...element};
     el.id = undefined;
     el.sectionId = sectionId;
     el.parentId = parentId;
+    if (blockId) el.blockId = blockId;
     // el.sort = element.sort + 1;
     const result = await Repositories.getCurrent().element.save(el);
     const promises:Promise<Element>[] = [];
     el.elements?.forEach(e => {
-      promises.push(this.duplicateElement(e, sectionId, result.id));
+      promises.push(this.duplicateElement(e, sectionId, result.id, blockId));
     });
     await Promise.all(promises);
     return result;

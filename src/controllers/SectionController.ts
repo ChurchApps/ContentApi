@@ -20,10 +20,16 @@ export class SectionController extends ContentBaseController {
     return this.actionWrapper(req, res, async (au) => {
       if (!au.checkAccess(Permissions.content.edit)) return this.json({}, 401);
       else {
+        const { convertToBlock } = req.query;
         let section = await this.repositories.section.load(au.churchId, id);
         const allElements: Element[] = await this.repositories.element.loadForSection(section.churchId, section.id);
         section = TreeHelper.buildTree([section], allElements)[0];
-        const result = await TreeHelper.duplicateSection(section)
+        let result;
+        if (convertToBlock && convertToBlock !== "") {
+          result = await TreeHelper.convertToBlock(section, convertToBlock.toString());
+        } else {
+          result = await TreeHelper.duplicateSection(section);
+        }
         return result;
       }
     });
