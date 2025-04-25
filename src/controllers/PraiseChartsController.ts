@@ -98,32 +98,16 @@ export class PraiseChartsController extends ContentBaseController {
         break;
     }
 
+    // Ensure the file buffer is properly handled for both PDF and ZIP
+    const buffer = Buffer.isBuffer(fileBuffer) ? fileBuffer : Buffer.from(fileBuffer);
+
     const redirectUrl = (process.env.SERVER_PORT) ?
-      await PraiseChartsController.saveLocalFile(fileName, fileBuffer) :
-      await PraiseChartsController.saveS3File(fileName, mimeType, fileBuffer);
+      await PraiseChartsController.saveLocalFile(fileName, buffer) :
+      await PraiseChartsController.saveS3File(fileName, mimeType, buffer);
 
     return { redirectUrl };
   }
 
-
-
-  /*
-
-      let mimeType = "application/pdf";
-
-      const fileType = fileName.split('.')[1].toLowerCase();
-      switch (fileType) {
-        case "zip":
-          mimeType = "application/zip";
-          break;
-      }
-      console.log("Byte length", fileBuffer.length);
-
-      res.setHeader("Content-Type", mimeType);
-      res.setHeader("Content-Disposition", `attachment; filename="${fileName}"`);
-      res.send(fileBuffer); // this safely sends the raw binary
-    }
-  */
   @httpGet("/authUrl")
   public async praiseChartsAuthUrl(req: express.Request<{}, {}, null>, res: express.Response): Promise<interfaces.IHttpActionResult> {
     return this.actionWrapperAnon(req, res, async () => {
