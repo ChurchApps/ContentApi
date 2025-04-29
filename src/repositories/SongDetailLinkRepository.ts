@@ -43,6 +43,8 @@ export class SongDetailLinkRepository {
     return DB.query("SELECT * FROM songDetailLinks WHERE songDetailId=? ORDER BY service;", [songDetailId]);
   }
 
-
+  public loadByServiceAndKey(service: string, serviceKey: string) {
+    return DB.queryOne("SELECT * FROM songDetailLinks WHERE service=? AND serviceKey=?;", [service, serviceKey]);
+  }
 
 }

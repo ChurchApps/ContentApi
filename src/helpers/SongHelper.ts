@@ -1,0 +1,92 @@
+import { SongDetail, Song, Arrangement } from "../models";
+import { PraiseChartsHelper } from "./PraiseChartsHelper";
+import { Repositories } from "../repositories";
+
+export class SongHelper {
+
+  static async importSong(churchId: string, title?: string, artist?: string, lyrics?: string, ccliNumber?: string): Promise<Arrangement> {
+    try {
+      // 1. Try to find existing song by CCLI
+      const existingSong = await this.findExistingSongByCCLI(churchId, ccliNumber);
+      if (existingSong) return existingSong;
+
+      // 2. Look up song on PraiseCharts
+      const praiseChartsResult = await PraiseChartsHelper.findBestMatch(title, artist, lyrics, ccliNumber);
+      if (!praiseChartsResult) throw new Error("Song not found on PraiseCharts");
+
+      // 3. Get or create song detail
+      const songDetail = await this.getOrCreateSongDetail(praiseChartsResult);
+
+      // 4. Check if arrangement exists for this church
+      const existingArrangement = await Repositories.getCurrent().arrangement.loadBySongDetailId(churchId, songDetail.id);
+      if (existingArrangement.length > 0) return existingArrangement;
+
+      // 5. Create new Song and Arrangement
+      return await this.createSongAndArrangement(churchId, songDetail, lyrics);
+
+    } catch (error) {
+      console.error("Error importing song:", error);
+      throw new Error(`Error importing song: ${error.message}`);
+    }
+  }
+
+  private static async findExistingSongByCCLI(churchId: string, ccliNumber?: string): Promise<SongDetail | null> {
+    if (!ccliNumber) return null;
+
+    const existingByCCLI = await Repositories.getCurrent().songDetailLink.loadByServiceAndKey("CCLI", ccliNumber);
+    if (existingByCCLI) {
+      const songDetail = await Repositories.getCurrent().songDetail.load(existingByCCLI.songDetailId);
+      if (songDetail) {
+        const existingArrangement = await Repositories.getCurrent().arrangement.loadBySongDetailId(churchId, songDetail.id);
+        if (existingArrangement.length > 0) {
+          return songDetail;
+        }
+      }
+    }
+    return null;
+  }
+
+  private static async getOrCreateSongDetail(praiseChartsResult: SongDetail): Promise<SongDetail> {
+    let songDetail = await Repositories.getCurrent().songDetail.loadByPraiseChartsId(praiseChartsResult.praiseChartsId);
+
+    if (!songDetail) {
+      // Create new song detail
+      songDetail = praiseChartsResult;
+      songDetail = await Repositories.getCurrent().songDetail.save(songDetail);
+
+      // Create song detail links
+      await this.createSongDetailLinks(songDetail, praiseChartsResult.praiseChartsId);
+    }
+
+    return songDetail;
+  }
+
+  private static async createSongDetailLinks(songDetail: SongDetail, praiseChartsId: string): Promise<void> {
+    const { links } = await PraiseChartsHelper.load(praiseChartsId);
+    for (const link of links) {
+      link.songDetailId = songDetail.id;
+      await Repositories.getCurrent().songDetailLink.save(link);
+    }
+  }
+
+  private static async createSongAndArrangement(churchId: string, songDetail: SongDetail, lyrics?: string): Promise<Arrangement> {
+    // Create new Song
+    const song: Song = {
+      churchId,
+      name: songDetail.title,
+      dateAdded: new Date()
+    };
+    const savedSong = await Repositories.getCurrent().song.save(song);
+
+    // Create new Arrangement
+    const arrangement: Arrangement = {
+      churchId,
+      songId: savedSong.id,
+      songDetailId: songDetail.id,
+      name: "Default",
+      lyrics: lyrics || ""
+    };
+    return await Repositories.getCurrent().arrangement.save(arrangement);
+  }
+
+}
