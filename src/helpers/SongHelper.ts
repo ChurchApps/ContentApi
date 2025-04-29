@@ -6,16 +6,12 @@ export class SongHelper {
 
 
   static async importSongs(churchId: string, songs: { title?: string, artist?: string, lyrics?: string, ccliNumber?: string }[]): Promise<Arrangement[]> {
-    const arrangements: Arrangement[] = [];
+    const promises: Promise<Arrangement>[] = [];
     for (const song of songs) {
-      try {
-        const arrangement = await this.importSong(churchId, song.title, song.artist, song.lyrics, song.ccliNumber);
-        arrangements.push(arrangement);
-      } catch (error) {
-        console.error(`Error importing song ${song.title}:`, error);
-      }
+      const promise = this.importSong(churchId, song.title, song.artist, song.lyrics, song.ccliNumber);
+      promises.push(promise);
     }
-    return arrangements;
+    return Promise.all(promises);
   }
 
   static async importSong(churchId: string, title?: string, artist?: string, lyrics?: string, ccliNumber?: string): Promise<Arrangement> {
