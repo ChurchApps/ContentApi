@@ -3,6 +3,7 @@ import express from "express";
 import { Song } from "../models";
 import { ContentBaseController } from "./ContentBaseController";
 import { Permissions } from "../helpers";
+import { SongHelper } from "../helpers/SongHelper";
 
 
 
@@ -65,5 +66,19 @@ export class SongController extends ContentBaseController {
     })
   }
 
+  @httpPost("/import")
+  public async import(req: express.Request<{}, {}, { title?: string, artist?: string, lyrics?: string, ccliNumber?: string }[]>, res: express.Response): Promise<interfaces.IHttpActionResult> {
+    return this.actionWrapper(req, res, async (au) => {
+      if (!au.checkAccess(Permissions.content.edit)) return this.json({}, 401);
+
+      const songs = req.body;
+      if (!Array.isArray(songs)) {
+        return this.json({ error: "Request body must be an array of songs" }, 400);
+      }
+
+      const arrangements = await SongHelper.importSongs(au.churchId, songs);
+      return arrangements;
+    });
+  }
 
 }

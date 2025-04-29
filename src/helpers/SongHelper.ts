@@ -4,6 +4,20 @@ import { Repositories } from "../repositories";
 
 export class SongHelper {
 
+
+  static async importSongs(churchId: string, songs: { title?: string, artist?: string, lyrics?: string, ccliNumber?: string }[]): Promise<Arrangement[]> {
+    const arrangements: Arrangement[] = [];
+    for (const song of songs) {
+      try {
+        const arrangement = await this.importSong(churchId, song.title, song.artist, song.lyrics, song.ccliNumber);
+        arrangements.push(arrangement);
+      } catch (error) {
+        console.error(`Error importing song ${song.title}:`, error);
+      }
+    }
+    return arrangements;
+  }
+
   static async importSong(churchId: string, title?: string, artist?: string, lyrics?: string, ccliNumber?: string): Promise<Arrangement> {
     try {
       // 1. Try to find existing song by CCLI
