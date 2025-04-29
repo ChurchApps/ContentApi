@@ -68,7 +68,7 @@ export class SongController extends ContentBaseController {
 
   //We should do batches of 10 or so.
   @httpPost("/import")
-  public async import(req: express.Request<{}, {}, { title?: string, artist?: string, lyrics?: string, ccliNumber?: string }[]>, res: express.Response): Promise<interfaces.IHttpActionResult> {
+  public async import(req: express.Request<{}, {}, { title?: string, artist?: string, lyrics?: string, ccliNumber?: string, geniusId?: string }[]>, res: express.Response): Promise<interfaces.IHttpActionResult> {
     return this.actionWrapper(req, res, async (au) => {
       if (!au.checkAccess(Permissions.content.edit)) return this.json({}, 401);
 

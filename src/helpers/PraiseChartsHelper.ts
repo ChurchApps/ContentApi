@@ -241,13 +241,21 @@ export class PraiseChartsHelper {
     return (matchCount / searchWords.length) * 100;
   }
 
-  static async findBestMatch(title?: string, artist?: string, lyrics?: string, ccliNumber?: string): Promise<SongDetail | null> {
+  static async findBestMatch(title?: string, artist?: string, lyrics?: string, ccliNumber?: string, geniusId?: string): Promise<SongDetail | null> {
     try {
+      // First try CCLI number if provided
       if (ccliNumber) {
         const ccliResult = await this.searchByCCLI(ccliNumber);
         if (ccliResult) return ccliResult;
       }
 
+      // Then try Genius ID if provided
+      if (geniusId) {
+        const geniusResult = await this.searchByGeniusId(geniusId);
+        if (geniusResult) return geniusResult;
+      }
+
+      // If no CCLI match or no CCLI provided, try searching with title and artist
       let searchQuery = "";
       if (title) searchQuery += title;
       if (artist) searchQuery += ` ${artist}`;
@@ -259,6 +267,7 @@ export class PraiseChartsHelper {
           + "&arr_includes[]=details.album.title"
           + "&arr_includes[]=details.album.images.md.url"
           + "&arr_includes[]=details.external_ids.ccli_number"
+          + "&arr_includes[]=details.external_ids.genius_id"
           + "&arr_includes[]=details.lyrics";
 
         const url = `https://api.praisecharts.com/v1.0/catalog/search?q=${encodeURIComponent(searchQuery.trim())}${includes}`;
@@ -294,6 +303,23 @@ export class PraiseChartsHelper {
     } catch (error) {
       console.error("Error searching PraiseCharts:", error);
       throw new Error(`Error searching PraiseCharts: ${error.message}`);
+    }
+  }
+
+  static async searchByGeniusId(geniusId: string): Promise<SongDetail | null> {
+    try {
+      const url = `https://api.praisecharts.com/v1.0/catalog/search?genius_id=${encodeURIComponent(geniusId)}`;
+      const response = await fetch(url);
+      if (response.ok) {
+        const data = await response.json();
+        if (data.arrangements.items.length > 0) {
+          return this.convertItemToSongDetail(data.arrangements.items[0]);
+        }
+      }
+      return null;
+    } catch (error) {
+      console.error("Error searching PraiseCharts by Genius ID:", error);
+      throw new Error(`Error searching PraiseCharts by Genius ID: ${error.message}`);
     }
   }
 
