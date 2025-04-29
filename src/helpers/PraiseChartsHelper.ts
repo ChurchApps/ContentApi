@@ -201,4 +201,100 @@ export class PraiseChartsHelper {
     return result;
   }
 
+  static async searchByCCLI(ccliNumber: string): Promise<SongDetail | null> {
+    try {
+      const url = `https://api.praisecharts.com/v1.0/catalog/search?ccli_number=${encodeURIComponent(ccliNumber)}`;
+      const response = await fetch(url);
+      if (response.ok) {
+        const data = await response.json();
+        if (data.arrangements.items.length > 0) {
+          return this.convertItemToSongDetail(data.arrangements.items[0]);
+        }
+      }
+      return null;
+    } catch (error) {
+      console.error("Error searching PraiseCharts by CCLI:", error);
+      throw new Error(`Error searching PraiseCharts by CCLI: ${error.message}`);
+    }
+  }
+
+  private static calculateLyricsMatchScore(searchLyrics: string, resultLyrics: string): number {
+    if (!searchLyrics || !resultLyrics) return 0;
+
+    // Convert both to lowercase for case-insensitive comparison
+    const searchLower = searchLyrics.toLowerCase();
+    const resultLower = resultLyrics.toLowerCase();
+
+    // Split into words
+    const searchWords = searchLower.split(/\s+/);
+    const resultWords = resultLower.split(/\s+/);
+
+    // Count matching words
+    let matchCount = 0;
+    for (const word of searchWords) {
+      if (resultWords.includes(word)) {
+        matchCount++;
+      }
+    }
+
+    // Calculate match percentage
+    return (matchCount / searchWords.length) * 100;
+  }
+
+  static async findBestMatch(title?: string, artist?: string, lyrics?: string, ccliNumber?: string): Promise<SongDetail | null> {
+    try {
+      if (ccliNumber) {
+        const ccliResult = await this.searchByCCLI(ccliNumber);
+        if (ccliResult) return ccliResult;
+      }
+
+      let searchQuery = "";
+      if (title) searchQuery += title;
+      if (artist) searchQuery += ` ${artist}`;
+
+      if (searchQuery.trim()) {
+        const includes = "&arr_includes[]=id"
+          + "&arr_includes[]=details.title"
+          + "&arr_includes[]=details.artists.names"
+          + "&arr_includes[]=details.album.title"
+          + "&arr_includes[]=details.album.images.md.url"
+          + "&arr_includes[]=details.external_ids.ccli_number"
+          + "&arr_includes[]=details.lyrics";
+
+        const url = `https://api.praisecharts.com/v1.0/catalog/search?q=${encodeURIComponent(searchQuery.trim())}${includes}`;
+        const response = await fetch(url);
+        if (response.ok) {
+          const data = await response.json();
+          if (data.arrangements.items.length > 0) {
+            // If we have lyrics, find the best match based on lyrics similarity
+            if (lyrics) {
+              let bestMatch = data.arrangements.items[0];
+              let bestScore = this.calculateLyricsMatchScore(lyrics, bestMatch.details?.lyrics || "");
+
+              for (let i = 1; i < data.arrangements.items.length; i++) {
+                const currentItem = data.arrangements.items[i];
+                const currentScore = this.calculateLyricsMatchScore(lyrics, currentItem.details?.lyrics || "");
+
+                if (currentScore > bestScore) {
+                  bestMatch = currentItem;
+                  bestScore = currentScore;
+                }
+              }
+
+              return this.convertItemToSongDetail(bestMatch);
+            }
+
+            // If no lyrics provided, return the first result
+            return this.convertItemToSongDetail(data.arrangements.items[0]);
+          }
+        }
+      }
+
+      return null;
+    } catch (error) {
+      console.error("Error searching PraiseCharts:", error);
+      throw new Error(`Error searching PraiseCharts: ${error.message}`);
+    }
+  }
+
 }
