@@ -1,4 +1,4 @@
-import { SongDetail, Song, Arrangement } from "../models";
+import { SongDetail, Song, Arrangement, SongDetailLink } from "../models";
 import { PraiseChartsHelper } from "./PraiseChartsHelper";
 import { Repositories } from "../repositories";
 
@@ -31,7 +31,7 @@ export class SongHelper {
       if (!praiseChartsResult) throw new Error("Song not found on PraiseCharts");
 
       // 4. Get or create song detail
-      const songDetail = await this.getOrCreateSongDetail(praiseChartsResult);
+      const songDetail = await this.getOrCreateSongDetail(praiseChartsResult, ccliNumber, geniusId);
 
       // 5. Check if arrangement exists for this church
       const existingArrangement = await Repositories.getCurrent().arrangement.loadBySongDetailId(churchId, songDetail.id);
@@ -73,7 +73,7 @@ export class SongHelper {
     return null;
   }
 
-  private static async getOrCreateSongDetail(praiseChartsResult: SongDetail): Promise<SongDetail> {
+  private static async getOrCreateSongDetail(praiseChartsResult: SongDetail, ccliNumber?: string, geniusId?: string): Promise<SongDetail> {
     let songDetail = await Repositories.getCurrent().songDetail.loadByPraiseChartsId(praiseChartsResult.praiseChartsId);
 
     if (!songDetail) {
@@ -81,9 +81,12 @@ export class SongHelper {
       songDetail = praiseChartsResult;
       songDetail = await Repositories.getCurrent().songDetail.save(songDetail);
 
-      // Create song detail links
+      // Create song detail links from PraiseCharts
       await this.createSongDetailLinks(songDetail, praiseChartsResult.praiseChartsId);
     }
+
+    // Create additional links for CCLI and Genius if provided
+    await this.createAdditionalLinks(songDetail, ccliNumber, geniusId);
 
     return songDetail;
   }
@@ -93,6 +96,32 @@ export class SongHelper {
     for (const link of links) {
       link.songDetailId = songDetail.id;
       await Repositories.getCurrent().songDetailLink.save(link);
+    }
+  }
+
+  private static async createAdditionalLinks(songDetail: SongDetail, ccliNumber?: string, geniusId?: string): Promise<void> {
+    const existingLinks = await Repositories.getCurrent().songDetailLink.loadForSongDetail(songDetail.id);
+
+    // Create CCLI link if provided and doesn't exist
+    if (ccliNumber && !existingLinks.some((link: SongDetailLink) => link.service === "CCLI" && link.serviceKey === ccliNumber)) {
+      const ccliLink: SongDetailLink = {
+        songDetailId: songDetail.id,
+        service: "CCLI",
+        serviceKey: ccliNumber,
+        url: `https://songselect.ccli.com/Songs/${ccliNumber}`
+      };
+      await Repositories.getCurrent().songDetailLink.save(ccliLink);
+    }
+
+    // Create Genius link if provided and doesn't exist
+    if (geniusId && !existingLinks.some((link: SongDetailLink) => link.service === "Genius" && link.serviceKey === geniusId)) {
+      const geniusLink: SongDetailLink = {
+        songDetailId: songDetail.id,
+        service: "Genius",
+        serviceKey: geniusId,
+        url: `https://genius.com/songs/${geniusId}`
+      };
+      await Repositories.getCurrent().songDetailLink.save(geniusLink);
     }
   }
 
