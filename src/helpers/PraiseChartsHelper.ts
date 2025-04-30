@@ -276,13 +276,9 @@ export class PraiseChartsHelper {
         if (response.ok) {
           const data = await response.json();
           if (data.arrangements.items.length > 0) {
-            return this.getArtistBestMatch(data.arrangements.items, artist);
-            // If we have lyrics, find the best match based on lyrics similarity
-            // if (lyrics) return this.getLyricsBestMatch(data.arrangements.items, lyrics);
-
-
-            // If no lyrics provided, return the first result
-            // return this.convertItemToSongDetail(data.arrangements.items[0]);
+            if (artist) return this.getArtistBestMatch(data.arrangements.items, artist);
+            else if (lyrics) return this.getLyricsBestMatch(data.arrangements.items, lyrics);
+            else return this.convertItemToSongDetail(data.arrangements.items[0]);
           }
         }
       }

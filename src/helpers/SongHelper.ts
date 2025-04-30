@@ -28,7 +28,7 @@ export class SongHelper {
 
       // 3. Look up song on PraiseCharts
       const praiseChartsResult = await PraiseChartsHelper.findBestMatch(title, artist, lyrics, ccliNumber, geniusId);
-      if (!praiseChartsResult) throw new Error("Song not found on PraiseCharts");
+      if (!praiseChartsResult) return null; // throw new Error("Song not found on PraiseCharts");
 
       // 4. Get or create song detail
       const songDetail = await this.getOrCreateSongDetail(praiseChartsResult, ccliNumber, geniusId);
