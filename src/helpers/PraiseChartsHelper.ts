@@ -218,12 +218,12 @@ export class PraiseChartsHelper {
     }
   }
 
-  private static calculateLyricsMatchScore(searchLyrics: string, resultLyrics: string): number {
-    if (!searchLyrics || !resultLyrics) return 0;
+  private static calculateMatchScore(searchText: string, resultText: string): number {
+    if (!resultText || !searchText) return 0;
 
     // Convert both to lowercase for case-insensitive comparison
-    const searchLower = searchLyrics.toLowerCase();
-    const resultLower = resultLyrics.toLowerCase();
+    const searchLower = searchText.toLowerCase();
+    const resultLower = resultText.toLowerCase();
 
     // Split into words
     const searchWords = searchLower.split(/\s+/);
@@ -271,30 +271,18 @@ export class PraiseChartsHelper {
           + "&arr_includes[]=details.lyrics";
 
         const url = `https://api.praisecharts.com/v1.0/catalog/search?q=${encodeURIComponent(searchQuery.trim())}${includes}`;
+        console.log("Searching PraiseCharts with URL:", url);
         const response = await fetch(url);
         if (response.ok) {
           const data = await response.json();
           if (data.arrangements.items.length > 0) {
+            return this.getArtistBestMatch(data.arrangements.items, artist);
             // If we have lyrics, find the best match based on lyrics similarity
-            if (lyrics) {
-              let bestMatch = data.arrangements.items[0];
-              let bestScore = this.calculateLyricsMatchScore(lyrics, bestMatch.details?.lyrics || "");
+            // if (lyrics) return this.getLyricsBestMatch(data.arrangements.items, lyrics);
 
-              for (let i = 1; i < data.arrangements.items.length; i++) {
-                const currentItem = data.arrangements.items[i];
-                const currentScore = this.calculateLyricsMatchScore(lyrics, currentItem.details?.lyrics || "");
-
-                if (currentScore > bestScore) {
-                  bestMatch = currentItem;
-                  bestScore = currentScore;
-                }
-              }
-
-              return this.convertItemToSongDetail(bestMatch);
-            }
 
             // If no lyrics provided, return the first result
-            return this.convertItemToSongDetail(data.arrangements.items[0]);
+            // return this.convertItemToSongDetail(data.arrangements.items[0]);
           }
         }
       }
@@ -304,6 +292,42 @@ export class PraiseChartsHelper {
       console.error("Error searching PraiseCharts:", error);
       throw new Error(`Error searching PraiseCharts: ${error.message}`);
     }
+  }
+
+  static getLyricsBestMatch(arrangements: any, lyrics: string) {
+    let bestMatch = arrangements[0];
+    let bestScore = this.calculateMatchScore(lyrics, bestMatch.details?.lyrics || "");
+
+    for (let i = 1; i < arrangements.length; i++) {
+      const currentItem = arrangements[i];
+      const currentScore = this.calculateMatchScore(lyrics, currentItem.details?.lyrics || "");
+
+      if (currentScore > bestScore) {
+        bestMatch = currentItem;
+        bestScore = currentScore;
+      }
+    }
+
+    return this.convertItemToSongDetail(bestMatch);
+  }
+
+  static getArtistBestMatch(arrangements: any, artist: string) {
+    let bestMatch = arrangements[0];
+    let bestScore = bestMatch.details?.artists?.names ? this.calculateMatchScore(artist, bestMatch.details?.artists?.names || "") : 0;
+
+    for (let i = 1; i < arrangements.length; i++) {
+      const currentItem = arrangements[i];
+      if (currentItem.details?.artists?.names) {
+        const currentScore = this.calculateMatchScore(artist, currentItem.details?.artists?.names || "");
+
+        if (currentScore > bestScore) {
+          bestMatch = currentItem;
+          bestScore = currentScore;
+        }
+      }
+    }
+
+    return this.convertItemToSongDetail(bestMatch);
   }
 
   static async searchByGeniusId(geniusId: string): Promise<SongDetail | null> {
