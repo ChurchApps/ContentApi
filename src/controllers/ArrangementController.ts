@@ -73,5 +73,23 @@ export class ArrangementController extends ContentBaseController {
     });
   }
 
+  @httpPost("/freeShow/missing")
+  public async getMissingFreeShowArrangements(req: express.Request<{}, {}, { freeShowIds: string[] }>, res: express.Response): Promise<interfaces.IHttpActionResult> {
+    return this.actionWrapper(req, res, async (au) => {
+
+      const { freeShowIds } = req.body;
+      if (!freeShowIds || !Array.isArray(freeShowIds)) {
+        return this.json({ error: "Invalid request body. Expected array of freeShowIds" }, 400);
+      }
+
+      const existingArrangements = await this.repositories.arrangement.loadAll(au.churchId);
+      const existingFreeShowIds = existingArrangements.map((a: Arrangement) => a.freeShowId).filter((id: string | undefined) => id);
+
+      // Return array of IDs that don't exist in Chums
+      const missingIds = freeShowIds.filter(id => !existingFreeShowIds.includes(id));
+
+      return this.json(missingIds);
+    });
+  }
 
 }
