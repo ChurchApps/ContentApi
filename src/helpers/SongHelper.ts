@@ -2,43 +2,59 @@ import { SongDetail, Song, Arrangement, SongDetailLink, ArrangementKey } from ".
 import { PraiseChartsHelper } from "./PraiseChartsHelper";
 import { Repositories } from "../repositories";
 
+export interface FreeShowSong {
+  freeShowId: string;
+  title?: string;
+  artist?: string;
+  lyrics?: string;
+  ccliNumber?: string;
+  geniusId?: string;
+}
+
 export class SongHelper {
 
 
-  static async importSongs(churchId: string, songs: { title?: string, artist?: string, lyrics?: string, ccliNumber?: string, geniusId?: string }[]): Promise<Arrangement[]> {
+
+
+  static async importSongs(churchId: string, songs: FreeShowSong[]): Promise<Arrangement[]> {
     const promises: Promise<Arrangement>[] = [];
     for (const song of songs) {
-      const promise = this.importSong(churchId, song.title, song.artist, song.lyrics, song.ccliNumber, song.geniusId);
+      const promise = this.importSong(churchId, song);
       promises.push(promise);
     }
     return Promise.all(promises);
   }
 
-  static async importSong(churchId: string, title?: string, artist?: string, lyrics?: string, ccliNumber?: string, geniusId?: string): Promise<Arrangement> {
+  static async importSong(churchId: string, freeshowSong: FreeShowSong): Promise<Arrangement> {
     try {
-      // 1. Try to find existing song by CCLI
-      const existingSong = await this.findExistingSongByCCLI(churchId, ccliNumber);
+
+      // 1. Check if arrangement already exists for this church and freeshow key
+      const exactMathArrangement = await Repositories.getCurrent().arrangement.loadByFreeShowId(churchId, freeshowSong.freeShowId);
+      if (exactMathArrangement) return exactMathArrangement;
+
+      // 2. Try to find existing song by CCLI
+      const existingSong = await this.findExistingSongByCCLI(churchId, freeshowSong.ccliNumber);
       if (existingSong) return existingSong;
 
-      // 2. Try to find existing song by Genius ID
-      if (geniusId) {
-        const existingByGenius = await this.findExistingSongByGeniusId(churchId, geniusId);
+      // 3. Try to find existing song by Genius ID
+      if (freeshowSong.geniusId) {
+        const existingByGenius = await this.findExistingSongByGeniusId(churchId, freeshowSong.geniusId);
         if (existingByGenius) return existingByGenius;
       }
 
-      // 3. Look up song on PraiseCharts
-      const praiseChartsResult = await PraiseChartsHelper.findBestMatch(title, artist, lyrics, ccliNumber, geniusId);
+      // 4. Look up song on PraiseCharts
+      const praiseChartsResult = await PraiseChartsHelper.findBestMatch(freeshowSong.title, freeshowSong.artist, freeshowSong.lyrics, freeshowSong.ccliNumber, freeshowSong.geniusId);
       if (!praiseChartsResult) return null; // throw new Error("Song not found on PraiseCharts");
 
-      // 4. Get or create song detail
-      const songDetail = await this.getOrCreateSongDetail(praiseChartsResult, ccliNumber, geniusId);
+      // 5. Get or create song detail
+      const songDetail = await this.getOrCreateSongDetail(praiseChartsResult, freeshowSong.ccliNumber, freeshowSong.geniusId);
 
-      // 5. Check if arrangement exists for this church
+      // 6. Check if arrangement exists for this church
       const existingArrangement = await Repositories.getCurrent().arrangement.loadBySongDetailId(churchId, songDetail.id);
       if (existingArrangement.length > 0) return existingArrangement[0];
 
-      // 6. Create new Song and Arrangement
-      return await this.createSongAndArrangement(churchId, songDetail, lyrics);
+      // 7. Create new Song and Arrangement
+      return await this.createSongAndArrangement(churchId, songDetail, freeshowSong.lyrics);
     } catch (error) {
       console.error("Error importing song:", error);
       throw new Error(`Error importing song: ${error.message}`);
