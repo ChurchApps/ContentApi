@@ -3,6 +3,7 @@ CREATE TABLE `arrangements` (
   `churchId` char(11) DEFAULT NULL,
   `songId` char(11) DEFAULT NULL,
   `songDetailId` char(11) DEFAULT NULL,
+  `freeShowId` varchar(45) DEFAULT NULL,
   `name` varchar(45) DEFAULT NULL,
   `lyrics` text,
   PRIMARY KEY (`id`)
