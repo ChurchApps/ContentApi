@@ -177,7 +177,7 @@ export class PraiseChartsHelper {
     return result;
   }
 
-  private static appendDetails(item: any, sd: SongDetail) {
+  static appendDetails(item: any, sd: SongDetail) {
     sd.bpm = item.bpm;
     sd.keySignature = item.details.original_key;
     sd.seconds = item.seconds;

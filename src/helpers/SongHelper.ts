@@ -95,6 +95,9 @@ export class SongHelper {
     if (!songDetail) {
       // Create new song detail
       songDetail = praiseChartsResult;
+      // Add additional details from PraiseCharts
+      const rawData = await PraiseChartsHelper.loadRaw(praiseChartsResult.praiseChartsId);
+      PraiseChartsHelper.appendDetails(rawData, songDetail);
       songDetail = await Repositories.getCurrent().songDetail.save(songDetail);
 
       // Create song detail links from PraiseCharts
