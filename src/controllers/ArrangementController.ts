@@ -67,7 +67,13 @@ export class ArrangementController extends ContentBaseController {
     return this.actionWrapper(req, res, async (au) => {
       if (!au.checkAccess(Permissions.content.edit)) return this.json({}, 401);
       else {
-        await this.repositories.arrangement.delete(au.churchId, id);
+        const existing = await this.repositories.arrangement.load(au.churchId, id);
+        if (existing) {
+          await this.repositories.arrangement.delete(au.churchId, id);
+          await this.repositories.arrangementKey.deleteForArrangement(au.churchId, id);
+          const songArrangments = await this.repositories.arrangement.loadBySongId(au.churchId, existing.songId);
+          if (songArrangments.length === 0) await this.repositories.song.delete(au.churchId, existing.songId);
+        }
         return this.json({});
       }
     });

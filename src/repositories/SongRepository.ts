@@ -32,8 +32,8 @@ export class SongRepository {
     return song;
   }
 
-  public delete(id: string) {
-    return DB.query("DELETE FROM songs WHERE id=?;", [id]);
+  public delete(churchId: string, id: string) {
+    return DB.query("DELETE FROM songs WHERE churchId=? AND id=?;", [churchId, id]);
   }
 
   public loadAll(churchId: string) {
