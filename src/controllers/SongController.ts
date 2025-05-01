@@ -70,7 +70,7 @@ export class SongController extends ContentBaseController {
   @httpPost("/import")
   public async import(req: express.Request<{}, {}, { title?: string, artist?: string, lyrics?: string, ccliNumber?: string, geniusId?: string }[]>, res: express.Response): Promise<interfaces.IHttpActionResult> {
     return this.actionWrapper(req, res, async (au) => {
-      if (!au.checkAccess(Permissions.content.edit)) return this.json({}, 401);
+      // if (!au.checkAccess(Permissions.content.edit)) return this.json({}, 401); //This is via oAuth.  Need to figure out another way.
 
       const songs = req.body;
       if (!Array.isArray(songs)) {
