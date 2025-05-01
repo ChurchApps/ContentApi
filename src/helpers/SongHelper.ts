@@ -1,4 +1,4 @@
-import { SongDetail, Song, Arrangement, SongDetailLink } from "../models";
+import { SongDetail, Song, Arrangement, SongDetailLink, ArrangementKey } from "../models";
 import { PraiseChartsHelper } from "./PraiseChartsHelper";
 import { Repositories } from "../repositories";
 
@@ -142,7 +142,17 @@ export class SongHelper {
       name: "Default",
       lyrics: lyrics || ""
     };
-    return await Repositories.getCurrent().arrangement.save(arrangement);
+    const result = await Repositories.getCurrent().arrangement.save(arrangement);
+
+    const arrangementKey: ArrangementKey = {
+      churchId,
+      arrangementId: arrangement.id,
+      keySignature: songDetail.keySignature || "",
+      shortDescription: "Default"
+    };
+    await Repositories.getCurrent().arrangementKey.save(arrangementKey);
+
+    return result;
   }
 
 }
