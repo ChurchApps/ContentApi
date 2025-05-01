@@ -36,6 +36,10 @@ export class ArrangementKeyRepository {
     return DB.query("DELETE FROM arrangementKeys WHERE id=? and churchId=?;", [id, churchId]);
   }
 
+  public deleteForArrangement(churchId: string, arrangementId: string) {
+    return DB.query("DELETE FROM arrangementKeys WHERE churchId=? and arrangementId=?;", [churchId, arrangementId]);
+  }
+
   public loadAll(churchId: string) {
     return DB.queryOne("SELECT * FROM arrangementKeys WHERE churchId=? ORDER BY name;", [churchId]);
   }

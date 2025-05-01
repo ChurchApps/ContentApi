@@ -67,11 +67,35 @@ export class ArrangementController extends ContentBaseController {
     return this.actionWrapper(req, res, async (au) => {
       if (!au.checkAccess(Permissions.content.edit)) return this.json({}, 401);
       else {
-        await this.repositories.arrangement.delete(au.churchId, id);
+        const existing = await this.repositories.arrangement.load(au.churchId, id);
+        if (existing) {
+          await this.repositories.arrangement.delete(au.churchId, id);
+          await this.repositories.arrangementKey.deleteForArrangement(au.churchId, id);
+          const songArrangments = await this.repositories.arrangement.loadBySongId(au.churchId, existing.songId);
+          if (songArrangments.length === 0) await this.repositories.song.delete(au.churchId, existing.songId);
+        }
         return this.json({});
       }
     });
   }
 
+  @httpPost("/freeShow/missing")
+  public async getMissingFreeShowArrangements(req: express.Request<{}, {}, { freeShowIds: string[] }>, res: express.Response): Promise<interfaces.IHttpActionResult> {
+    return this.actionWrapper(req, res, async (au) => {
+
+      const { freeShowIds } = req.body;
+      if (!freeShowIds || !Array.isArray(freeShowIds)) {
+        return this.json({ error: "Invalid request body. Expected array of freeShowIds" }, 400);
+      }
+
+      const existingArrangements = await this.repositories.arrangement.loadAll(au.churchId);
+      const existingFreeShowIds = existingArrangements.map((a: Arrangement) => a.freeShowId).filter((id: string | undefined) => id);
+
+      // Return array of IDs that don't exist in Chums
+      const missingIds = freeShowIds.filter(id => !existingFreeShowIds.includes(id));
+
+      return this.json(missingIds);
+    });
+  }
 
 }
