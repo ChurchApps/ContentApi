@@ -54,7 +54,7 @@ export class SongHelper {
       if (existingArrangement.length > 0) return existingArrangement[0];
 
       // 7. Create new Song and Arrangement
-      return await this.createSongAndArrangement(churchId, songDetail, freeshowSong.lyrics);
+      return await this.createSongAndArrangement(churchId, songDetail, freeshowSong);
     } catch (error) {
       console.error("Error importing song:", error);
       throw new Error(`Error importing song: ${error.message}`);
@@ -141,7 +141,7 @@ export class SongHelper {
     }
   }
 
-  private static async createSongAndArrangement(churchId: string, songDetail: SongDetail, lyrics?: string): Promise<Arrangement> {
+  private static async createSongAndArrangement(churchId: string, songDetail: SongDetail, freeShowSong: FreeShowSong): Promise<Arrangement> {
     // Create new Song
     const song: Song = {
       churchId,
@@ -156,7 +156,8 @@ export class SongHelper {
       songId: savedSong.id,
       songDetailId: songDetail.id,
       name: "Default",
-      lyrics: lyrics || ""
+      lyrics: freeShowSong.lyrics || "",
+      freeShowId: freeShowSong.freeShowId,
     };
     const result = await Repositories.getCurrent().arrangement.save(arrangement);
 
