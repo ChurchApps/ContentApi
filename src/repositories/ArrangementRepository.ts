@@ -37,7 +37,7 @@ export class ArrangementRepository {
   }
 
   public loadAll(churchId: string) {
-    return DB.queryOne("SELECT * FROM arrangements WHERE churchId=? ORDER BY name;", [churchId]);
+    return DB.query("SELECT * FROM arrangements WHERE churchId=? ORDER BY name;", [churchId]);
   }
 
   public load(churchId: string, id: string) {
