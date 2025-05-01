@@ -15,6 +15,11 @@ export class ArrangementKeyController extends ContentBaseController {
       console.log(churchId, id);
       const arrangementKey: ArrangementKey = await this.repositories.arrangementKey.load(churchId, id);
       const arrangement: Arrangement = await this.repositories.arrangement.load(churchId, arrangementKey.arrangementId);
+      if (!arrangement.freeShowId) {
+        arrangement.freeShowId = `chumssong_${arrangementKey.id}`;
+        await this.repositories.arrangement.save(arrangement);
+      }
+
       const song: Song = await this.repositories.song.load(churchId, arrangement.songId);
       const songDetail: SongDetail = await this.repositories.songDetail.load(arrangement.songDetailId);
       const result = { arrangementKey, arrangement, song, songDetail };
