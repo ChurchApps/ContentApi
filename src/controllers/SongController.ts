@@ -15,7 +15,7 @@ export class SongController extends ContentBaseController {
   public async search(req: express.Request<{}, {}, null>, res: express.Response): Promise<interfaces.IHttpActionResult> {
     return this.actionWrapper(req, res, async (au) => {
       const query = req.query.q as string;
-      const results = await this.repositories.song.search(query);
+      const results = await this.repositories.song.search(au.churchId, query);
       return results;
     })
   }
