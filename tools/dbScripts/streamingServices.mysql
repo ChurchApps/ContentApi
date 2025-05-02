@@ -1,7 +1,7 @@
 DROP TABLE IF EXISTS `streamingServices`;
 CREATE TABLE `streamingServices` (
-  `id` char(11) CHARACTER SET latin1 NOT NULL,
-  `churchId` char(11) CHARACTER SET latin1 DEFAULT NULL,
+  `id` char(11) NOT NULL,
+  `churchId` char(11) DEFAULT NULL,
   `serviceTime` datetime DEFAULT NULL,
   `earlyStart` int(11) DEFAULT NULL,
   `chatBefore` int(11) DEFAULT NULL,
