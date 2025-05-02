@@ -8,5 +8,6 @@ CREATE TABLE `bibleVerseTexts` (
   `content` varchar(1000) DEFAULT NULL,
   `newParagraph` bit DEFAULT NULL,
   PRIMARY KEY (`id`),
+  UNIQUE KEY `uq_translationKey_verseKey` (`translationKey`,`verseKey`),
   KEY `ix_translationKey_verseKey` (`translationKey`,`verseKey`)
 ) ENGINE=InnoDB;

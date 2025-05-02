@@ -3,8 +3,9 @@ CREATE TABLE `arrangements` (
   `churchId` char(11) DEFAULT NULL,
   `songId` char(11) DEFAULT NULL,
   `songDetailId` char(11) DEFAULT NULL,
-  `freeShowId` varchar(45) DEFAULT NULL,
   `name` varchar(45) DEFAULT NULL,
   `lyrics` text,
-  PRIMARY KEY (`id`)
+  `freeShowId` varchar(45) DEFAULT NULL,
+  PRIMARY KEY (`id`),
+  KEY `ix_churchId_songId` (`churchId`, `songId`)
 ) ENGINE=InnoDB;
