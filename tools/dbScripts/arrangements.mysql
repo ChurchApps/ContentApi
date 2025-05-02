@@ -6,5 +6,6 @@ CREATE TABLE `arrangements` (
   `name` varchar(45) DEFAULT NULL,
   `lyrics` text,
   `freeShowId` varchar(45) DEFAULT NULL,
-  PRIMARY KEY (`id`)
+  PRIMARY KEY (`id`),
+  KEY `ix_churchId_songId` (`churchId`, `songId`)
 ) ENGINE=InnoDB;

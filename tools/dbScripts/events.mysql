@@ -11,5 +11,6 @@ CREATE TABLE `events` (
   `description` mediumtext,
   `visibility` varchar(45) DEFAULT NULL,
   `recurrenceRule` varchar(255) DEFAULT NULL,
-  PRIMARY KEY (`id`)
+  PRIMARY KEY (`id`),
+  KEY `ix_churchId_groupId` (`churchId`, `groupId`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;

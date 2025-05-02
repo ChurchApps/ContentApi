@@ -15,5 +15,7 @@ CREATE TABLE `sections` (
   `answersJSON` mediumtext,
   `stylesJSON` mediumtext,
   `animationsJSON` mediumtext,
-  PRIMARY KEY (`id`)
+  PRIMARY KEY (`id`),
+  KEY `ix_churchId_pageId_sort` (`churchId`, `pageId`, `sort`),
+  KEY `ix_churchId_blockId_sort` (`churchId`, `blockId`, `sort`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;

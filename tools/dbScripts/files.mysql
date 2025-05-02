@@ -10,5 +10,6 @@ CREATE TABLE `files` (
   `fileType` varchar(45) DEFAULT NULL,
   `size` int(11) DEFAULT NULL,
   `dateModified` datetime DEFAULT NULL,
-  PRIMARY KEY (`id`)
+  PRIMARY KEY (`id`),
+  KEY `ix_churchId_id` (`churchId`, `id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;

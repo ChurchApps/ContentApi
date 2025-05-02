@@ -11,5 +11,6 @@ CREATE TABLE `elements` (
   `answersJSON` mediumtext,
   `stylesJSON` mediumtext,
   `animationsJSON` mediumtext,
-  PRIMARY KEY (`id`)
+  PRIMARY KEY (`id`),
+  KEY `ix_churchId_blockId_sort` (`churchId`, `blockId`, `sort`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;

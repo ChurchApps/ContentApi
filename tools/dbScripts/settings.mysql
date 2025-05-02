@@ -9,5 +9,6 @@ CREATE TABLE `settings` (
   `public` bit(1) DEFAULT NULL,
   PRIMARY KEY (`id`),
   UNIQUE KEY `id_UNIQUE` (`id`),
-  KEY `churchId` (`churchId`)
+  KEY `churchId` (`churchId`),
+  KEY `ix_churchId_keyName_userId` (`churchId`, `keyName`, `userId`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_520_ci;
