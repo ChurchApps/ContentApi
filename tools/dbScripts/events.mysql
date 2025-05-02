@@ -8,7 +8,7 @@ CREATE TABLE `events` (
   `start` datetime DEFAULT NULL,
   `end` datetime DEFAULT NULL,
   `title` varchar(255) DEFAULT NULL,
-  `description` text,
+  `description` mediumtext,
   `visibility` varchar(45) DEFAULT NULL,
   `recurrenceRule` varchar(255) DEFAULT NULL,
   PRIMARY KEY (`id`)

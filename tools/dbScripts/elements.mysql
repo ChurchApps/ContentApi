@@ -8,7 +8,8 @@ CREATE TABLE `elements` (
   `elementType` varchar(45) DEFAULT NULL,
   `sort` float DEFAULT NULL,
   `parentId` char(11) DEFAULT NULL,
-  `answersJSON` text,
-  `stylesJSON` text,
+  `answersJSON` mediumtext,
+  `stylesJSON` mediumtext,
+  `animationsJSON` mediumtext,
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;

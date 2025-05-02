@@ -12,7 +12,8 @@ CREATE TABLE `sections` (
   `linkColor` varchar(45) DEFAULT NULL,
   `sort` float DEFAULT NULL,
   `targetBlockId` char(11) DEFAULT NULL,
-  `answersJSON` text DEFAULT NULL,
-  `stylesJSON` text,
+  `answersJSON` mediumtext,
+  `stylesJSON` mediumtext,
+  `animationsJSON` mediumtext,
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
