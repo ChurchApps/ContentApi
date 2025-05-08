@@ -51,13 +51,21 @@ export class SongHelper {
 
       // 6. Check if arrangement exists for this church
       const existingArrangement = await Repositories.getCurrent().arrangement.loadBySongDetailId(churchId, songDetail.id);
-      if (existingArrangement.length > 0) return existingArrangement[0];
+      if (existingArrangement.length > 0) {
+        // If arrangement exists, update it with freeshow details
+        if (!existingArrangement[0].freeShowId && freeshowSong.freeShowId) {
+          existingArrangement[0].freeShowId = freeshowSong.freeShowId;
+          await Repositories.getCurrent().arrangement.save(existingArrangement[0]);
+        }
+        return existingArrangement[0];
+      }
 
       // 7. Create new Song and Arrangement
       return await this.createSongAndArrangement(churchId, songDetail, freeshowSong);
     } catch (error) {
       console.error("Error importing song:", error);
-      throw new Error(`Error importing song: ${error.message}`);
+      //throw new Error(`Error importing song: ${error.message}`);
+      return null;
     }
   }
 
