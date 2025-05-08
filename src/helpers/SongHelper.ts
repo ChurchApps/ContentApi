@@ -25,6 +25,39 @@ export class SongHelper {
     return Promise.all(promises);
   }
 
+  static async createCustomSong(churchId: string, freeshowSong: FreeShowSong): Promise<Arrangement> {
+    //create as custom song
+    const customSongDetail: SongDetail = {
+      title: freeshowSong.title || "",
+      artist: freeshowSong.artist || "",
+      keySignature: "",
+      praiseChartsId: ""
+    };
+    const songDetail = await Repositories.getCurrent().songDetail.save(customSongDetail);
+    const customSong: Song = {
+      churchId,
+      name: customSongDetail.title,
+      dateAdded: new Date()
+    }
+    const customArrangement: Arrangement = {
+      churchId,
+      songId: songDetail.id,
+      songDetailId: songDetail.id,
+      name: "Default",
+      lyrics: freeshowSong.lyrics || "",
+      freeShowId: freeshowSong.freeShowId,
+    };
+    const result = await Repositories.getCurrent().arrangement.save(customArrangement);
+    const arrangementKey: ArrangementKey = {
+      churchId,
+      arrangementId: customArrangement.id,
+      keySignature: customSongDetail.keySignature || "",
+      shortDescription: "Default"
+    };
+    await Repositories.getCurrent().arrangementKey.save(arrangementKey);
+    return result;
+  }
+
   static async importSong(churchId: string, freeshowSong: FreeShowSong): Promise<Arrangement> {
     try {
 
@@ -44,7 +77,9 @@ export class SongHelper {
 
       // 4. Look up song on PraiseCharts
       const praiseChartsResult = await PraiseChartsHelper.findBestMatch(freeshowSong.title, freeshowSong.artist, freeshowSong.lyrics, freeshowSong.ccliNumber, freeshowSong.geniusId);
-      if (!praiseChartsResult) return null; // throw new Error("Song not found on PraiseCharts");
+      if (!praiseChartsResult) {
+        return this.createCustomSong(churchId, freeshowSong);
+      }
 
       // 5. Get or create song detail
       const songDetail = await this.getOrCreateSongDetail(praiseChartsResult, freeshowSong.ccliNumber, freeshowSong.geniusId);
