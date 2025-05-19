@@ -39,9 +39,10 @@ export class SongHelper {
       name: customSongDetail.title,
       dateAdded: new Date()
     }
+    const song = await Repositories.getCurrent().song.save(customSong);
     const customArrangement: Arrangement = {
       churchId,
-      songId: songDetail.id,
+      songId: song.id,
       songDetailId: songDetail.id,
       name: "Default",
       lyrics: freeshowSong.lyrics || "",
