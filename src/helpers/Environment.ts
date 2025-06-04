@@ -13,6 +13,9 @@ export class Environment extends EnvironmentBase {
   static apiBibleKey: string;
   static praiseChartsConsumerKey: string;
   static praiseChartsConsumerSecret: string;
+  static aiProvider: string;
+  static openRouterApiKey: string;
+  static openAiApiKey: string;
 
   static async init(environment: string) {
     let file = "dev.json";
@@ -34,6 +37,9 @@ export class Environment extends EnvironmentBase {
     this.apiBibleKey = process.env.API_BIBLE_KEY || await AwsHelper.readParameter(`/${environment}/apiBibleKey`);
     this.praiseChartsConsumerKey = process.env.PRAISECHARTS_CONSUMER_KEY || await AwsHelper.readParameter(`/${environment}/praiseChartsConsumerKey`);
     this.praiseChartsConsumerSecret = process.env.PRAISECHARTS_CONSUMER_SECRET || await AwsHelper.readParameter(`/${environment}/praiseChartsConsumerSecret`);
+    this.aiProvider = data.aiProvider;
+    this.openRouterApiKey = process.env.OPENROUTER_API_KEY || await AwsHelper.readParameter(`/${environment}/openRouterApiKey`);
+    this.openAiApiKey = process.env.OPENAI_API_KEY || await AwsHelper.readParameter(`/${environment}/openAiApiKey`);
   }
 
 }
