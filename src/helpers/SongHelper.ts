@@ -26,7 +26,7 @@ export class SongHelper {
   }
 
   static async createCustomSong(churchId: string, freeshowSong: FreeShowSong): Promise<Arrangement> {
-    //create as custom song
+    // create as custom song
     const customSongDetail: SongDetail = {
       title: freeshowSong.title || "",
       artist: freeshowSong.artist || "",
@@ -100,7 +100,7 @@ export class SongHelper {
       return await this.createSongAndArrangement(churchId, songDetail, freeshowSong);
     } catch (error) {
       console.error("Error importing song:", error);
-      //throw new Error(`Error importing song: ${error.message}`);
+      // throw new Error(`Error importing song: ${error.message}`);
       return null;
     }
   }

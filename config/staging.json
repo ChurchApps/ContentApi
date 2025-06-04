@@ -6,5 +6,6 @@
   "mailSystem": "SES",
   "membershipApi": "https://membershipapi.staging.churchapps.org",
   "s3Bucket": "staging-churchapps-content",
-  "messagingApi": "https://messagingapi.staging.churchapps.org"
+  "messagingApi": "https://messagingapi.staging.churchapps.org",
+  "aiProvider": "openai"
 }

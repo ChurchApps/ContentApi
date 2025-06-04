@@ -4,3 +4,10 @@ CONNECTION_STRING=mysql://
 ENCRYPTION_KEY=aSecretKeyOfExactly192BitsLength
 JWT_SECRET=this is a test key that is a sentence
 SERVER_PORT=8082
+
+YOUTUBE_API_KEY=
+
+OPENAI_API_KEY=
+
+# You can get this API key for free on https://openrouter.ai/
+OPENROUTER_API_KEY=
