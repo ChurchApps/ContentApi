@@ -13,7 +13,9 @@ export class OpenAiHelper {
       if (!this.OPENAI_API_KEY) {
         throw new Error("Missing ApiKey for OpenAi provider.");
       }
-      this.openai = new OpenAI({ apiKey: this.OPENAI_API_KEY });
+      if (!this.openai) {
+        this.openai = new OpenAI({ apiKey: this.OPENAI_API_KEY });
+      }
     }
 
     if (this.provider === "openrouter" && !this.OPENROUTER_API_KEY) {
