@@ -10,19 +10,25 @@ const init = async () => {
   console.log("Connecting");
   Pool.initPool();
 
-  const taskTables: { title: string, file: string }[] = [
+  const eventTables: { title: string, file: string }[] = [
+    { title: "Events", file: "events.mysql" },
+    { title: "Event Exceptions", file: "eventExceptions.mysql" },
+    { title: "Curated Calendars", file: "curatedCalendars.mysql" },
+    { title: "Curated Events", file: "curatedEvents.mysql" },
+  ]
+
+  const streamingTables: { title: string, file: string }[] = [
+    { title: "Playlists", file: "playlists.mysql" },
+    { title: "Sermons", file: "sermons.mysql" },
+    { title: "StreamingServices", file: "streamingServices.mysql" },
+  ]
+
+  const contentTables: { title: string, file: string }[] = [
     { title: "Blocks", file: "blocks.mysql" },
     { title: "Elements", file: "elements.mysql" },
     { title: "GlobalStyles", file: "globalStyles.mysql" },
     { title: "Pages", file: "pages.mysql" },
     { title: "Sections", file: "sections.mysql" },
-    { title: "Playlists", file: "playlists.mysql" },
-    { title: "Sermons", file: "sermons.mysql" },
-    { title: "StreamingServices", file: "streamingServices.mysql" },
-    { title: "Events", file: "events.mysql" },
-    { title: "Event Exceptions", file: "eventExceptions.mysql" },
-    { title: "Curated Calendars", file: "curatedCalendars.mysql" },
-    { title: "Curated Events", file: "curatedEvents.mysql" },
     { title: "Links", file: "links.mysql" },
     { title: "Settings", file: "settings.mysql" },
   ]
@@ -44,7 +50,9 @@ const init = async () => {
     { title: "Songs", file: "songs.mysql" },
   ]
 
-  await initTables("Content", taskTables);
+  await initTables("Events", eventTables);
+  await initTables("Streaming", streamingTables);
+  await initTables("Content", contentTables);
   await initTables("Bible", bibleTables);
   await initTables("Songs", songTables);
 };

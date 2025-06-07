@@ -1,0 +1,343 @@
+-- Songs
+INSERT INTO songs (id, churchId, title, author, copyright, ccliNumber, theme, notes, lastModified) VALUES
+-- Modern Worship Songs
+('SON00000001', 'CHU00000001', 'What a Beautiful Name', 'Hillsong Worship', '© 2016 Hillsong Music Publishing', '7068424', 'Worship, Praise', 'Modern worship song about the name of Jesus', '2024-01-01 00:00:00'),
+('SON00000002', 'CHU00000001', 'Good Good Father', 'Chris Tomlin, Pat Barrett', '© 2014 Capitol CMG Paragon', '7036612', 'Worship, Father', 'Modern worship song about God as our Father', '2024-01-01 00:00:00'),
+('SON00000003', 'CHU00000001', 'Reckless Love', 'Cory Asbury', '© 2017 Bethel Music Publishing', '7089641', 'Worship, Love', 'Modern worship song about God''s love', '2024-01-01 00:00:00'),
+('SON00000004', 'CHU00000001', 'Build My Life', 'Pat Barrett', '© 2016 Capitol CMG Paragon', '7078011', 'Worship, Surrender', 'Modern worship song about surrender', '2024-01-01 00:00:00'),
+('SON00000005', 'CHU00000001', 'Graves Into Gardens', 'Elevation Worship', '© 2020 Elevation Worship Publishing', '7127647', 'Worship, Resurrection', 'Modern worship song about God''s power', '2024-01-01 00:00:00'),
+
+-- Classic Hymns
+('SON00000006', 'CHU00000001', 'Amazing Grace', 'John Newton', 'Public Domain', NULL, 'Grace, Salvation', 'Classic hymn about God''s grace', '2024-01-01 00:00:00'),
+('SON00000007', 'CHU00000001', 'How Great Thou Art', 'Carl Boberg', '© 1949, 1953 The Stuart Hine Trust', '14181', 'Worship, Majesty', 'Classic hymn about God''s greatness', '2024-01-01 00:00:00'),
+('SON00000008', 'CHU00000001', 'Great Is Thy Faithfulness', 'Thomas Chisholm', '© 1923, 1951 Hope Publishing Company', '4768151', 'Faithfulness, Trust', 'Classic hymn about God''s faithfulness', '2024-01-01 00:00:00'),
+('SON00000009', 'CHU00000001', 'Be Thou My Vision', 'Dallan Forgaill', 'Public Domain', NULL, 'Devotion, Surrender', 'Classic hymn about devotion to God', '2024-01-01 00:00:00'),
+('SON00000010', 'CHU00000001', 'It Is Well With My Soul', 'Horatio Spafford', 'Public Domain', NULL, 'Peace, Trust', 'Classic hymn about peace in trials', '2024-01-01 00:00:00');
+
+-- Song Details
+INSERT INTO songDetails (id, churchId, songId, key, tempo, timeSignature, notes, lastModified) VALUES
+-- Modern Worship Songs
+('SDT00000001', 'CHU00000001', 'SON00000001', 'B', 75, '4/4', 'Modern worship song in B major', '2024-01-01 00:00:00'),
+('SDT00000002', 'CHU00000001', 'SON00000002', 'G', 72, '4/4', 'Modern worship song in G major', '2024-01-01 00:00:00'),
+('SDT00000003', 'CHU00000001', 'SON00000003', 'A', 70, '4/4', 'Modern worship song in A major', '2024-01-01 00:00:00'),
+('SDT00000004', 'CHU00000001', 'SON00000004', 'E', 68, '4/4', 'Modern worship song in E major', '2024-01-01 00:00:00'),
+('SDT00000005', 'CHU00000001', 'SON00000005', 'F#', 74, '4/4', 'Modern worship song in F# major', '2024-01-01 00:00:00'),
+
+-- Classic Hymns
+('SDT00000006', 'CHU00000001', 'SON00000006', 'G', 60, '3/4', 'Classic hymn in G major', '2024-01-01 00:00:00'),
+('SDT00000007', 'CHU00000001', 'SON00000007', 'C', 65, '4/4', 'Classic hymn in C major', '2024-01-01 00:00:00'),
+('SDT00000008', 'CHU00000001', 'SON00000008', 'F', 63, '4/4', 'Classic hymn in F major', '2024-01-01 00:00:00'),
+('SDT00000009', 'CHU00000001', 'SON00000009', 'D', 58, '4/4', 'Classic hymn in D major', '2024-01-01 00:00:00'),
+('SDT00000010', 'CHU00000001', 'SON00000010', 'Eb', 62, '4/4', 'Classic hymn in Eb major', '2024-01-01 00:00:00');
+
+-- Song Detail Links
+INSERT INTO songDetailLinks (id, churchId, songDetailId, linkType, linkUrl, notes, lastModified) VALUES
+-- Modern Worship Songs
+('SDL00000001', 'CHU00000001', 'SDT00000001', 'YouTube', 'https://www.youtube.com/watch?v=nQWFzMvCfLE', 'Official Hillsong Worship video', '2024-01-01 00:00:00'),
+('SDL00000002', 'CHU00000001', 'SDT00000001', 'Spotify', 'https://open.spotify.com/track/4KuKzIsfbtp6woLL3ZxRhz', 'Spotify track', '2024-01-01 00:00:00'),
+('SDL00000003', 'CHU00000001', 'SDT00000002', 'YouTube', 'https://www.youtube.com/watch?v=CqybaIesbuA', 'Official Chris Tomlin video', '2024-01-01 00:00:00'),
+('SDL00000004', 'CHU00000001', 'SDT00000002', 'Spotify', 'https://open.spotify.com/track/1nKS4IsazxwvBEn3MLxD5A', 'Spotify track', '2024-01-01 00:00:00'),
+('SDL00000005', 'CHU00000001', 'SDT00000003', 'YouTube', 'https://www.youtube.com/watch?v=Sc6SSHuZvQE', 'Official Bethel Music video', '2024-01-01 00:00:00'),
+('SDL00000006', 'CHU00000001', 'SDT00000003', 'Spotify', 'https://open.spotify.com/track/0rsC1RXGwlFdKnGLwK3G1z', 'Spotify track', '2024-01-01 00:00:00'),
+('SDL00000007', 'CHU00000001', 'SDT00000004', 'YouTube', 'https://www.youtube.com/watch?v=r49TxokzD9s', 'Official Pat Barrett video', '2024-01-01 00:00:00'),
+('SDL00000008', 'CHU00000001', 'SDT00000004', 'Spotify', 'https://open.spotify.com/track/2IBG8XcWyDR1emlDo0Dm9I', 'Spotify track', '2024-01-01 00:00:00'),
+('SDL00000009', 'CHU00000001', 'SDT00000005', 'YouTube', 'https://www.youtube.com/watch?v=OuYk3P2erKA', 'Official Elevation Worship video', '2024-01-01 00:00:00'),
+('SDL00000010', 'CHU00000001', 'SDT00000005', 'Spotify', 'https://open.spotify.com/track/5vLcVysT4bJc4xHMp6hj9t', 'Spotify track', '2024-01-01 00:00:00'),
+
+-- Classic Hymns
+('SDL00000011', 'CHU00000001', 'SDT00000006', 'YouTube', 'https://www.youtube.com/watch?v=HsCp5LG_zNE', 'Traditional arrangement', '2024-01-01 00:00:00'),
+('SDL00000012', 'CHU00000001', 'SDT00000007', 'YouTube', 'https://www.youtube.com/watch?v=1yB5F_3yxyU', 'Traditional arrangement', '2024-01-01 00:00:00'),
+('SDL00000013', 'CHU00000001', 'SDT00000008', 'YouTube', 'https://www.youtube.com/watch?v=0k1WhFtVp0o', 'Traditional arrangement', '2024-01-01 00:00:00'),
+('SDL00000014', 'CHU00000001', 'SDT00000009', 'YouTube', 'https://www.youtube.com/watch?v=jIMhXpFD7Uc', 'Traditional arrangement', '2024-01-01 00:00:00'),
+('SDL00000015', 'CHU00000001', 'SDT00000010', 'YouTube', 'https://www.youtube.com/watch?v=LYY5AYv0M0o', 'Traditional arrangement', '2024-01-01 00:00:00');
+
+-- Arrangements
+INSERT INTO arrangements (id, churchId, songId, name, notes, lastModified) VALUES
+-- Modern Worship Songs
+('ARR00000001', 'CHU00000001', 'SON00000001', 'Standard', 'Standard arrangement for What a Beautiful Name', '2024-01-01 00:00:00'),
+('ARR00000002', 'CHU00000001', 'SON00000002', 'Standard', 'Standard arrangement for Good Good Father', '2024-01-01 00:00:00'),
+('ARR00000003', 'CHU00000001', 'SON00000003', 'Standard', 'Standard arrangement for Reckless Love', '2024-01-01 00:00:00'),
+('ARR00000004', 'CHU00000001', 'SON00000004', 'Standard', 'Standard arrangement for Build My Life', '2024-01-01 00:00:00'),
+('ARR00000005', 'CHU00000001', 'SON00000005', 'Standard', 'Standard arrangement for Graves Into Gardens', '2024-01-01 00:00:00'),
+
+-- Classic Hymns
+('ARR00000006', 'CHU00000001', 'SON00000006', 'Traditional', 'Traditional arrangement for Amazing Grace', '2024-01-01 00:00:00'),
+('ARR00000007', 'CHU00000001', 'SON00000006', 'Modern', 'Modern arrangement for Amazing Grace', '2024-01-01 00:00:00'),
+('ARR00000008', 'CHU00000001', 'SON00000007', 'Traditional', 'Traditional arrangement for How Great Thou Art', '2024-01-01 00:00:00'),
+('ARR00000009', 'CHU00000001', 'SON00000007', 'Modern', 'Modern arrangement for How Great Thou Art', '2024-01-01 00:00:00'),
+('ARR00000010', 'CHU00000001', 'SON00000008', 'Traditional', 'Traditional arrangement for Great Is Thy Faithfulness', '2024-01-01 00:00:00'),
+('ARR00000011', 'CHU00000001', 'SON00000008', 'Modern', 'Modern arrangement for Great Is Thy Faithfulness', '2024-01-01 00:00:00'),
+('ARR00000012', 'CHU00000001', 'SON00000009', 'Traditional', 'Traditional arrangement for Be Thou My Vision', '2024-01-01 00:00:00'),
+('ARR00000013', 'CHU00000001', 'SON00000009', 'Modern', 'Modern arrangement for Be Thou My Vision', '2024-01-01 00:00:00'),
+('ARR00000014', 'CHU00000001', 'SON00000010', 'Traditional', 'Traditional arrangement for It Is Well With My Soul', '2024-01-01 00:00:00'),
+('ARR00000015', 'CHU00000001', 'SON00000010', 'Modern', 'Modern arrangement for It Is Well With My Soul', '2024-01-01 00:00:00');
+
+-- Arrangement Keys
+INSERT INTO arrangementKeys (id, churchId, arrangementId, key, notes, lastModified) VALUES
+-- Modern Worship Songs
+('ARK00000001', 'CHU00000001', 'ARR00000001', 'B', 'Original key for What a Beautiful Name', '2024-01-01 00:00:00'),
+('ARK00000002', 'CHU00000001', 'ARR00000001', 'A', 'Lower key for What a Beautiful Name', '2024-01-01 00:00:00'),
+('ARK00000003', 'CHU00000001', 'ARR00000002', 'G', 'Original key for Good Good Father', '2024-01-01 00:00:00'),
+('ARK00000004', 'CHU00000001', 'ARR00000002', 'F', 'Lower key for Good Good Father', '2024-01-01 00:00:00'),
+('ARK00000005', 'CHU00000001', 'ARR00000003', 'A', 'Original key for Reckless Love', '2024-01-01 00:00:00'),
+('ARK00000006', 'CHU00000001', 'ARR00000003', 'G', 'Lower key for Reckless Love', '2024-01-01 00:00:00'),
+('ARK00000007', 'CHU00000001', 'ARR00000004', 'E', 'Original key for Build My Life', '2024-01-01 00:00:00'),
+('ARK00000008', 'CHU00000001', 'ARR00000004', 'D', 'Lower key for Build My Life', '2024-01-01 00:00:00'),
+('ARK00000009', 'CHU00000001', 'ARR00000005', 'F#', 'Original key for Graves Into Gardens', '2024-01-01 00:00:00'),
+('ARK00000010', 'CHU00000001', 'ARR00000005', 'E', 'Lower key for Graves Into Gardens', '2024-01-01 00:00:00'),
+
+-- Classic Hymns
+('ARK00000011', 'CHU00000001', 'ARR00000006', 'G', 'Traditional key for Amazing Grace', '2024-01-01 00:00:00'),
+('ARK00000012', 'CHU00000001', 'ARR00000007', 'D', 'Modern key for Amazing Grace', '2024-01-01 00:00:00'),
+('ARK00000013', 'CHU00000001', 'ARR00000008', 'C', 'Traditional key for How Great Thou Art', '2024-01-01 00:00:00'),
+('ARK00000014', 'CHU00000001', 'ARR00000009', 'G', 'Modern key for How Great Thou Art', '2024-01-01 00:00:00'),
+('ARK00000015', 'CHU00000001', 'ARR00000010', 'F', 'Traditional key for Great Is Thy Faithfulness', '2024-01-01 00:00:00'),
+('ARK00000016', 'CHU00000001', 'ARR00000011', 'C', 'Modern key for Great Is Thy Faithfulness', '2024-01-01 00:00:00'),
+('ARK00000017', 'CHU00000001', 'ARR00000012', 'D', 'Traditional key for Be Thou My Vision', '2024-01-01 00:00:00'),
+('ARK00000018', 'CHU00000001', 'ARR00000013', 'G', 'Modern key for Be Thou My Vision', '2024-01-01 00:00:00'),
+('ARK00000019', 'CHU00000001', 'ARR00000014', 'Eb', 'Traditional key for It Is Well With My Soul', '2024-01-01 00:00:00'),
+('ARK00000020', 'CHU00000001', 'ARR00000015', 'C', 'Modern key for It Is Well With My Soul', '2024-01-01 00:00:00');
+
+-- Events
+INSERT INTO events (id, churchId, groupId, title, description, startTime, endTime, allDay, recurrenceRule, location, notes, lastModified) VALUES
+-- Sunday Services (Recurring Weekly)
+('EVT00000001', 'CHU00000001', 'GRP00000001', 'Sunday Morning Service', 'Main worship service with contemporary music and biblical teaching', '2024-01-07 10:00:00', '2024-01-07 11:30:00', 0, 'FREQ=WEEKLY;BYDAY=SU', 'Main Sanctuary', 'Regular Sunday service', '2024-01-01 00:00:00'),
+('EVT00000002', 'CHU00000001', 'GRP00000002', 'Sunday Evening Service', 'Evening service with traditional hymns and deeper Bible study', '2024-01-07 18:00:00', '2024-01-07 19:30:00', 0, 'FREQ=WEEKLY;BYDAY=SU', 'Main Sanctuary', 'Regular evening service', '2024-01-01 00:00:00'),
+
+-- Sunday School Classes (Recurring Weekly)
+('EVT00000003', 'CHU00000001', 'GRP00000004', 'Adult Bible Class', 'In-depth Bible study for adults', '2024-01-07 09:00:00', '2024-01-07 09:45:00', 0, 'FREQ=WEEKLY;BYDAY=SU', 'Room 101', 'Regular Sunday school class', '2024-01-01 00:00:00'),
+('EVT00000004', 'CHU00000001', 'GRP00000005', 'Young Adults Class', 'Bible study for young adults', '2024-01-07 09:00:00', '2024-01-07 09:45:00', 0, 'FREQ=WEEKLY;BYDAY=SU', 'Room 102', 'Regular Sunday school class', '2024-01-01 00:00:00'),
+
+-- Youth Group Events (Recurring Weekly)
+('EVT00000005', 'CHU00000001', 'GRP00000013', 'Youth Group Meeting', 'Weekly youth group with games, worship, and Bible study', '2024-01-03 18:30:00', '2024-01-03 20:30:00', 0, 'FREQ=WEEKLY;BYDAY=WE', 'Youth Room', 'Regular youth group meeting', '2024-01-01 00:00:00'),
+('EVT00000006', 'CHU00000001', 'GRP00000011', 'Middle School Bible Study', 'Bible study for middle school students', '2024-01-07 09:00:00', '2024-01-07 09:45:00', 0, 'FREQ=WEEKLY;BYDAY=SU', 'Youth Room', 'Regular middle school class', '2024-01-01 00:00:00'),
+('EVT00000007', 'CHU00000001', 'GRP00000012', 'High School Bible Study', 'Bible study for high school students', '2024-01-07 09:00:00', '2024-01-07 09:45:00', 0, 'FREQ=WEEKLY;BYDAY=SU', 'Youth Room', 'Regular high school class', '2024-01-01 00:00:00'),
+
+-- Small Groups (Recurring Weekly)
+('EVT00000008', 'CHU00000001', 'GRP00000014', 'Young Families Group', 'Small group for families with young children', '2024-01-02 19:00:00', '2024-01-02 20:30:00', 0, 'FREQ=WEEKLY;BYDAY=TU', 'Various Homes', 'Rotates between member homes', '2024-01-01 00:00:00'),
+('EVT00000009', 'CHU00000001', 'GRP00000015', 'Empty Nesters Group', 'Small group for couples whose children have left home', '2024-01-04 19:00:00', '2024-01-04 20:30:00', 0, 'FREQ=WEEKLY;BYDAY=TH', 'Various Homes', 'Rotates between member homes', '2024-01-01 00:00:00'),
+('EVT00000010', 'CHU00000001', 'GRP00000016', 'Men''s Bible Study', 'Weekly Bible study for men', '2024-01-06 07:00:00', '2024-01-06 08:30:00', 0, 'FREQ=WEEKLY;BYDAY=SA', 'Fellowship Hall', 'Includes breakfast', '2024-01-01 00:00:00'),
+('EVT00000011', 'CHU00000001', 'GRP00000017', 'Women''s Bible Study', 'Weekly Bible study for women', '2024-01-02 10:00:00', '2024-01-02 11:30:00', 0, 'FREQ=WEEKLY;BYDAY=TU', 'Fellowship Hall', 'Childcare provided', '2024-01-01 00:00:00'),
+
+-- Music Ministry (Recurring Weekly)
+('EVT00000012', 'CHU00000001', 'GRP00000018', 'Adult Choir Practice', 'Weekly choir practice', '2024-01-04 19:00:00', '2024-01-04 20:30:00', 0, 'FREQ=WEEKLY;BYDAY=TH', 'Choir Room', 'Regular choir practice', '2024-01-01 00:00:00'),
+('EVT00000013', 'CHU00000001', 'GRP00000019', 'Praise Team Practice', 'Weekly praise team practice', '2024-01-06 10:00:00', '2024-01-06 12:00:00', 0, 'FREQ=WEEKLY;BYDAY=SA', 'Sanctuary', 'Regular praise team practice', '2024-01-01 00:00:00'),
+('EVT00000014', 'CHU00000001', 'GRP00000020', 'Children''s Choir Practice', 'Weekly children''s choir practice', '2024-01-03 16:00:00', '2024-01-03 17:00:00', 0, 'FREQ=WEEKLY;BYDAY=WE', 'Choir Room', 'Regular children''s choir practice', '2024-01-01 00:00:00'),
+
+-- Special Events (One-time)
+('EVT00000015', 'CHU00000001', 'GRP00000030', 'Vacation Bible School', 'Annual summer program for children', '2024-06-17 09:00:00', '2024-06-21 12:00:00', 0, NULL, 'Various Rooms', 'Annual VBS program', '2024-01-01 00:00:00'),
+('EVT00000016', 'CHU00000001', 'GRP00000022', 'Missions Conference', 'Annual missions conference', '2024-02-16 18:00:00', '2024-02-18 12:00:00', 0, NULL, 'Main Sanctuary', 'Annual missions conference', '2024-01-01 00:00:00'),
+('EVT00000017', 'CHU00000001', 'GRP00000021', 'Food Pantry Distribution', 'Monthly food pantry distribution', '2024-01-20 09:00:00', '2024-01-20 12:00:00', 0, 'FREQ=MONTHLY;BYDAY=3SA', 'Food Pantry', 'Monthly food distribution', '2024-01-01 00:00:00');
+
+-- Event Exceptions
+INSERT INTO eventExceptions (id, churchId, eventId, originalDate, newDate, newStartTime, newEndTime, newLocation, notes, lastModified) VALUES
+-- Service Cancellations
+('EXC00000001', 'CHU00000001', 'EVT00000001', '2024-01-07', '2024-01-07', NULL, NULL, NULL, 'Service cancelled due to inclement weather', '2024-01-01 00:00:00'),
+('EXC00000002', 'CHU00000001', 'EVT00000002', '2024-01-07', '2024-01-07', NULL, NULL, NULL, 'Evening service cancelled due to inclement weather', '2024-01-01 00:00:00'),
+
+-- Location Changes
+('EXC00000003', 'CHU00000001', 'EVT00000008', '2024-01-02', '2024-01-02', '19:00:00', '20:30:00', 'Fellowship Hall', 'Young Families Group meeting moved to Fellowship Hall', '2024-01-01 00:00:00'),
+('EXC00000004', 'CHU00000001', 'EVT00000009', '2024-01-04', '2024-01-04', '19:00:00', '20:30:00', 'Room 101', 'Empty Nesters Group meeting moved to Room 101', '2024-01-01 00:00:00'),
+
+-- Time Changes
+('EXC00000005', 'CHU00000001', 'EVT00000010', '2024-01-06', '2024-01-06', '08:00:00', '09:30:00', 'Fellowship Hall', 'Men''s Bible Study time changed due to special speaker', '2024-01-01 00:00:00'),
+('EXC00000006', 'CHU00000001', 'EVT00000011', '2024-01-02', '2024-01-02', '09:30:00', '11:00:00', 'Fellowship Hall', 'Women''s Bible Study time changed for special event', '2024-01-01 00:00:00'),
+
+-- Special Event Modifications
+('EXC00000007', 'CHU00000001', 'EVT00000015', '2024-06-17', '2024-06-17', '08:30:00', '12:30:00', 'Various Rooms', 'VBS first day extended for registration', '2024-01-01 00:00:00'),
+('EXC00000008', 'CHU00000001', 'EVT00000016', '2024-02-16', '2024-02-16', '19:00:00', '21:00:00', 'Main Sanctuary', 'Missions Conference start time adjusted', '2024-01-01 00:00:00');
+
+-- Curated Calendars
+INSERT INTO curatedCalendars (id, churchId, name, description, lastModified) VALUES
+('CAL00000001', 'CHU00000001', 'Youth Ministry Calendar', 'Combined calendar for all youth-related events', '2024-01-01 00:00:00'),
+('CAL00000002', 'CHU00000001', 'Worship Ministry Calendar', 'Combined calendar for all worship and music events', '2024-01-01 00:00:00'),
+('CAL00000003', 'CHU00000001', 'Small Groups Calendar', 'Combined calendar for all small group meetings', '2024-01-01 00:00:00'),
+('CAL00000004', 'CHU00000001', 'Main Church Calendar', 'Primary church calendar with all major events', '2024-01-01 00:00:00');
+
+-- Curated Events
+INSERT INTO curatedEvents (id, churchId, calendarId, eventId, lastModified) VALUES
+-- Youth Ministry Calendar
+('CUR00000001', 'CHU00000001', 'CAL00000001', 'EVT00000005', '2024-01-01 00:00:00'), -- Youth Group Meeting
+('CUR00000002', 'CHU00000001', 'CAL00000001', 'EVT00000006', '2024-01-01 00:00:00'), -- Middle School Bible Study
+('CUR00000003', 'CHU00000001', 'CAL00000001', 'EVT00000007', '2024-01-01 00:00:00'), -- High School Bible Study
+('CUR00000004', 'CHU00000001', 'CAL00000001', 'EVT00000015', '2024-01-01 00:00:00'), -- VBS
+
+-- Worship Ministry Calendar
+('CUR00000005', 'CHU00000001', 'CAL00000002', 'EVT00000001', '2024-01-01 00:00:00'), -- Sunday Morning Service
+('CUR00000006', 'CHU00000001', 'CAL00000002', 'EVT00000002', '2024-01-01 00:00:00'), -- Sunday Evening Service
+('CUR00000007', 'CHU00000001', 'CAL00000002', 'EVT00000012', '2024-01-01 00:00:00'), -- Adult Choir Practice
+('CUR00000008', 'CHU00000001', 'CAL00000002', 'EVT00000013', '2024-01-01 00:00:00'), -- Praise Team Practice
+('CUR00000009', 'CHU00000001', 'CAL00000002', 'EVT00000014', '2024-01-01 00:00:00'), -- Children's Choir Practice
+
+-- Small Groups Calendar
+('CUR00000010', 'CHU00000001', 'CAL00000003', 'EVT00000008', '2024-01-01 00:00:00'), -- Young Families Group
+('CUR00000011', 'CHU00000001', 'CAL00000003', 'EVT00000009', '2024-01-01 00:00:00'), -- Empty Nesters Group
+('CUR00000012', 'CHU00000001', 'CAL00000003', 'EVT00000010', '2024-01-01 00:00:00'), -- Men's Bible Study
+('CUR00000013', 'CHU00000001', 'CAL00000003', 'EVT00000011', '2024-01-01 00:00:00'), -- Women's Bible Study
+
+-- Main Church Calendar
+('CUR00000014', 'CHU00000001', 'CAL00000004', 'EVT00000001', '2024-01-01 00:00:00'), -- Sunday Morning Service
+('CUR00000015', 'CHU00000001', 'CAL00000004', 'EVT00000002', '2024-01-01 00:00:00'), -- Sunday Evening Service
+('CUR00000016', 'CHU00000001', 'CAL00000004', 'EVT00000015', '2024-01-01 00:00:00'), -- VBS
+('CUR00000017', 'CHU00000001', 'CAL00000004', 'EVT00000016', '2024-01-01 00:00:00'), -- Missions Conference
+('CUR00000018', 'CHU00000001', 'CAL00000004', 'EVT00000017', '2024-01-01 00:00:00'); -- Food Pantry Distribution
+
+-- Blocks (Reusable Components)
+INSERT INTO blocks (id, churchId, blockType, name) VALUES
+-- Header and Footer Blocks
+('BLK00000001', 'CHU00000001', 'header', 'Main Header'),
+('BLK00000002', 'CHU00000001', 'footer', 'Main Footer'),
+('BLK00000003', 'CHU00000001', 'navigation', 'Main Navigation'),
+
+-- Reusable Content Blocks
+('BLK00000004', 'CHU00000001', 'hero', 'Welcome Hero'),
+('BLK00000005', 'CHU00000001', 'cta', 'Contact CTA'),
+('BLK00000006', 'CHU00000001', 'feature', 'Ministry Feature'),
+('BLK00000007', 'CHU00000001', 'testimonial', 'Member Testimonial'),
+('BLK00000008', 'CHU00000001', 'event', 'Upcoming Event'),
+('BLK00000009', 'CHU00000001', 'sermon', 'Latest Sermon'),
+('BLK00000010', 'CHU00000001', 'gallery', 'Photo Gallery');
+
+-- Pages
+INSERT INTO pages (id, churchId, url, title, layout) VALUES
+('PAG00000001', 'CHU00000001', '/', 'Home', 'default'),
+('PAG00000002', 'CHU00000001', '/about', 'About Us', 'default'),
+('PAG00000003', 'CHU00000001', '/ministries', 'Ministries', 'default'),
+('PAG00000004', 'CHU00000001', '/events', 'Events', 'default'),
+('PAG00000005', 'CHU00000001', '/sermons', 'Sermons', 'default'),
+('PAG00000006', 'CHU00000001', '/give', 'Give', 'default'),
+('PAG00000007', 'CHU00000001', '/contact', 'Contact', 'default');
+
+-- Sections (Home Page)
+INSERT INTO sections (id, churchId, pageId, blockId, zone, background, textColor, headingColor, linkColor, sort, answersJSON, stylesJSON) VALUES
+-- Header Section (Reusable)
+('SEC00000001', 'CHU00000001', NULL, 'BLK00000001', 'header', '#FFFFFF', '#333333', '#1a1a1a', '#0066cc', 1, 
+  '{"logo": "/images/logo.png", "showSearch": true, "showLogin": true}',
+  '{"padding": "1rem", "boxShadow": "0 2px 4px rgba(0,0,0,0.1)"}'),
+
+-- Home Page Sections
+('SEC00000002', 'CHU00000001', 'PAG00000001', NULL, 'hero', 'linear-gradient(rgba(0,0,0,0.5), rgba(0,0,0,0.5)), url(/images/church-building.jpg)', '#FFFFFF', '#FFFFFF', '#FFFFFF', 1,
+  '{"title": "Welcome to Grace Community Church", "subtitle": "Join us in worship this Sunday at 10:00 AM", "buttonText": "Plan Your Visit", "buttonLink": "/visit"}',
+  '{"height": "80vh", "textAlign": "center", "padding": "4rem 2rem", "backgroundSize": "cover", "backgroundPosition": "center"}'),
+
+('SEC00000003', 'CHU00000001', 'PAG00000001', NULL, 'content', '#FFFFFF', '#333333', '#1a1a1a', '#0066cc', 2,
+  '{"title": "Join Us This Sunday", "content": "Experience meaningful worship, biblical teaching, and authentic community. We have programs for all ages and stages of life."}',
+  '{"padding": "4rem 2rem", "maxWidth": "1200px", "margin": "0 auto"}'),
+
+('SEC00000004', 'CHU00000001', 'PAG00000001', NULL, 'features', '#f5f5f5', '#333333', '#1a1a1a', '#0066cc', 3,
+  '{"title": "Our Ministries", "features": [{"title": "Worship", "icon": "music", "description": "Join us for inspiring worship services"}, {"title": "Children", "icon": "child", "description": "Nurturing programs for kids of all ages"}, {"title": "Youth", "icon": "users", "description": "Engaging activities for teens"}, {"title": "Small Groups", "icon": "home", "description": "Connect in meaningful community"}]}',
+  '{"padding": "4rem 2rem", "display": "grid", "gridTemplateColumns": "repeat(auto-fit, minmax(250px, 1fr))", "gap": "2rem"}'),
+
+('SEC00000005', 'CHU00000001', 'PAG00000001', NULL, 'events', '#FFFFFF', '#333333', '#1a1a1a', '#0066cc', 4,
+  '{"title": "Upcoming Events", "showCount": 3}',
+  '{"padding": "4rem 2rem", "backgroundColor": "#f9f9f9"}'),
+
+('SEC00000006', 'CHU00000001', 'PAG00000001', NULL, 'sermons', '#f5f5f5', '#333333', '#1a1a1a', '#0066cc', 5,
+  '{"title": "Latest Sermons", "showCount": 2}',
+  '{"padding": "4rem 2rem"}'),
+
+-- Footer Section (Reusable)
+('SEC00000007', 'CHU00000001', NULL, 'BLK00000002', 'footer', '#333333', '#FFFFFF', '#FFFFFF', '#FFFFFF', 1,
+  '{"address": "123 Church Street, Anytown, USA", "phone": "(555) 123-4567", "email": "info@gracechurch.org", "socialLinks": {"facebook": "https://facebook.com/gracechurch", "youtube": "https://youtube.com/gracechurch", "instagram": "https://instagram.com/gracechurch"}}',
+  '{"padding": "3rem 2rem", "textAlign": "center"}');
+
+-- Elements (Home Page Hero Section)
+INSERT INTO elements (id, churchId, sectionId, elementType, sort, answersJSON, stylesJSON) VALUES
+-- Hero Section Elements
+('ELE00000001', 'CHU00000001', 'SEC00000002', 'heading', 1,
+  '{"text": "Welcome to Grace Community Church", "level": 1}',
+  '{"fontSize": "3.5rem", "fontWeight": "bold", "marginBottom": "1rem"}'),
+
+('ELE00000002', 'CHU00000001', 'SEC00000002', 'text', 2,
+  '{"text": "Join us in worship this Sunday at 10:00 AM"}',
+  '{"fontSize": "1.5rem", "marginBottom": "2rem"}'),
+
+('ELE00000003', 'CHU00000001', 'SEC00000002', 'button', 3,
+  '{"text": "Plan Your Visit", "link": "/visit", "type": "primary"}',
+  '{"padding": "1rem 2rem", "fontSize": "1.2rem", "borderRadius": "4px", "backgroundColor": "#0066cc", "color": "#FFFFFF"}'),
+
+-- Content Section Elements
+('ELE00000004', 'CHU00000001', 'SEC00000003', 'heading', 1,
+  '{"text": "Join Us This Sunday", "level": 2}',
+  '{"fontSize": "2.5rem", "marginBottom": "1.5rem", "textAlign": "center"}'),
+
+('ELE00000005', 'CHU00000001', 'SEC00000003', 'text', 2,
+  '{"text": "Experience meaningful worship, biblical teaching, and authentic community. We have programs for all ages and stages of life."}',
+  '{"fontSize": "1.2rem", "lineHeight": "1.6", "maxWidth": "800px", "margin": "0 auto", "textAlign": "center"}'),
+
+-- Features Section Elements
+('ELE00000006', 'CHU00000001', 'SEC00000004', 'heading', 1,
+  '{"text": "Our Ministries", "level": 2}',
+  '{"fontSize": "2.5rem", "marginBottom": "2rem", "textAlign": "center"}'),
+
+('ELE00000007', 'CHU00000001', 'SEC00000004', 'feature-grid', 2,
+  '{"features": [{"title": "Worship", "icon": "music", "description": "Join us for inspiring worship services"}, {"title": "Children", "icon": "child", "description": "Nurturing programs for kids of all ages"}, {"title": "Youth", "icon": "users", "description": "Engaging activities for teens"}, {"title": "Small Groups", "icon": "home", "description": "Connect in meaningful community"}]}',
+  '{"display": "grid", "gridTemplateColumns": "repeat(auto-fit, minmax(250px, 1fr))", "gap": "2rem", "padding": "1rem"}'),
+
+-- Events Section Elements
+('ELE00000008', 'CHU00000001', 'SEC00000005', 'heading', 1,
+  '{"text": "Upcoming Events", "level": 2}',
+  '{"fontSize": "2.5rem", "marginBottom": "2rem", "textAlign": "center"}'),
+
+('ELE00000009', 'CHU00000001', 'SEC00000005', 'event-list', 2,
+  '{"events": [{"id": "EVT00000001", "title": "Sunday Morning Service", "date": "2024-01-07", "time": "10:00 AM"}, {"id": "EVT00000015", "title": "Vacation Bible School", "date": "2024-06-17", "time": "9:00 AM"}, {"id": "EVT00000016", "title": "Missions Conference", "date": "2024-02-16", "time": "6:00 PM"}]}',
+  '{"display": "grid", "gap": "1rem", "maxWidth": "800px", "margin": "0 auto"}'),
+
+-- Sermons Section Elements
+('ELE00000010', 'CHU00000001', 'SEC00000006', 'heading', 1,
+  '{"text": "Latest Sermons", "level": 2}',
+  '{"fontSize": "2.5rem", "marginBottom": "2rem", "textAlign": "center"}'),
+
+('ELE00000011', 'CHU00000001', 'SEC00000006', 'sermon-list', 2,
+  '{"sermons": [{"id": "SER00000001", "title": "The Power of Faith", "date": "2024-01-07", "speaker": "Pastor John Smith"}, {"id": "SER00000002", "title": "Walking in Love", "date": "2023-12-31", "speaker": "Pastor John Smith"}]}',
+  '{"display": "grid", "gap": "2rem", "maxWidth": "800px", "margin": "0 auto"}'),
+
+-- Footer Elements
+('ELE00000012', 'CHU00000001', 'SEC00000007', 'text', 1,
+  '{"text": "123 Church Street, Anytown, USA"}',
+  '{"marginBottom": "1rem"}'),
+
+('ELE00000013', 'CHU00000001', 'SEC00000007', 'text', 2,
+  '{"text": "(555) 123-4567 | info@gracechurch.org"}',
+  '{"marginBottom": "1rem"}'),
+
+('ELE00000014', 'CHU00000001', 'SEC00000007', 'social-links', 3,
+  '{"links": {"facebook": "https://facebook.com/gracechurch", "youtube": "https://youtube.com/gracechurch", "instagram": "https://instagram.com/gracechurch"}}',
+  '{"display": "flex", "justifyContent": "center", "gap": "1rem", "marginTop": "1rem"}');
+
+-- Playlists
+INSERT INTO playlists (id, churchId, title, description, publishDate, thumbnail) VALUES
+('PLY00000001', 'CHU00000001', 'Sunday Sermons 2024', 'Weekly sermons from our Sunday morning services', '2024-01-01 00:00:00', '/images/playlists/sunday-sermons.jpg'),
+('PLY00000002', 'CHU00000001', 'Special Services', 'Recordings from special services and events', '2024-01-01 00:00:00', '/images/playlists/special-services.jpg'),
+('PLY00000003', 'CHU00000001', 'Bible Study Series', 'In-depth Bible study sessions', '2024-01-01 00:00:00', '/images/playlists/bible-study.jpg'),
+('PLY00000004', 'CHU00000001', 'Christmas Services', 'Special Christmas services and programs', '2024-01-01 00:00:00', '/images/playlists/christmas.jpg'),
+('PLY00000005', 'CHU00000001', 'Easter Services', 'Easter services and special programs', '2024-01-01 00:00:00', '/images/playlists/easter.jpg');
+
+-- Sermons
+INSERT INTO sermons (id, churchId, playlistId, videoType, videoData, videoUrl, title, description, publishDate, thumbnail, duration, permanentUrl) VALUES
+-- Recent Sunday Sermons
+('SER00000001', 'CHU00000001', 'PLY00000001', 'youtube', 'dQw4w9WgXcQ', 'https://www.youtube.com/watch?v=dQw4w9WgXcQ', 'The Power of Faith', 'Exploring how faith transforms our lives and strengthens our relationship with God', '2024-01-07 10:00:00', '/images/sermons/power-of-faith.jpg', 3600, 1),
+('SER00000002', 'CHU00000001', 'PLY00000001', 'youtube', 'dQw4w9WgXcQ', 'https://www.youtube.com/watch?v=dQw4w9WgXcQ', 'Walking in Love', 'Understanding God''s love and how to share it with others', '2023-12-31 10:00:00', '/images/sermons/walking-in-love.jpg', 3540, 1),
+('SER00000003', 'CHU00000001', 'PLY00000001', 'youtube', 'dQw4w9WgXcQ', 'https://www.youtube.com/watch?v=dQw4w9WgXcQ', 'Finding Peace in Chaos', 'Discovering God''s peace in the midst of life''s challenges', '2023-12-24 10:00:00', '/images/sermons/finding-peace.jpg', 3720, 1),
+
+-- Special Services
+('SER00000004', 'CHU00000001', 'PLY00000002', 'vimeo', '123456789', 'https://vimeo.com/123456789', 'Christmas Eve Service 2023', 'Our annual Christmas Eve candlelight service with carols and message', '2023-12-24 19:00:00', '/images/sermons/christmas-eve-2023.jpg', 5400, 1),
+('SER00000005', 'CHU00000001', 'PLY00000002', 'vimeo', '987654321', 'https://vimeo.com/987654321', 'New Year''s Eve Service 2023', 'Special service celebrating the new year with worship and reflection', '2023-12-31 19:00:00', '/images/sermons/new-years-eve-2023.jpg', 4800, 1),
+
+-- Bible Study Series
+('SER00000006', 'CHU00000001', 'PLY00000003', 'youtube', 'dQw4w9WgXcQ', 'https://www.youtube.com/watch?v=dQw4w9WgXcQ', 'Understanding the Book of Romans - Part 1', 'Introduction to Paul''s letter to the Romans', '2024-01-03 19:00:00', '/images/sermons/romans-part1.jpg', 2700, 1),
+('SER00000007', 'CHU00000001', 'PLY00000003', 'youtube', 'dQw4w9WgXcQ', 'https://www.youtube.com/watch?v=dQw4w9WgXcQ', 'Understanding the Book of Romans - Part 2', 'Exploring the themes of grace and faith in Romans', '2024-01-10 19:00:00', '/images/sermons/romans-part2.jpg', 2700, 1),
+
+-- Christmas Services
+('SER00000008', 'CHU00000001', 'PLY00000004', 'vimeo', '456789123', 'https://vimeo.com/456789123', 'Christmas Sunday Service 2023', 'Special Christmas morning service with carols and message', '2023-12-24 10:00:00', '/images/sermons/christmas-sunday-2023.jpg', 5400, 1),
+('SER00000009', 'CHU00000001', 'PLY00000004', 'vimeo', '789123456', 'https://vimeo.com/789123456', 'Children''s Christmas Program 2023', 'Our annual children''s Christmas program', '2023-12-17 10:00:00', '/images/sermons/childrens-christmas-2023.jpg', 3600, 1),
+
+-- Easter Services
+('SER00000010', 'CHU00000001', 'PLY00000005', 'vimeo', '321654987', 'https://vimeo.com/321654987', 'Good Friday Service 2023', 'Reflective service remembering Christ''s sacrifice', '2023-04-07 19:00:00', '/images/sermons/good-friday-2023.jpg', 3600, 1),
+('SER00000011', 'CHU00000001', 'PLY00000005', 'vimeo', '654987321', 'https://vimeo.com/654987321', 'Easter Sunday Service 2023', 'Celebrating Christ''s resurrection', '2023-04-09 10:00:00', '/images/sermons/easter-sunday-2023.jpg', 5400, 1);
+
+-- Streaming Services
+INSERT INTO streamingServices (id, churchId, serviceTime, earlyStart, chatBefore, chatAfter, provider, providerKey, videoUrl, timezoneOffset, recurring, label, sermonId) VALUES
+-- Sunday Morning Service (Recurring)
+('STR00000001', 'CHU00000001', '2024-01-07 10:00:00', 900, 1800, 900, 'youtube', 'CHANNEL_ID_123', 'https://www.youtube.com/channel/CHANNEL_ID_123/live', -300, 1, 'Sunday Morning Service', 'SER00000001'),
+

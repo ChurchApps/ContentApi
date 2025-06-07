@@ -1,4 +1,4 @@
-name: Deploy Demo Environment
+name: Deploy Demo
 
 on:
   schedule:
@@ -6,26 +6,13 @@ on:
   workflow_dispatch: # Allows manual triggering
 
 env:
-  SERVERLESS_ACCESS_KEY: ${{ secrets.AWS_ACCESS_KEY_ID }}
+  SERVERLESS_ACCESS_KEY: ${{ secrets.STAGING_AWS_ACCESS_KEY_ID }}
 
 jobs:
   cleanup:
     name: Cleanup Previous Demo
     runs-on: ubuntu-latest
     steps:
-      - name: Configure AWS Credentials
-        uses: aws-actions/configure-aws-credentials@v1
-        with:
-          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
-          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-          aws-region: us-east-2
-
-      - name: Remove Previous Demo Stack
-        run:
-          |
-          npm install -g serverless
-          serverless remove --stage Demo --verbose
-
       - name: Checkout
         uses: actions/checkout@v2
         with:
@@ -36,7 +23,21 @@ jobs:
           node-version: "18"
 
       - name: Install Dependencies
-        run: npm install
+        run: npm ci
+
+      - name: Configure AWS Credentials
+        uses: aws-actions/configure-aws-credentials@v1
+        with:
+          aws-access-key-id: ${{ secrets.STAGING_AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.STAGING_AWS_SECRET_ACCESS_KEY }}
+          aws-region: us-east-2
+
+      - name: Remove Previous Demo Stack
+        run:
+          |
+          # This will fail if stack doesn't exist, which is expected for first-time deployments
+          npm install -g serverless
+          serverless remove --stage Demo --verbose || echo "No existing stack to remove"
 
       - name: Reset and Initialize Database
         run:
@@ -57,9 +58,13 @@ jobs:
 
           # Create .env file for initdb script
           echo "APP_ENV=Demo" > .env
+          echo "CONNECTION_STRING=$CONNECTION_STRING" >> .env
 
           # Run the initdb script to create tables and seed data
           npm run initdb
+
+          # Run the demo.sql file to populate demo data
+          mysql -h "$DB_HOST" -u "$DB_USER" -p"$DB_PASS" "$DB_NAME" < tools/dbScripts/demo.mysql
 
   deploy:
     name: Deploy Demo
@@ -68,14 +73,13 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v2
-        with:
-          submodules: "true"
 
       - uses: actions/setup-node@v2
         with:
           node-version: "18"
 
-      - uses: actions/cache@v3
+      - name: Cache npm dependencies
+        uses: actions/cache@v3
         with:
           path: ~/.npm
           key: ${{ runner.os }}-node-${{ hashFiles('**/package-lock.json') }}
@@ -86,19 +90,36 @@ jobs:
       - name: Configure AWS Credentials
         uses: aws-actions/configure-aws-credentials@v1
         with:
-          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
-          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-access-key-id: ${{ secrets.STAGING_AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.STAGING_AWS_SECRET_ACCESS_KEY }}
           aws-region: us-east-2
 
-      - name: Setup Serverless
+      - name: Install dependencies
         run:
           |
-          export SERVERLESS_ACCESS_KEY="$SERVERLESS_ACCESS_KEY"
+          npm ci
+
+      - name: Check Serverless version
+        run: npx serverless --version
+
+      - name: Prepare Lambda Layer
+        run:
+          |
+          mkdir -p layer/nodejs
+          cp package.json layer/nodejs/
+          cd layer/nodejs
+          npm install --production
+          cd ../..
 
       - name: Deploy API
         run:
           |
-          npm install
           npm run build
           npm run copy-assets
-          serverless deploy --stage Demo --verbose
+          npx serverless deploy --stage Demo --verbose
+
+      - name: Serverless package contents
+        run:
+          |
+          npx serverless package --stage Demo
+          ls -R .serverless
