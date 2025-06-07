@@ -1,3 +1,21 @@
+-- Truncate all tables (in order to respect foreign key constraints)
+TRUNCATE TABLE streamingServices;
+TRUNCATE TABLE sermons;
+TRUNCATE TABLE playlists;
+TRUNCATE TABLE elements;
+TRUNCATE TABLE sections;
+TRUNCATE TABLE pages;
+TRUNCATE TABLE blocks;
+TRUNCATE TABLE curatedEvents;
+TRUNCATE TABLE curatedCalendars;
+TRUNCATE TABLE eventExceptions;
+TRUNCATE TABLE events;
+TRUNCATE TABLE arrangementKeys;
+TRUNCATE TABLE arrangements;
+TRUNCATE TABLE songDetailLinks;
+TRUNCATE TABLE songDetails;
+TRUNCATE TABLE songs;
+
 -- Songs
 INSERT INTO songs (id, churchId, name, dateAdded) VALUES
 -- Modern Worship Songs
