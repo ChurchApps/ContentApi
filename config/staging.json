@@ -7,5 +7,5 @@
   "membershipApi": "https://membershipapi.staging.churchapps.org",
   "s3Bucket": "staging-churchapps-content",
   "messagingApi": "https://messagingapi.staging.churchapps.org",
-  "aiProvider": "openai"
+  "aiProvider": "openrouter"
 }
