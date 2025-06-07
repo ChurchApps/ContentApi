@@ -378,5 +378,5 @@ INSERT INTO sermons (id, churchId, playlistId, videoType, videoData, videoUrl, t
 -- Streaming Services
 INSERT INTO streamingServices (id, churchId, serviceTime, earlyStart, chatBefore, chatAfter, provider, providerKey, videoUrl, timezoneOffset, recurring, label, sermonId) VALUES
 -- Sunday Morning Service (Recurring)
-('STR00000001', 'CHU00000001', '2024-01-07 10:00:00', 900, 1800, 900, 'youtube', 'CHANNEL_ID_123', 'https://www.youtube.com/channel/CHANNEL_ID_123/live', -300, 1, 'Sunday Morning Service', 'SER00000001'),
+('STR00000001', 'CHU00000001', '2024-01-07 10:00:00', 900, 1800, 900, 'youtube', 'CHANNEL_ID_123', 'https://www.youtube.com/channel/CHANNEL_ID_123/live', -300, 1, 'Sunday Morning Service', 'SER00000001');
 
