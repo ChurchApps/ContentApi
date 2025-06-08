@@ -66,7 +66,6 @@ jobs:
           # Run the demo.mysql file to populate demo data
           mysql -h "$DB_HOST" -u "$DB_USER" -p"$DB_PASS" "$DB_NAME" < tools/dbScripts/demo.mysql
 
-  jobs:
     deploy:
       name: Deploy Demo
       runs-on: ubuntu-latest
