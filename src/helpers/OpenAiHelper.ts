@@ -94,6 +94,26 @@ export class OpenAiHelper {
 
   public static async generateSocialMediaPosts(notes: string) {
     const prompt =
+      `You are a church social media manager. I want you to create three posts that will be used the week after this sermon to remind people what was discussed, prompt them to apply it this week and engage with the post.
+      These are posts that will be shared after the sermon.  Do not hype an upcoming sermon.
+
+        For each idea, return an object with the following format:
+        {
+            postIdea: string,
+            visual: string,
+            caption: string
+        }
+
+        Only populate postIdea with the exact contents of the post.  The other two field should be empty strings.
+
+        Return the response as a JSON array of 3 objects.
+
+        Notes: ${notes}
+        `.trim();
+
+    console.log(prompt);
+    /*
+    const prompt =
       `You are a church social media manager. Based on the notes below, generate 3 engaging and inspiring social media content ideas.
 
         For each idea, return an object with the following format:
@@ -106,7 +126,7 @@ export class OpenAiHelper {
         Return the response as a JSON array of 3 objects.
 
         Notes: ${notes}
-        `.trim();
+        `.trim();*/
 
     if (!notes || notes.length === 0) {
       // prompt = `You are a church social media manager. Generate 3 engaging and inspiring social media content ideas for church's socials.
@@ -123,6 +143,9 @@ export class OpenAiHelper {
       throw new Error("No notes provided");
     }
     const completion = await this.getCompletion(prompt);
+
+    console.log("Completion from AI:", completion);
+
     const parsedPosts = this.parsePosts(completion);
     return parsedPosts;
   }

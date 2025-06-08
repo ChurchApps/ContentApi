@@ -73,13 +73,10 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v2
-
-      - uses: actions/setup-node@v2
         with:
-          node-version: "18"
+          submodules: "true"
 
-      - name: Cache npm dependencies
-        uses: actions/cache@v3
+      - uses: actions/cache@v3
         with:
           path: ~/.npm
           key: ${{ runner.os }}-node-${{ hashFiles('**/package-lock.json') }}
@@ -94,29 +91,14 @@ jobs:
           aws-secret-access-key: ${{ secrets.STAGING_AWS_SECRET_ACCESS_KEY }}
           aws-region: us-east-2
 
-      - name: Install dependencies
-        run:
-          |
-          npm ci
-
-      - name: Check Serverless version
-        run: npx serverless --version
-
-      - name: Prepare Lambda Layer
-        run:
-          |
-          mkdir -p layer/nodejs
-          cp package.json layer/nodejs/
-          cd layer/nodejs
-          npm install --production
-          cd ../..
+      - name: Setup Serverless
+        run: export SERVERLESS_ACCESS_KEY="$SERVERLESS_ACCESS_KEY"
 
       - name: Deploy API
         run:
           |
-          npm run build
-          npm run copy-assets
-          npx serverless deploy --stage Demo --verbose
+          npm install
+          npm run deploy-demo
 
       - name: Serverless package contents
         run:
