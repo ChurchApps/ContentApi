@@ -218,130 +218,55 @@ INSERT INTO blocks (id, churchId, blockType, name) VALUES
 
 -- Pages
 INSERT INTO pages (id, churchId, url, title, layout) VALUES
-('PAG00000001', 'CHU00000001', '/', 'Home', 'default'),
-('PAG00000002', 'CHU00000001', '/about', 'About Us', 'default'),
-('PAG00000003', 'CHU00000001', '/ministries', 'Ministries', 'default'),
-('PAG00000004', 'CHU00000001', '/events', 'Events', 'default'),
-('PAG00000005', 'CHU00000001', '/sermons', 'Sermons', 'default'),
-('PAG00000006', 'CHU00000001', '/give', 'Give', 'default'),
-('PAG00000007', 'CHU00000001', '/contact', 'Contact', 'default');
+('PAG00000001', 'CHU00000001', '/', 'Home', 'default');
 
 -- Sections (Home Page)
 INSERT INTO sections (id, churchId, pageId, blockId, zone, background, textColor, headingColor, linkColor, sort, targetBlockId, answersJSON, stylesJSON, animationsJSON) VALUES
--- Header Section (Reusable)
-('SEC00000001', 'CHU00000001', NULL, 'BLK00000001', 'header', '#FFFFFF', '#333333', '#1a1a1a', '#0066cc', 1, NULL, 
-  '{"logo": "/images/logo.png", "showSearch": true, "showLogin": true}',
-  '{"padding": "1rem", "boxShadow": "0 2px 4px rgba(0,0,0,0.1)"}',
-  NULL),
+('SEC00000001', 'CHU00000001', 'PAG00000001', NULL, 'main', 'var(--light)', 'var(--accent)', 'var(--accent)', 'var(--darkAccent)', 1, NULL, NULL, NULL, NULL),
+('SEC00000002', 'CHU00000001', 'PAG00000001', NULL, 'main', 'var(--dark)', 'var(--light)', 'var(--light)', 'var(--lightAccent)', 2, NULL, NULL, NULL, NULL);
 
--- Home Page Sections
-('SEC00000002', 'CHU00000001', 'PAG00000001', NULL, 'hero', 'linear-gradient(rgba(0,0,0,0.5), rgba(0,0,0,0.5)), url(/images/church-building.jpg)', '#FFFFFF', '#FFFFFF', '#FFFFFF', 1, NULL,
-  '{"title": "Welcome to Grace Community Church", "subtitle": "Join us in worship this Sunday at 10:00 AM", "buttonText": "Plan Your Visit", "buttonLink": "/visit"}',
-  '{"height": "80vh", "textAlign": "center", "padding": "4rem 2rem", "backgroundSize": "cover", "backgroundPosition": "center"}',
-  NULL),
-
-('SEC00000003', 'CHU00000001', 'PAG00000001', NULL, 'content', '#FFFFFF', '#333333', '#1a1a1a', '#0066cc', 2, NULL,
-  '{"title": "Join Us This Sunday", "content": "Experience meaningful worship, biblical teaching, and authentic community. We have programs for all ages and stages of life."}',
-  '{"padding": "4rem 2rem", "maxWidth": "1200px", "margin": "0 auto"}',
-  NULL),
-
-('SEC00000004', 'CHU00000001', 'PAG00000001', NULL, 'features', '#f5f5f5', '#333333', '#1a1a1a', '#0066cc', 3, NULL,
-  '{"title": "Our Ministries", "features": [{"title": "Worship", "icon": "music", "description": "Join us for inspiring worship services"}, {"title": "Children", "icon": "child", "description": "Nurturing programs for kids of all ages"}, {"title": "Youth", "icon": "users", "description": "Engaging activities for teens"}, {"title": "Small Groups", "icon": "home", "description": "Connect in meaningful community"}]}',
-  '{"padding": "4rem 2rem", "display": "grid", "gridTemplateColumns": "repeat(auto-fit, minmax(250px, 1fr))", "gap": "2rem"}',
-  NULL),
-
-('SEC00000005', 'CHU00000001', 'PAG00000001', NULL, 'events', '#FFFFFF', '#333333', '#1a1a1a', '#0066cc', 4, NULL,
-  '{"title": "Upcoming Events", "showCount": 3}',
-  '{"padding": "4rem 2rem", "backgroundColor": "#f9f9f9"}',
-  NULL),
-
-('SEC00000006', 'CHU00000001', 'PAG00000001', NULL, 'sermons', '#f5f5f5', '#333333', '#1a1a1a', '#0066cc', 5, NULL,
-  '{"title": "Latest Sermons", "showCount": 2}',
-  '{"padding": "4rem 2rem"}',
-  NULL),
-
--- Footer Section (Reusable)
-('SEC00000007', 'CHU00000001', NULL, 'BLK00000002', 'footer', '#333333', '#FFFFFF', '#FFFFFF', '#FFFFFF', 1, NULL,
-  '{"address": "123 Church Street, Anytown, USA", "phone": "(555) 123-4567", "email": "info@gracechurch.org", "socialLinks": {"facebook": "https://facebook.com/gracechurch", "youtube": "https://youtube.com/gracechurch", "instagram": "https://instagram.com/gracechurch"}}',
-  '{"padding": "3rem 2rem", "textAlign": "center"}',
-  NULL);
-
--- Elements (Home Page Hero Section)
+-- Elements (Home Page)
 INSERT INTO elements (id, churchId, sectionId, blockId, elementType, sort, parentId, answersJSON, stylesJSON, animationsJSON) VALUES
--- Hero Section Elements
-('ELE00000001', 'CHU00000001', 'SEC00000002', NULL, 'heading', 1, NULL,
-  '{"text": "Welcome to Grace Community Church", "level": 1}',
-  '{"fontSize": "3.5rem", "fontWeight": "bold", "marginBottom": "1rem"}',
+-- Hero Section
+('ELE00000001', 'CHU00000001', 'SEC00000001', NULL, 'text', 1, NULL,
+  '{"text": "# Welcome to Grace Community Church!\\n\\n### *A place to belong.*", "textAlignment": "center"}',
+  NULL,
   NULL),
 
-('ELE00000002', 'CHU00000001', 'SEC00000002', NULL, 'text', 2, NULL,
-  '{"text": "Join us in worship this Sunday at 10:00 AM"}',
-  '{"fontSize": "1.5rem", "marginBottom": "2rem"}',
+-- Content Section with Row/Column structure
+('ELE00000002', 'CHU00000001', 'SEC00000002', NULL, 'row', 1, NULL,
+  '{"columns": "4,4,4"}',
+  NULL,
   NULL),
 
-('ELE00000003', 'CHU00000001', 'SEC00000002', NULL, 'button', 3, NULL,
-  '{"text": "Plan Your Visit", "link": "/visit", "type": "primary"}',
-  '{"padding": "1rem 2rem", "fontSize": "1.2rem", "borderRadius": "4px", "backgroundColor": "#0066cc", "color": "#FFFFFF"}',
+('ELE00000003', 'CHU00000001', 'SEC00000002', NULL, 'column', 1, 'ELE00000002',
+  '{"size": 4}',
+  NULL,
   NULL),
 
--- Content Section Elements
-('ELE00000004', 'CHU00000001', 'SEC00000003', NULL, 'heading', 1, NULL,
-  '{"text": "Join Us This Sunday", "level": 2}',
-  '{"fontSize": "2.5rem", "marginBottom": "1.5rem", "textAlign": "center"}',
+('ELE00000004', 'CHU00000001', 'SEC00000002', NULL, 'column', 2, 'ELE00000002',
+  '{"size": 4}',
+  NULL,
   NULL),
 
-('ELE00000005', 'CHU00000001', 'SEC00000003', NULL, 'text', 2, NULL,
-  '{"text": "Experience meaningful worship, biblical teaching, and authentic community. We have programs for all ages and stages of life."}',
-  '{"fontSize": "1.2rem", "lineHeight": "1.6", "maxWidth": "800px", "margin": "0 auto", "textAlign": "center"}',
+('ELE00000005', 'CHU00000001', 'SEC00000002', NULL, 'column', 3, 'ELE00000002',
+  '{"size": 4}',
+  NULL,
   NULL),
 
--- Features Section Elements
-('ELE00000006', 'CHU00000001', 'SEC00000004', NULL, 'heading', 1, NULL,
-  '{"text": "Our Ministries", "level": 2}',
-  '{"fontSize": "2.5rem", "marginBottom": "2rem", "textAlign": "center"}',
+('ELE00000006', 'CHU00000001', 'SEC00000002', NULL, 'text', 1, 'ELE00000003',
+  '{"text": "**Our Beliefs**\\n\\nLorem ipsum dolor sit amet, consectetur adipiscing elit. Ut scelerisque massa elit, eget bibendum lacus bibendum ut. Vestibulum ac pharetra risus, dapibus cursus arcu. Integer lacinia tempor tellus, et aliquet diam mattis nec."}',
+  NULL,
   NULL),
 
-('ELE00000007', 'CHU00000001', 'SEC00000004', NULL, 'feature-grid', 2, NULL,
-  '{"features": [{"title": "Worship", "icon": "music", "description": "Join us for inspiring worship services"}, {"title": "Children", "icon": "child", "description": "Nurturing programs for kids of all ages"}, {"title": "Youth", "icon": "users", "description": "Engaging activities for teens"}, {"title": "Small Groups", "icon": "home", "description": "Connect in meaningful community"}]}',
-  '{"display": "grid", "gridTemplateColumns": "repeat(auto-fit, minmax(250px, 1fr))", "gap": "2rem", "padding": "1rem"}',
+('ELE00000007', 'CHU00000001', 'SEC00000002', NULL, 'text', 1, 'ELE00000004',
+  '{"text": "**Why People Call Us Home**\\n\\nPhasellus porta magna ex, nec lobortis libero sagittis at. Morbi maximus nunc nisl, sed sagittis quam luctus aliquet."}',
+  NULL,
   NULL),
 
--- Events Section Elements
-('ELE00000008', 'CHU00000001', 'SEC00000005', NULL, 'heading', 1, NULL,
-  '{"text": "Upcoming Events", "level": 2}',
-  '{"fontSize": "2.5rem", "marginBottom": "2rem", "textAlign": "center"}',
-  NULL),
-
-('ELE00000009', 'CHU00000001', 'SEC00000005', NULL, 'event-list', 2, NULL,
-  '{"events": [{"id": "EVT00000001", "title": "Sunday Morning Service", "date": "2024-01-07", "time": "10:00 AM"}, {"id": "EVT00000015", "title": "Vacation Bible School", "date": "2024-06-17", "time": "9:00 AM"}, {"id": "EVT00000016", "title": "Missions Conference", "date": "2024-02-16", "time": "6:00 PM"}]}',
-  '{"display": "grid", "gap": "1rem", "maxWidth": "800px", "margin": "0 auto"}',
-  NULL),
-
--- Sermons Section Elements
-('ELE00000010', 'CHU00000001', 'SEC00000006', NULL, 'heading', 1, NULL,
-  '{"text": "Latest Sermons", "level": 2}',
-  '{"fontSize": "2.5rem", "marginBottom": "2rem", "textAlign": "center"}',
-  NULL),
-
-('ELE00000011', 'CHU00000001', 'SEC00000006', NULL, 'sermon-list', 2, NULL,
-  '{"sermons": [{"id": "SER00000001", "title": "The Power of Faith", "date": "2024-01-07", "speaker": "Pastor John Smith"}, {"id": "SER00000002", "title": "Walking in Love", "date": "2023-12-31", "speaker": "Pastor John Smith"}]}',
-  '{"display": "grid", "gap": "2rem", "maxWidth": "800px", "margin": "0 auto"}',
-  NULL),
-
--- Footer Elements
-('ELE00000012', 'CHU00000001', 'SEC00000007', NULL, 'text', 1, NULL,
-  '{"text": "123 Church Street, Anytown, USA"}',
-  '{"marginBottom": "1rem"}',
-  NULL),
-
-('ELE00000013', 'CHU00000001', 'SEC00000007', NULL, 'text', 2, NULL,
-  '{"text": "(555) 123-4567 | info@gracechurch.org"}',
-  '{"marginBottom": "1rem"}',
-  NULL),
-
-('ELE00000014', 'CHU00000001', 'SEC00000007', NULL, 'social-links', 3, NULL,
-  '{"links": {"facebook": "https://facebook.com/gracechurch", "youtube": "https://youtube.com/gracechurch", "instagram": "https://instagram.com/gracechurch"}}',
-  '{"display": "flex", "justifyContent": "center", "gap": "1rem", "marginTop": "1rem"}',
+('ELE00000008', 'CHU00000001', 'SEC00000002', NULL, 'text', 1, 'ELE00000005',
+  '{"text": "**Plan Your Visit**\\n\\nOrci varius natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus. Donec sollicitudin fringilla sem eget dignissim. Quisque pharetra velit eget imperdiet dignissim."}',
+  NULL,
   NULL);
 
 -- Playlists
