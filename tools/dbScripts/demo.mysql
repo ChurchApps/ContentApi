@@ -222,50 +222,183 @@ INSERT INTO pages (id, churchId, url, title, layout) VALUES
 
 -- Sections (Home Page)
 INSERT INTO sections (id, churchId, pageId, blockId, zone, background, textColor, headingColor, linkColor, sort, targetBlockId, answersJSON, stylesJSON, animationsJSON) VALUES
-('SEC00000001', 'CHU00000001', 'PAG00000001', NULL, 'main', 'var(--light)', 'var(--accent)', 'var(--accent)', 'var(--darkAccent)', 1, NULL, NULL, NULL, NULL),
-('SEC00000002', 'CHU00000001', 'PAG00000001', NULL, 'main', 'var(--dark)', 'var(--light)', 'var(--light)', 'var(--lightAccent)', 2, NULL, NULL, NULL, NULL);
+-- Hero Section with background image
+('SEC00000001', 'CHU00000001', 'PAG00000001', NULL, 'main', '/tempLibrary/backgrounds/worship.jpg', 'light', NULL, NULL, 1, NULL, NULL, NULL, NULL),
+
+-- Service Times Section
+('SEC00000002', 'CHU00000001', 'PAG00000001', NULL, 'main', 'var(--light)', 'var(--accent)', 'var(--accent)', 'var(--darkAccent)', 2, NULL, NULL, NULL, NULL),
+
+-- About Pastor Section
+('SEC00000003', 'CHU00000001', 'PAG00000001', NULL, 'main', '#FFFFFF', 'dark', NULL, NULL, 3, NULL, NULL, NULL, NULL),
+
+-- Ministries Section
+('SEC00000004', 'CHU00000001', 'PAG00000001', NULL, 'main', '/tempLibrary/backgrounds/kids.jpg', 'light', NULL, NULL, 4, NULL, NULL, NULL, NULL),
+
+-- Latest Sermons Section
+('SEC00000005', 'CHU00000001', 'PAG00000001', NULL, 'main', 'var(--dark)', 'var(--light)', 'var(--light)', 'var(--lightAccent)', 5, NULL, NULL, NULL, NULL),
+
+-- FAQ Section
+('SEC00000006', 'CHU00000001', 'PAG00000001', NULL, 'main', '#f8f9fa', 'dark', NULL, NULL, 6, NULL, NULL, NULL, NULL),
+
+-- Contact & Location Section
+('SEC00000007', 'CHU00000001', 'PAG00000001', NULL, 'main', '/tempLibrary/backgrounds/crowd.jpg', 'light', NULL, NULL, 7, NULL, NULL, NULL, NULL);
 
 -- Elements (Home Page)
 INSERT INTO elements (id, churchId, sectionId, blockId, elementType, sort, parentId, answersJSON, stylesJSON, animationsJSON) VALUES
 -- Hero Section
 ('ELE00000001', 'CHU00000001', 'SEC00000001', NULL, 'text', 1, NULL,
-  '{"text": "# Welcome to Grace Community Church!\\n\\n### *A place to belong.*", "textAlignment": "center"}',
+  '{"text": "# Welcome to Grace Community Church\\n\\n### *A place to belong, grow, and serve together*\\n\\nJoin us this Sunday as we worship, learn, and connect with God and each other.", "textAlignment": "center"}',
   NULL,
   NULL),
 
--- Content Section with Row/Column structure
-('ELE00000002', 'CHU00000001', 'SEC00000002', NULL, 'row', 1, NULL,
-  '{"columns": "4,4,4"}',
+-- Service Times Section
+('ELE00000002', 'CHU00000001', 'SEC00000002', NULL, 'text', 1, NULL,
+  '{"text": "## Sunday Service Times\\n\\n### Morning Worship: 9:00 AM & 11:00 AM\\n### Sunday School: 10:00 AM\\n### Evening Service: 6:00 PM\\n\\n**What to Expect:** Casual dress, friendly people, inspiring music, and biblical teaching that applies to your daily life.", "textAlignment": "center"}',
   NULL,
   NULL),
 
-('ELE00000003', 'CHU00000001', 'SEC00000002', NULL, 'column', 1, 'ELE00000002',
-  '{"size": 4}',
+-- About Pastor Section with Photo
+('ELE00000003', 'CHU00000001', 'SEC00000003', NULL, 'textWithPhoto', 1, NULL,
+  '{"photoPosition": "right", "photo": "/tempLibrary/pastor.jpg", "text": "# Meet Pastor John Smith\\n\\n**Welcome to our church family!**\\n\\nPastor John has been serving Grace Community Church since 2010. He is passionate about helping people discover God''s love and purpose for their lives.\\n\\n**Education:** M.Div. from Seminary, B.A. in Theology\\n**Family:** Married to Sarah, father of three children\\n**Hobbies:** Reading, hiking, and coffee\\n\\n*\\"My heart''s desire is to see every person experience the transforming love of Jesus Christ.\\"*"}',
   NULL,
   NULL),
 
-('ELE00000004', 'CHU00000001', 'SEC00000002', NULL, 'column', 2, 'ELE00000002',
-  '{"size": 4}',
+-- Ministries Section
+('ELE00000004', 'CHU00000001', 'SEC00000004', NULL, 'row', 1, NULL,
+  '{"columns": "3,3,3,3"}',
   NULL,
   NULL),
 
-('ELE00000005', 'CHU00000001', 'SEC00000002', NULL, 'column', 3, 'ELE00000002',
-  '{"size": 4}',
+('ELE00000005', 'CHU00000001', 'SEC00000004', NULL, 'column', 1, 'ELE00000004',
+  '{"size": 3}',
   NULL,
   NULL),
 
-('ELE00000006', 'CHU00000001', 'SEC00000002', NULL, 'text', 1, 'ELE00000003',
-  '{"text": "**Our Beliefs**\\n\\nLorem ipsum dolor sit amet, consectetur adipiscing elit. Ut scelerisque massa elit, eget bibendum lacus bibendum ut. Vestibulum ac pharetra risus, dapibus cursus arcu. Integer lacinia tempor tellus, et aliquet diam mattis nec."}',
+('ELE00000006', 'CHU00000001', 'SEC00000004', NULL, 'column', 2, 'ELE00000004',
+  '{"size": 3}',
   NULL,
   NULL),
 
-('ELE00000007', 'CHU00000001', 'SEC00000002', NULL, 'text', 1, 'ELE00000004',
-  '{"text": "**Why People Call Us Home**\\n\\nPhasellus porta magna ex, nec lobortis libero sagittis at. Morbi maximus nunc nisl, sed sagittis quam luctus aliquet."}',
+('ELE00000007', 'CHU00000001', 'SEC00000004', NULL, 'column', 3, 'ELE00000004',
+  '{"size": 3}',
   NULL,
   NULL),
 
-('ELE00000008', 'CHU00000001', 'SEC00000002', NULL, 'text', 1, 'ELE00000005',
-  '{"text": "**Plan Your Visit**\\n\\nOrci varius natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus. Donec sollicitudin fringilla sem eget dignissim. Quisque pharetra velit eget imperdiet dignissim."}',
+('ELE00000008', 'CHU00000001', 'SEC00000004', NULL, 'column', 4, 'ELE00000004',
+  '{"size": 3}',
+  NULL,
+  NULL),
+
+('ELE00000009', 'CHU00000001', 'SEC00000004', NULL, 'text', 1, 'ELE00000005',
+  '{"text": "## Children''s Ministry\\n\\nNursery through 5th grade programs with engaging lessons, games, and activities that teach kids about God''s love.\\n\\n**Ages:** 0-11 years\\n**When:** Every Sunday", "textAlignment": "center"}',
+  NULL,
+  NULL),
+
+('ELE00000010', 'CHU00000001', 'SEC00000004', NULL, 'text', 1, 'ELE00000006',
+  '{"text": "## Youth Ministry\\n\\nMiddle and high school students connect through fun activities, deep discussions, and mission trips.\\n\\n**Ages:** 12-18 years\\n**When:** Sundays & Wednesdays", "textAlignment": "center"}',
+  NULL,
+  NULL),
+
+('ELE00000011', 'CHU00000001', 'SEC00000004', NULL, 'text', 1, 'ELE00000007',
+  '{"text": "## Small Groups\\n\\nAdult small groups meet throughout the week for Bible study, prayer, and fellowship in homes.\\n\\n**When:** Various times\\n**Where:** Member homes", "textAlignment": "center"}',
+  NULL,
+  NULL),
+
+('ELE00000012', 'CHU00000001', 'SEC00000004', NULL, 'text', 1, 'ELE00000008',
+  '{"text": "## Music Ministry\\n\\nWorship team, choir, and special music opportunities for all ages and skill levels.\\n\\n**Rehearsals:** Thursdays\\n**Performances:** Sundays", "textAlignment": "center"}',
+  NULL,
+  NULL),
+
+-- Latest Sermons Section
+('ELE00000013', 'CHU00000001', 'SEC00000005', NULL, 'text', 1, NULL,
+  '{"text": "## Latest Sermons", "textAlignment": "center"}',
+  NULL,
+  NULL),
+
+('ELE00000014', 'CHU00000001', 'SEC00000005', NULL, 'row', 2, NULL,
+  '{"columns": "6,6"}',
+  NULL,
+  NULL),
+
+('ELE00000015', 'CHU00000001', 'SEC00000005', NULL, 'column', 1, 'ELE00000014',
+  '{"size": 6}',
+  NULL,
+  NULL),
+
+('ELE00000016', 'CHU00000001', 'SEC00000005', NULL, 'column', 2, 'ELE00000014',
+  '{"size": 6}',
+  NULL,
+  NULL),
+
+('ELE00000017', 'CHU00000001', 'SEC00000005', NULL, 'text', 1, 'ELE00000015',
+  '{"text": "### \\"The Power of Faith\\"\\n**January 7, 2024**\\n\\nExploring how faith transforms our lives and strengthens our relationship with God. Join us as we dive into practical ways to grow in faith.\\n\\n*[Watch Online] [Download Audio]*"}',
+  NULL,
+  NULL),
+
+('ELE00000018', 'CHU00000001', 'SEC00000005', NULL, 'text', 1, 'ELE00000016',
+  '{"text": "### \\"Walking in Love\\"\\n**December 31, 2023**\\n\\nUnderstanding God''s love and how to share it with others in our daily lives. A message of hope for the new year.\\n\\n*[Watch Online] [Download Audio]*"}',
+  NULL,
+  NULL),
+
+-- FAQ Section
+('ELE00000019', 'CHU00000001', 'SEC00000006', NULL, 'text', 1, NULL,
+  '{"text": "## Frequently Asked Questions", "textAlignment": "center"}',
+  NULL,
+  NULL),
+
+('ELE00000020', 'CHU00000001', 'SEC00000006', NULL, 'row', 2, NULL,
+  '{"columns": "6,6"}',
+  NULL,
+  NULL),
+
+('ELE00000021', 'CHU00000001', 'SEC00000006', NULL, 'column', 1, 'ELE00000020',
+  '{"size": 6}',
+  NULL,
+  NULL),
+
+('ELE00000022', 'CHU00000001', 'SEC00000006', NULL, 'column', 2, 'ELE00000020',
+  '{"size": 6}',
+  NULL,
+  NULL),
+
+('ELE00000023', 'CHU00000001', 'SEC00000006', NULL, 'text', 1, 'ELE00000021',
+  '{"text": "**What should I wear?**\\nCome as you are! We have people in everything from jeans to suits.\\n\\n**What about my kids?**\\nWe have age-appropriate programs for all children during services.\\n\\n**Where do I park?**\\nPlenty of free parking is available in our lot and on surrounding streets."}',
+  NULL,
+  NULL),
+
+('ELE00000024', 'CHU00000001', 'SEC00000006', NULL, 'text', 1, 'ELE00000022',
+  '{"text": "**How long is the service?**\\nServices typically last about 75 minutes including worship and message.\\n\\n**Do I need to bring anything?**\\nJust yourself! Bibles and bulletins are provided.\\n\\n**Can I get involved?**\\nAbsolutely! We have ministries for every interest and skill level."}',
+  NULL,
+  NULL),
+
+-- Contact & Location Section
+('ELE00000025', 'CHU00000001', 'SEC00000007', NULL, 'text', 1, NULL,
+  '{"text": "## Visit Us This Sunday\\n\\n**We would love to meet you!**\\n\\nCome as you are and experience God''s love in our community.", "textAlignment": "center"}',
+  NULL,
+  NULL),
+
+('ELE00000026', 'CHU00000001', 'SEC00000007', NULL, 'row', 2, NULL,
+  '{"columns": "6,6"}',
+  NULL,
+  NULL),
+
+('ELE00000027', 'CHU00000001', 'SEC00000007', NULL, 'column', 1, 'ELE00000026',
+  '{"size": 6}',
+  NULL,
+  NULL),
+
+('ELE00000028', 'CHU00000001', 'SEC00000007', NULL, 'column', 2, 'ELE00000026',
+  '{"size": 6}',
+  NULL,
+  NULL),
+
+('ELE00000029', 'CHU00000001', 'SEC00000007', NULL, 'text', 1, 'ELE00000027',
+  '{"text": "### Contact Information\\n\\n**Address:**\\n123 Church Street\\nAnytown, USA 12345\\n\\n**Phone:** (555) 123-4567\\n**Email:** info@gracechurch.org\\n\\n**Office Hours:**\\nMonday-Friday: 9 AM - 5 PM", "textAlignment": "center"}',
+  NULL,
+  NULL),
+
+('ELE00000030', 'CHU00000001', 'SEC00000007', NULL, 'map', 1, 'ELE00000028',
+  '{"mapAddress": "123 Church Street, Anytown, USA 12345", "mapZoom": "16"}',
   NULL,
   NULL);
 
