@@ -1,4 +1,4 @@
-import { controller, httpGet, httpPost, interfaces, requestParam } from "inversify-express-utils";
+import { controller, httpPost, interfaces } from "inversify-express-utils";
 import express from "express";
 import { ContentBaseController } from "./ContentBaseController"
 import Pexels from "pexels";

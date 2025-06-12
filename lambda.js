@@ -1,39 +1,73 @@
-const { createServer, proxy } = require('aws-serverless-express');
+const serverlessExpress = require('@codegenie/serverless-express');
 const { init } = require('./dist/app');
 const { Pool } = require('@churchapps/apihelper');
 const { Environment } = require('./dist/helpers/Environment');
-const { ScheduleHelper } = require('./dist/helpers/ScheduleHelper');
-const binaryMimeTypes = ['application/pdf', 'application/zip'];
-
-let server; //Global cache
 
 const checkPool = async () => {
   if (!Environment.connectionString) {
-    await Environment.init(process.env.APP_ENV)
+    await Environment.init(process.env.APP_ENV);
     Pool.initPool();
   }
-}
+};
 
-const universal = function universal(event, context) {
-  checkPool().then(() => {
-    if (server) return proxy(server, event, context);
+let handler;
+
+const universal = async function universal(event, context) {
+  try {
+    console.log('Lambda invocation:', event.httpMethod, event.path);
     
-    init().then(app => {
-      server = createServer(app, null, binaryMimeTypes);
-      return proxy(server, event, context);
-    });
-  });
-}
+    await checkPool();
+    
+    // Initialize the handler only once
+    if (!handler) {
+      const app = await init();
+      handler = serverlessExpress({ 
+        app,
+        binarySettings: {
+          contentTypes: [
+            'application/octet-stream',
+            'font/*', 
+            'image/*',
+            'application/pdf',
+            'application/zip'
+          ]
+        },
+        stripBasePath: false,
+        resolutionMode: 'PROMISE'
+      });
+    }
+    
+    return handler(event, context);
+  } catch (error) {
+    console.error('Lambda handler error:', error);
+    console.error('Error stack:', error.stack);
+    return {
+      statusCode: 500,
+      headers: {
+        'Access-Control-Allow-Origin': '*',
+        'Access-Control-Allow-Headers': 'Content-Type,Authorization',
+        'Access-Control-Allow-Methods': 'GET,POST,PUT,DELETE,OPTIONS'
+      },
+      body: JSON.stringify({ 
+        error: 'Internal server error',
+        message: error.message,
+        timestamp: new Date().toISOString()
+      })
+    };
+  }
+};
 
 const nightly = async (event, context) => {
   await checkPool();
-  await ScheduleHelper.handleAutoImports();
-}
+  // ScheduleHelper functionality was removed as it was unused
+  console.log('Nightly job executed');
+};
 
 const timer2Monday = async (event, context) => {
   await checkPool();
-  await ScheduleHelper.updateServiceTimes();
-}
+  // ScheduleHelper functionality was removed as it was unused  
+  console.log('Monday timer job executed');
+};
 
 module.exports.universal = universal;
 module.exports.nightly = nightly;

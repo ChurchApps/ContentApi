@@ -17,7 +17,7 @@ custom:
 
 provider:
   name: aws
-  runtime: nodejs18.x
+  runtime: nodejs20.x
   memorySize: 1024
   timeout: 300
   region: us-east-2
@@ -25,9 +25,9 @@ provider:
     role: arn:aws:iam::428019619026:role/ChurchAppsRole
   environment:
     APP_ENV: ${self:custom.env}
-  binaryMediaTypes:
-    - application/pdf
-    - application/zip
+  httpApi:
+    binaryMediaTypes:
+      - "*/*"
 
 layers:
   dependencies:
@@ -35,7 +35,7 @@ layers:
     name: ${self:service}-${sls:stage}-dependencies
     description: Dependencies for ${self:service}
     compatibleRuntimes:
-      - nodejs18.x
+      - nodejs20.x
 
 functions:
   api:
@@ -59,7 +59,7 @@ functions:
         - "!package-lock.json"
         - "**"
   nightly:
-    name: membership-api-${sls:stage}-nightly
+    name: content-api-${sls:stage}-nightly
     handler: lambda.nightly
     events:
       - schedule:
@@ -75,7 +75,7 @@ functions:
         - "!node_modules/**"
         - "!package-lock.json"
   timer2Monday:
-    name: membership-api-${sls:stage}-timer2Monday
+    name: content-api-${sls:stage}-timer2Monday
     handler: lambda.timer2Monday
     events:
       - schedule:
