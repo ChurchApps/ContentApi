@@ -5,7 +5,8 @@ import { ContentBaseController } from "./ContentBaseController";
 import { Permissions } from "../helpers/Permissions";
 import { YouTubeHelper, Environment, VimeoHelper, OpenAiHelper } from "../helpers";
 import { FileStorageHelper } from "@churchapps/apihelper";
-import { getSubtitles } from "youtube-captions-scraper";
+// @ts-ignore
+import TranscriptAPI from 'youtube-transcript-api';
 
 @controller("/sermons")
 export class SermonController extends ContentBaseController {
@@ -14,7 +15,8 @@ export class SermonController extends ContentBaseController {
   public async getPublicSubtitles(@requestParam("videoId") videoId: string, req: express.Request<{}, {}, null>, res: express.Response): Promise<any> {
     return this.actionWrapperAnon(req, res, async () => {
       try {
-        const subtitles = await getSubtitles({ videoID: videoId, lang: "en" });
+        const subtitles = await TranscriptAPI.getTranscript(videoId);
+        console.log("subtitles: ", subtitles);
         return subtitles;
       } catch (error) {
         return error;
