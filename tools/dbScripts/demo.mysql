@@ -21,6 +21,7 @@ BEGIN
     TRUNCATE TABLE songDetailLinks;
     TRUNCATE TABLE songDetails;
     TRUNCATE TABLE songs;
+    TRUNCATE TABLE settings;
 
     -- Songs
     INSERT INTO songs (id, churchId, name, dateAdded) VALUES
@@ -123,53 +124,122 @@ BEGIN
     ('ARK00000020', 'CHU00000001', 'ARR00000015', 'C', 'Modern key');
 
     -- Events
+    -- Note: Using dynamic dates relative to current date for all events
     INSERT INTO events (id, churchId, groupId, title, description, start, end, allDay, recurrenceRule, visibility) VALUES
-    -- Sunday Services (Recurring Weekly)
-    ('EVT00000001', 'CHU00000001', 'GRP00000001', 'Sunday Morning Service', 'Main worship service with contemporary music and biblical teaching', '2024-01-07 10:00:00', '2024-01-07 11:30:00', 0, 'FREQ=WEEKLY;BYDAY=SU', 'public'),
-    ('EVT00000002', 'CHU00000001', 'GRP00000002', 'Sunday Evening Service', 'Evening service with traditional hymns and deeper Bible study', '2024-01-07 18:00:00', '2024-01-07 19:30:00', 0, 'FREQ=WEEKLY;BYDAY=SU', 'public'),
+    -- Sunday Services (Recurring Weekly) - Start from next Sunday
+    ('EVT00000001', 'CHU00000001', 'GRP00000001', 'Sunday Morning Service', 'Main worship service with contemporary music and biblical teaching', 
+        DATE_ADD(DATE_ADD(CURDATE(), INTERVAL (6 - WEEKDAY(CURDATE())) DAY), INTERVAL '10:00:00' HOUR_SECOND),
+        DATE_ADD(DATE_ADD(CURDATE(), INTERVAL (6 - WEEKDAY(CURDATE())) DAY), INTERVAL '11:30:00' HOUR_SECOND), 
+        0, 'FREQ=WEEKLY;BYDAY=SU', 'public'),
+    ('EVT00000002', 'CHU00000001', 'GRP00000002', 'Sunday Evening Service', 'Evening service with traditional hymns and deeper Bible study', 
+        DATE_ADD(DATE_ADD(CURDATE(), INTERVAL (6 - WEEKDAY(CURDATE())) DAY), INTERVAL '18:00:00' HOUR_SECOND),
+        DATE_ADD(DATE_ADD(CURDATE(), INTERVAL (6 - WEEKDAY(CURDATE())) DAY), INTERVAL '19:30:00' HOUR_SECOND), 
+        0, 'FREQ=WEEKLY;BYDAY=SU', 'public'),
 
-    -- Sunday School Classes (Recurring Weekly)
-    ('EVT00000003', 'CHU00000001', 'GRP00000004', 'Adult Bible Class', 'In-depth Bible study for adults', '2024-01-07 09:00:00', '2024-01-07 09:45:00', 0, 'FREQ=WEEKLY;BYDAY=SU', 'public'),
-    ('EVT00000004', 'CHU00000001', 'GRP00000005', 'Young Adults Class', 'Bible study for young adults', '2024-01-07 09:00:00', '2024-01-07 09:45:00', 0, 'FREQ=WEEKLY;BYDAY=SU', 'public'),
+    -- Sunday School Classes (Recurring Weekly) - Start from next Sunday
+    ('EVT00000003', 'CHU00000001', 'GRP00000004', 'Adult Bible Class', 'In-depth Bible study for adults', 
+        DATE_ADD(DATE_ADD(CURDATE(), INTERVAL (6 - WEEKDAY(CURDATE())) DAY), INTERVAL '09:00:00' HOUR_SECOND),
+        DATE_ADD(DATE_ADD(CURDATE(), INTERVAL (6 - WEEKDAY(CURDATE())) DAY), INTERVAL '09:45:00' HOUR_SECOND), 
+        0, 'FREQ=WEEKLY;BYDAY=SU', 'public'),
+    ('EVT00000004', 'CHU00000001', 'GRP00000005', 'Young Adults Class', 'Bible study for young adults', 
+        DATE_ADD(DATE_ADD(CURDATE(), INTERVAL (6 - WEEKDAY(CURDATE())) DAY), INTERVAL '09:00:00' HOUR_SECOND),
+        DATE_ADD(DATE_ADD(CURDATE(), INTERVAL (6 - WEEKDAY(CURDATE())) DAY), INTERVAL '09:45:00' HOUR_SECOND), 
+        0, 'FREQ=WEEKLY;BYDAY=SU', 'public'),
 
-    -- Youth Group Events (Recurring Weekly)
-    ('EVT00000005', 'CHU00000001', 'GRP00000013', 'Youth Group Meeting', 'Weekly youth group with games, worship, and Bible study', '2024-01-03 18:30:00', '2024-01-03 20:30:00', 0, 'FREQ=WEEKLY;BYDAY=WE', 'public'),
-    ('EVT00000006', 'CHU00000001', 'GRP00000011', 'Middle School Bible Study', 'Bible study for middle school students', '2024-01-07 09:00:00', '2024-01-07 09:45:00', 0, 'FREQ=WEEKLY;BYDAY=SU', 'public'),
-    ('EVT00000007', 'CHU00000001', 'GRP00000012', 'High School Bible Study', 'Bible study for high school students', '2024-01-07 09:00:00', '2024-01-07 09:45:00', 0, 'FREQ=WEEKLY;BYDAY=SU', 'public'),
+    -- Youth Group Events (Recurring Weekly) - Start from next Wednesday
+    ('EVT00000005', 'CHU00000001', 'GRP00000013', 'Youth Group Meeting', 'Weekly youth group with games, worship, and Bible study', 
+        DATE_ADD(DATE_ADD(CURDATE(), INTERVAL (2 - WEEKDAY(CURDATE()) + 7) % 7 DAY), INTERVAL '18:30:00' HOUR_SECOND),
+        DATE_ADD(DATE_ADD(CURDATE(), INTERVAL (2 - WEEKDAY(CURDATE()) + 7) % 7 DAY), INTERVAL '20:30:00' HOUR_SECOND), 
+        0, 'FREQ=WEEKLY;BYDAY=WE', 'public'),
+    ('EVT00000006', 'CHU00000001', 'GRP00000011', 'Middle School Bible Study', 'Bible study for middle school students', 
+        DATE_ADD(DATE_ADD(CURDATE(), INTERVAL (6 - WEEKDAY(CURDATE())) DAY), INTERVAL '09:00:00' HOUR_SECOND),
+        DATE_ADD(DATE_ADD(CURDATE(), INTERVAL (6 - WEEKDAY(CURDATE())) DAY), INTERVAL '09:45:00' HOUR_SECOND), 
+        0, 'FREQ=WEEKLY;BYDAY=SU', 'public'),
+    ('EVT00000007', 'CHU00000001', 'GRP00000012', 'High School Bible Study', 'Bible study for high school students', 
+        DATE_ADD(DATE_ADD(CURDATE(), INTERVAL (6 - WEEKDAY(CURDATE())) DAY), INTERVAL '09:00:00' HOUR_SECOND),
+        DATE_ADD(DATE_ADD(CURDATE(), INTERVAL (6 - WEEKDAY(CURDATE())) DAY), INTERVAL '09:45:00' HOUR_SECOND), 
+        0, 'FREQ=WEEKLY;BYDAY=SU', 'public'),
 
-    -- Small Groups (Recurring Weekly)
-    ('EVT00000008', 'CHU00000001', 'GRP00000014', 'Young Families Group', 'Small group for families with young children', '2024-01-02 19:00:00', '2024-01-02 20:30:00', 0, 'FREQ=WEEKLY;BYDAY=TU', 'public'),
-    ('EVT00000009', 'CHU00000001', 'GRP00000015', 'Empty Nesters Group', 'Small group for couples whose children have left home', '2024-01-04 19:00:00', '2024-01-04 20:30:00', 0, 'FREQ=WEEKLY;BYDAY=TH', 'public'),
-    ('EVT00000010', 'CHU00000001', 'GRP00000016', 'Men''s Bible Study', 'Weekly Bible study for men', '2024-01-06 07:00:00', '2024-01-06 08:30:00', 0, 'FREQ=WEEKLY;BYDAY=SA', 'public'),
-    ('EVT00000011', 'CHU00000001', 'GRP00000017', 'Women''s Bible Study', 'Weekly Bible study for women', '2024-01-02 10:00:00', '2024-01-02 11:30:00', 0, 'FREQ=WEEKLY;BYDAY=TU', 'public'),
+    -- Small Groups (Recurring Weekly) - Start from next occurrence of each day
+    ('EVT00000008', 'CHU00000001', 'GRP00000014', 'Young Families Group', 'Small group for families with young children', 
+        DATE_ADD(DATE_ADD(CURDATE(), INTERVAL (1 - WEEKDAY(CURDATE()) + 7) % 7 DAY), INTERVAL '19:00:00' HOUR_SECOND),
+        DATE_ADD(DATE_ADD(CURDATE(), INTERVAL (1 - WEEKDAY(CURDATE()) + 7) % 7 DAY), INTERVAL '20:30:00' HOUR_SECOND), 
+        0, 'FREQ=WEEKLY;BYDAY=TU', 'public'),
+    ('EVT00000009', 'CHU00000001', 'GRP00000015', 'Empty Nesters Group', 'Small group for couples whose children have left home', 
+        DATE_ADD(DATE_ADD(CURDATE(), INTERVAL (3 - WEEKDAY(CURDATE()) + 7) % 7 DAY), INTERVAL '19:00:00' HOUR_SECOND),
+        DATE_ADD(DATE_ADD(CURDATE(), INTERVAL (3 - WEEKDAY(CURDATE()) + 7) % 7 DAY), INTERVAL '20:30:00' HOUR_SECOND), 
+        0, 'FREQ=WEEKLY;BYDAY=TH', 'public'),
+    ('EVT00000010', 'CHU00000001', 'GRP00000016', 'Men''s Bible Study', 'Weekly Bible study for men', 
+        DATE_ADD(DATE_ADD(CURDATE(), INTERVAL (5 - WEEKDAY(CURDATE()) + 7) % 7 DAY), INTERVAL '07:00:00' HOUR_SECOND),
+        DATE_ADD(DATE_ADD(CURDATE(), INTERVAL (5 - WEEKDAY(CURDATE()) + 7) % 7 DAY), INTERVAL '08:30:00' HOUR_SECOND), 
+        0, 'FREQ=WEEKLY;BYDAY=SA', 'public'),
+    ('EVT00000011', 'CHU00000001', 'GRP00000017', 'Women''s Bible Study', 'Weekly Bible study for women', 
+        DATE_ADD(DATE_ADD(CURDATE(), INTERVAL (1 - WEEKDAY(CURDATE()) + 7) % 7 DAY), INTERVAL '10:00:00' HOUR_SECOND),
+        DATE_ADD(DATE_ADD(CURDATE(), INTERVAL (1 - WEEKDAY(CURDATE()) + 7) % 7 DAY), INTERVAL '11:30:00' HOUR_SECOND), 
+        0, 'FREQ=WEEKLY;BYDAY=TU', 'public'),
 
     -- Music Ministry (Recurring Weekly)
-    ('EVT00000012', 'CHU00000001', 'GRP00000018', 'Adult Choir Practice', 'Weekly choir practice', '2024-01-04 19:00:00', '2024-01-04 20:30:00', 0, 'FREQ=WEEKLY;BYDAY=TH', 'public'),
-    ('EVT00000013', 'CHU00000001', 'GRP00000019', 'Praise Team Practice', 'Weekly praise team practice', '2024-01-06 10:00:00', '2024-01-06 12:00:00', 0, 'FREQ=WEEKLY;BYDAY=SA', 'public'),
-    ('EVT00000014', 'CHU00000001', 'GRP00000020', 'Children''s Choir Practice', 'Weekly children''s choir practice', '2024-01-03 16:00:00', '2024-01-03 17:00:00', 0, 'FREQ=WEEKLY;BYDAY=WE', 'public'),
+    ('EVT00000012', 'CHU00000001', 'GRP00000018', 'Adult Choir Practice', 'Weekly choir practice', 
+        DATE_ADD(DATE_ADD(CURDATE(), INTERVAL (3 - WEEKDAY(CURDATE()) + 7) % 7 DAY), INTERVAL '19:00:00' HOUR_SECOND),
+        DATE_ADD(DATE_ADD(CURDATE(), INTERVAL (3 - WEEKDAY(CURDATE()) + 7) % 7 DAY), INTERVAL '20:30:00' HOUR_SECOND), 
+        0, 'FREQ=WEEKLY;BYDAY=TH', 'public'),
+    ('EVT00000013', 'CHU00000001', 'GRP00000019', 'Praise Team Practice', 'Weekly praise team practice', 
+        DATE_ADD(DATE_ADD(CURDATE(), INTERVAL (5 - WEEKDAY(CURDATE()) + 7) % 7 DAY), INTERVAL '10:00:00' HOUR_SECOND),
+        DATE_ADD(DATE_ADD(CURDATE(), INTERVAL (5 - WEEKDAY(CURDATE()) + 7) % 7 DAY), INTERVAL '12:00:00' HOUR_SECOND), 
+        0, 'FREQ=WEEKLY;BYDAY=SA', 'public'),
+    ('EVT00000014', 'CHU00000001', 'GRP00000020', 'Children''s Choir Practice', 'Weekly children''s choir practice', 
+        DATE_ADD(DATE_ADD(CURDATE(), INTERVAL (2 - WEEKDAY(CURDATE()) + 7) % 7 DAY), INTERVAL '16:00:00' HOUR_SECOND),
+        DATE_ADD(DATE_ADD(CURDATE(), INTERVAL (2 - WEEKDAY(CURDATE()) + 7) % 7 DAY), INTERVAL '17:00:00' HOUR_SECOND), 
+        0, 'FREQ=WEEKLY;BYDAY=WE', 'public'),
 
-    -- Special Events (One-time)
-    ('EVT00000015', 'CHU00000001', 'GRP00000030', 'Vacation Bible School', 'Annual summer program for children', '2024-06-17 09:00:00', '2024-06-21 12:00:00', 0, NULL, 'public'),
-    ('EVT00000016', 'CHU00000001', 'GRP00000022', 'Missions Conference', 'Annual missions conference', '2024-02-16 18:00:00', '2024-02-18 12:00:00', 0, NULL, 'public'),
-    ('EVT00000017', 'CHU00000001', 'GRP00000021', 'Food Pantry Distribution', 'Monthly food pantry distribution', '2024-01-20 09:00:00', '2024-01-20 12:00:00', 0, 'FREQ=MONTHLY;BYDAY=3SA', 'public');
+    -- Special Events (One-time) - Set to future dates
+    ('EVT00000015', 'CHU00000001', 'GRP00000030', 'Vacation Bible School', 'Annual summer program for children', 
+        DATE_ADD(DATE_ADD(CURDATE(), INTERVAL 4 MONTH), INTERVAL '09:00:00' HOUR_SECOND),
+        DATE_ADD(DATE_ADD(CURDATE(), INTERVAL 4 MONTH), INTERVAL '12:00:00' HOUR_SECOND) + INTERVAL 4 DAY, 
+        0, NULL, 'public'),
+    ('EVT00000016', 'CHU00000001', 'GRP00000022', 'Missions Conference', 'Annual missions conference', 
+        DATE_ADD(DATE_ADD(CURDATE(), INTERVAL 1 MONTH), INTERVAL '18:00:00' HOUR_SECOND),
+        DATE_ADD(DATE_ADD(CURDATE(), INTERVAL 1 MONTH), INTERVAL '12:00:00' HOUR_SECOND) + INTERVAL 2 DAY, 
+        0, NULL, 'public'),
+    ('EVT00000017', 'CHU00000001', 'GRP00000021', 'Food Pantry Distribution', 'Monthly food pantry distribution', 
+        DATE_ADD(DATE_ADD(LAST_DAY(CURDATE()), INTERVAL 1 DAY), INTERVAL '09:00:00' HOUR_SECOND) + INTERVAL ((5 + 7 - DAYOFWEEK(DATE_ADD(LAST_DAY(CURDATE()), INTERVAL 1 DAY))) % 7 + 14) DAY,
+        DATE_ADD(DATE_ADD(LAST_DAY(CURDATE()), INTERVAL 1 DAY), INTERVAL '12:00:00' HOUR_SECOND) + INTERVAL ((5 + 7 - DAYOFWEEK(DATE_ADD(LAST_DAY(CURDATE()), INTERVAL 1 DAY))) % 7 + 14) DAY, 
+        0, 'FREQ=MONTHLY;BYDAY=3SA', 'public');
 
     -- Event Exceptions
+    -- Note: Using dynamic dates relative to current date
     INSERT INTO eventExceptions (id, churchId, eventId, exceptionDate, recurrenceDate) VALUES
-    -- Service Cancellations
-    ('EXC00000001', 'CHU00000001', 'EVT00000001', '2024-01-07 10:00:00', '2024-01-07 10:00:00'),
-    ('EXC00000002', 'CHU00000001', 'EVT00000002', '2024-01-07 18:00:00', '2024-01-07 18:00:00'),
+    -- Service Cancellations - Set for 2 weeks from now
+    ('EXC00000001', 'CHU00000001', 'EVT00000001', 
+        DATE_ADD(DATE_ADD(CURDATE(), INTERVAL (6 - WEEKDAY(CURDATE())) DAY), INTERVAL '10:00:00' HOUR_SECOND) + INTERVAL 14 DAY,
+        DATE_ADD(DATE_ADD(CURDATE(), INTERVAL (6 - WEEKDAY(CURDATE())) DAY), INTERVAL '10:00:00' HOUR_SECOND) + INTERVAL 14 DAY),
+    ('EXC00000002', 'CHU00000001', 'EVT00000002', 
+        DATE_ADD(DATE_ADD(CURDATE(), INTERVAL (6 - WEEKDAY(CURDATE())) DAY), INTERVAL '18:00:00' HOUR_SECOND) + INTERVAL 14 DAY,
+        DATE_ADD(DATE_ADD(CURDATE(), INTERVAL (6 - WEEKDAY(CURDATE())) DAY), INTERVAL '18:00:00' HOUR_SECOND) + INTERVAL 14 DAY),
 
-    -- Location Changes
-    ('EXC00000003', 'CHU00000001', 'EVT00000008', '2024-01-02 19:00:00', '2024-01-02 19:00:00'),
-    ('EXC00000004', 'CHU00000001', 'EVT00000009', '2024-01-04 19:00:00', '2024-01-04 19:00:00'),
+    -- Location Changes - Set for 3 weeks from now
+    ('EXC00000003', 'CHU00000001', 'EVT00000008', 
+        DATE_ADD(DATE_ADD(CURDATE(), INTERVAL (1 - WEEKDAY(CURDATE()) + 7) % 7 DAY), INTERVAL '19:00:00' HOUR_SECOND) + INTERVAL 21 DAY,
+        DATE_ADD(DATE_ADD(CURDATE(), INTERVAL (1 - WEEKDAY(CURDATE()) + 7) % 7 DAY), INTERVAL '19:00:00' HOUR_SECOND) + INTERVAL 21 DAY),
+    ('EXC00000004', 'CHU00000001', 'EVT00000009', 
+        DATE_ADD(DATE_ADD(CURDATE(), INTERVAL (3 - WEEKDAY(CURDATE()) + 7) % 7 DAY), INTERVAL '19:00:00' HOUR_SECOND) + INTERVAL 21 DAY,
+        DATE_ADD(DATE_ADD(CURDATE(), INTERVAL (3 - WEEKDAY(CURDATE()) + 7) % 7 DAY), INTERVAL '19:00:00' HOUR_SECOND) + INTERVAL 21 DAY),
 
-    -- Time Changes
-    ('EXC00000005', 'CHU00000001', 'EVT00000010', '2024-01-06 08:00:00', '2024-01-06 07:00:00'),
-    ('EXC00000006', 'CHU00000001', 'EVT00000011', '2024-01-02 09:30:00', '2024-01-02 10:00:00'),
+    -- Time Changes - Set for 1 month from now
+    ('EXC00000005', 'CHU00000001', 'EVT00000010', 
+        DATE_ADD(DATE_ADD(CURDATE(), INTERVAL (5 - WEEKDAY(CURDATE()) + 7) % 7 DAY), INTERVAL '08:00:00' HOUR_SECOND) + INTERVAL 28 DAY,
+        DATE_ADD(DATE_ADD(CURDATE(), INTERVAL (5 - WEEKDAY(CURDATE()) + 7) % 7 DAY), INTERVAL '07:00:00' HOUR_SECOND) + INTERVAL 28 DAY),
+    ('EXC00000006', 'CHU00000001', 'EVT00000011', 
+        DATE_ADD(DATE_ADD(CURDATE(), INTERVAL (1 - WEEKDAY(CURDATE()) + 7) % 7 DAY), INTERVAL '09:30:00' HOUR_SECOND) + INTERVAL 28 DAY,
+        DATE_ADD(DATE_ADD(CURDATE(), INTERVAL (1 - WEEKDAY(CURDATE()) + 7) % 7 DAY), INTERVAL '10:00:00' HOUR_SECOND) + INTERVAL 28 DAY),
 
-    -- Special Event Modifications
-    ('EXC00000007', 'CHU00000001', 'EVT00000015', '2024-06-17 08:30:00', '2024-06-17 09:00:00'),
-    ('EXC00000008', 'CHU00000001', 'EVT00000016', '2024-02-16 19:00:00', '2024-02-16 18:00:00');
+    -- Special Event Modifications - Adjust time for VBS and Missions Conference
+    ('EXC00000007', 'CHU00000001', 'EVT00000015', 
+        DATE_ADD(DATE_ADD(CURDATE(), INTERVAL 4 MONTH), INTERVAL '08:30:00' HOUR_SECOND),
+        DATE_ADD(DATE_ADD(CURDATE(), INTERVAL 4 MONTH), INTERVAL '09:00:00' HOUR_SECOND)),
+    ('EXC00000008', 'CHU00000001', 'EVT00000016', 
+        DATE_ADD(DATE_ADD(CURDATE(), INTERVAL 1 MONTH), INTERVAL '19:00:00' HOUR_SECOND),
+        DATE_ADD(DATE_ADD(CURDATE(), INTERVAL 1 MONTH), INTERVAL '18:00:00' HOUR_SECOND));
 
     -- Curated Calendars
     INSERT INTO curatedCalendars (id, churchId, name) VALUES
@@ -243,11 +313,14 @@ BEGIN
     -- Latest Sermons Section
     ('SEC00000005', 'CHU00000001', 'PAG00000001', NULL, 'main', 'var(--dark)', 'var(--light)', 'var(--light)', 'var(--lightAccent)', 5, NULL, NULL, NULL, NULL),
 
+    -- Main Church Calendar Section
+    ('SEC00000008', 'CHU00000001', 'PAG00000001', NULL, 'main', '#FFFFFF', 'dark', NULL, NULL, 6, NULL, NULL, NULL, NULL),
+
     -- FAQ Section
-    ('SEC00000006', 'CHU00000001', 'PAG00000001', NULL, 'main', '#f8f9fa', 'dark', NULL, NULL, 6, NULL, NULL, NULL, NULL),
+    ('SEC00000006', 'CHU00000001', 'PAG00000001', NULL, 'main', '#f8f9fa', 'dark', NULL, NULL, 7, NULL, NULL, NULL, NULL),
 
     -- Contact & Location Section
-    ('SEC00000007', 'CHU00000001', 'PAG00000001', NULL, 'main', '/tempLibrary/backgrounds/crowd.jpg', 'light', NULL, NULL, 7, NULL, NULL, NULL, NULL);
+    ('SEC00000007', 'CHU00000001', 'PAG00000001', NULL, 'main', '/tempLibrary/backgrounds/crowd.jpg', 'light', NULL, NULL, 8, NULL, NULL, NULL, NULL);
 
     -- Elements (Home Page)
     INSERT INTO elements (id, churchId, sectionId, blockId, elementType, sort, parentId, answersJSON, stylesJSON, animationsJSON) VALUES
@@ -406,6 +479,22 @@ BEGIN
     ('ELE00000030', 'CHU00000001', 'SEC00000007', NULL, 'map', 1, 'ELE00000028',
       '{"mapAddress": "123 Church Street, Anytown, USA 12345", "mapZoom": "16"}',
       NULL,
+      NULL),
+
+    -- Main Church Calendar Section
+    ('ELE00000031', 'CHU00000001', 'SEC00000008', NULL, 'text', 1, NULL,
+      '{"text": "## Upcoming Events", "textAlignment": "center"}',
+      NULL,
+      NULL),
+
+    ('ELE00000032', 'CHU00000001', 'SEC00000008', NULL, 'text', 2, NULL,
+      '{"text": "Stay connected with all the exciting things happening at Grace Community Church!", "textAlignment": "center"}',
+      NULL,
+      NULL),
+
+    ('ELE00000033', 'CHU00000001', 'SEC00000008', NULL, 'calendar', 3, NULL,
+      '{"calendarType": "curated", "calendarId": "CAL00000004"}',
+      NULL,
       NULL);
 
     -- Playlists
@@ -441,8 +530,14 @@ BEGIN
 
     -- Streaming Services
     INSERT INTO streamingServices (id, churchId, serviceTime, earlyStart, chatBefore, chatAfter, provider, providerKey, videoUrl, timezoneOffset, recurring, label, sermonId) VALUES
-    -- Sunday Morning Service (Recurring)
-    ('STR00000001', 'CHU00000001', '2024-01-07 10:00:00', 900, 1800, 900, 'youtube', 'CHANNEL_ID_123', 'https://www.youtube.com/channel/CHANNEL_ID_123/live', -300, 1, 'Sunday Morning Service', 'SER00000001');
+    -- Sunday Morning Service (Recurring) - Next Sunday
+    ('STR00000001', 'CHU00000001', 
+        DATE_ADD(DATE_ADD(CURDATE(), INTERVAL (6 - WEEKDAY(CURDATE())) DAY), INTERVAL '10:00:00' HOUR_SECOND), 
+        900, 1800, 900, 'youtube', 'CHANNEL_ID_123', 'https://www.youtube.com/channel/CHANNEL_ID_123/live', -300, 1, 'Sunday Morning Service', 'SER00000001');
+
+    -- Settings
+    INSERT INTO settings (id, churchId, keyName, `value`, public) VALUES
+    ('SET00000001', 'CHU00000001', 'showLogin', 'true', 1);
 END //
 DELIMITER ;
 
