@@ -25,6 +25,16 @@ export class BibleController extends ContentBaseController {
     });
   }
 
+  @httpGet("/stats")
+  public async getStats(req: express.Request<{}, {}, null>, res: express.Response): Promise<interfaces.IHttpActionResult> {
+    return this.actionWrapperAnon(req, res, async () => {
+      const startDate = new Date(req.query.startDate.toString())
+      const endDate = new Date(req.query.endDate.toString())
+      const result = await this.repositories.bibleLookup.getStats(startDate, endDate);
+      return result;
+    });
+  }
+
   @httpGet("/updateCopyrights")
   public async updateCopyrights(req: express.Request<{}, {}, null>, res: express.Response): Promise<interfaces.IHttpActionResult> {
     return this.actionWrapperAnon(req, res, async () => {
