@@ -4,7 +4,7 @@
   "description": "",
   "main": "dist/index.js",
   "scripts": {
-    "clean": "rimraf dist/*",
+    "clean": "rimraf --glob dist/*",
     "copy-assets": "copyfiles -f src/apiBase/tools/templates/* dist/templates",
     "exec-deploy-demo": "serverless deploy --stage Demo",
     "deploy-demo": "npm-run-all build copy-assets exec-deploy-demo",

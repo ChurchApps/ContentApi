@@ -32,6 +32,17 @@ export class BibleLookupRepository {
     return lookup;
   }
 
+  public async getStats(startDate: Date, endDate: Date) {
+    const sql = "SELECT bt.abbreviation, count(distinct(bl.ipAddress)) as lookups" +
+      " FROM bibletranslations bt" +
+      " INNER JOIN biblelookups bl ON bl.translationKey = bt.abbreviation" +
+      " WHERE bl.lookupTime BETWEEN ? AND ?" +
+      " GROUP BY bt.abbreviation" +
+      " ORDER BY bt.abbreviation;"
+    const params = [startDate, endDate];
+    return DB.query(sql, params);
+  }
+
   public delete(id: string) {
     return DB.query("DELETE FROM bibleLookups WHERE id=?;", [id]);
   }
