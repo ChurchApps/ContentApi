@@ -147,6 +147,13 @@ export class OpenAiHelper {
     const parsedPosts = this.parsePosts(completion);
     return parsedPosts;
   }
+  
+  public static async generateLessonOutline(url: string, title: string, author: string) {
+    const prompt = `Give me a 45 minutes detailed small group lesson outline based on this URL: ${url}. If the link doesn't work then, create the detailed small group lesson outline based on the title of the sermon and it's author/speaker. The sermon title is ${title} and it's author/speaker is ${author}.`;
+    const completion = await this.getCompletion(prompt);
+
+    return { outline: completion };
+  }
 }
 
 // TODO: if the subtitles are not there, then also create social media posts and let users know they are not based on the subtitles.

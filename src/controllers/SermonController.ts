@@ -11,17 +11,17 @@ import TranscriptAPI from 'youtube-transcript-api';
 @controller("/sermons")
 export class SermonController extends ContentBaseController {
 
-  @httpGet("/public/subtitles/:videoId")
-  public async getPublicSubtitles(@requestParam("videoId") videoId: string, req: express.Request<{}, {}, null>, res: express.Response): Promise<any> {
-    return this.actionWrapperAnon(req, res, async () => {
-      try {
-        const subtitles = await TranscriptAPI.getTranscript(videoId);
-        return subtitles;
-      } catch (error) {
-        return error;
-      }
-    })
-  }
+  // @httpGet("/public/subtitles/:videoId")
+  // public async getPublicSubtitles(@requestParam("videoId") videoId: string, req: express.Request<{}, {}, null>, res: express.Response): Promise<any> {
+  //   return this.actionWrapperAnon(req, res, async () => {
+  //     try {
+  //       const subtitles = await TranscriptAPI.getTranscript(videoId);
+  //       return subtitles;
+  //     } catch (error) {
+  //       return error;
+  //     }
+  //   })
+  // }
 
   @httpGet("/public/freeshowSample")
   public async getFreeShow(@requestParam("churchId") churchId: string, req: express.Request<{}, {}, null>, res: express.Response): Promise<any> {
@@ -198,6 +198,24 @@ export class SermonController extends ContentBaseController {
             return { error: "Could not load subtitles for this video. Though here are some general post ideas for you to use.", posts };
           }
           return { error: null, posts }
+        } catch (error) {
+          throw new Error(error);
+        }
+      }
+    })
+  }
+
+  @httpGet("/outline")
+  public async lessonOutline(req: express.Request<{}, {}, null>, res: express.Response): Promise<any> {
+    return this.actionWrapper(req, res, async () => {
+      const url = req.query?.url?.toString();
+      const title = req.query?.title?.toString();
+      const author = req.query?.author?.toString();
+      if (url && url !== "") {
+        try {
+          await OpenAiHelper.initialize();
+          const result = await OpenAiHelper.generateLessonOutline(url, title, author);
+          return result;
         } catch (error) {
           throw new Error(error);
         }
