@@ -1,4 +1,3 @@
-import { Event } from "./Event";
 
 export class CuratedEvent {
   public id?: string;

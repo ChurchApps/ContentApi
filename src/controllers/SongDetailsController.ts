@@ -10,7 +10,7 @@ export class SongDetailsController extends ContentBaseController {
 
   @httpGet("/:id")
   public async get(@requestParam("id") id: string, req: express.Request<{}, {}, null>, res: express.Response): Promise<any> {
-    return this.actionWrapper(req, res, async (au) => {
+    return this.actionWrapper(req, res, async () => {
       return await this.repositories.songDetail.load(id);
     });
   }
@@ -25,7 +25,7 @@ export class SongDetailsController extends ContentBaseController {
 
   @httpPost("/create")
   public async post(req: express.Request<{}, {}, SongDetail>, res: express.Response): Promise<interfaces.IHttpActionResult> {
-    return this.actionWrapper(req, res, async (au) => {
+    return this.actionWrapper(req, res, async () => {
       const sd = req.body;
       if (!sd.praiseChartsId) return null;
       const existing = await this.repositories.songDetail.loadByPraiseChartsId(sd.praiseChartsId);
@@ -47,7 +47,7 @@ export class SongDetailsController extends ContentBaseController {
 
   @httpPost("/")
   public async save(req: express.Request<{}, {}, SongDetail[]>, res: express.Response): Promise<interfaces.IHttpActionResult> {
-    return this.actionWrapper(req, res, async (au) => {
+    return this.actionWrapper(req, res, async () => {
       const promises: Promise<SongDetail>[] = [];
       req.body.forEach(sd => {
         promises.push(this.repositories.songDetail.save(sd));

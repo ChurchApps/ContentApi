@@ -24,7 +24,6 @@ export class PraiseChartsHelper {
     return new Promise((resolve, reject) => {
       const oauth = this.getOAuth(returnUrl);
       oauth.getOAuthRequestToken((err, oauthToken, oauthTokenSecret) => {
-        if (err) console.log("Error is", err);
         if (err) return reject(err);
         resolve({ oauthToken, oauthTokenSecret });
       });
@@ -37,14 +36,12 @@ export class PraiseChartsHelper {
 
   static getAccessToken(oauthToken: string, oauthTokenSecret: string, oauthVerifier: string): Promise<{ accessToken: string, accessTokenSecret: string }> {
     return new Promise((resolve, reject) => {
-      console.log("Getting access token", oauthToken, oauthTokenSecret, oauthVerifier);
       const oauth = this.getOAuth("http://localhost:3101/pingback");
       oauth.getOAuthAccessToken(
         oauthToken,
         oauthTokenSecret,
         oauthVerifier,
         (err, accessToken, accessTokenSecret) => {
-          if (err) console.log("Error is", err);
           if (err) return reject(err);
           resolve({ accessToken, accessTokenSecret });
         }
@@ -95,7 +92,6 @@ export class PraiseChartsHelper {
     if (keys.length > 0) url += "&keys[]=" + keys.join(",");
     const oauth = this.getOAuth();
     const authHeader = oauth.authHeader(url, accessToken, accessTokenSecret, "GET");
-    console.log("URL", url)
 
     return new Promise((resolve, reject) => {
       const req = https.request(url, { method: "GET", headers: { Authorization: authHeader } }, (res) => {
@@ -213,7 +209,6 @@ export class PraiseChartsHelper {
       }
       return null;
     } catch (error) {
-      console.error("Error searching PraiseCharts by CCLI:", error);
       throw new Error(`Error searching PraiseCharts by CCLI: ${error.message}`);
     }
   }
@@ -271,7 +266,6 @@ export class PraiseChartsHelper {
           + "&arr_includes[]=details.lyrics";
 
         const url = `https://api.praisecharts.com/v1.0/catalog/search?q=${encodeURIComponent(searchQuery.trim())}${includes}`;
-        console.log("Searching PraiseCharts with URL:", url);
         const response = await fetch(url);
         if (response.ok) {
           const data = await response.json();
@@ -285,7 +279,6 @@ export class PraiseChartsHelper {
 
       return null;
     } catch (error) {
-      console.error("Error searching PraiseCharts:", error);
       throw new Error(`Error searching PraiseCharts: ${error.message}`);
     }
   }
@@ -338,7 +331,6 @@ export class PraiseChartsHelper {
       }
       return null;
     } catch (error) {
-      console.error("Error searching PraiseCharts by Genius ID:", error);
       throw new Error(`Error searching PraiseCharts by Genius ID: ${error.message}`);
     }
   }

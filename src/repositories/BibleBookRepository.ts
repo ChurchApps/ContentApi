@@ -21,7 +21,6 @@ export class BibleBookRepository {
 
     const sql = "INSERT INTO bibleBooks (id, translationKey, keyName, abbreviation, name, sort) VALUES (?, ?, ?, ?, ?, ?);";
     const params = [book.id, book.translationKey, book.keyName, book.abbreviation, book.name, book.sort];
-    console.log(sql, params);
     await DB.query(sql, params);
     return book;
   }
@@ -29,7 +28,6 @@ export class BibleBookRepository {
   private async update(book: BibleBook) {
     const sql = "UPDATE bibleBooks SET translationKey=?, keyName=?, abbreviation=?, name=?, sort=? WHERE id=?";
     const params = [book.translationKey, book.keyName, book.abbreviation, book.name, book.sort, book.id];
-    console.log(sql, params);
     await DB.query(sql, params);
     return book;
   }

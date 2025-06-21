@@ -16,10 +16,14 @@ module.exports = [
       '@typescript-eslint': tseslint
     },
     rules: {
-      '@typescript-eslint/no-unused-vars': 'warn',
+      '@typescript-eslint/no-unused-vars': ['warn', { 
+        argsIgnorePattern: '^_|^req$|^res$|^au$|^ex$|^e$|^bind$',
+        varsIgnorePattern: '^_|^start$|^result$|^app$',
+        caughtErrorsIgnorePattern: '^_'
+      }],
       '@typescript-eslint/no-explicit-any': 'off',
       '@typescript-eslint/no-inferrable-types': 'off',
-      'no-console': 'off'
+      'no-console': 'error'
     }
   }
 ];

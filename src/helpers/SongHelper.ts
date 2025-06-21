@@ -98,8 +98,7 @@ export class SongHelper {
 
       // 7. Create new Song and Arrangement
       return await this.createSongAndArrangement(churchId, songDetail, freeshowSong);
-    } catch (error) {
-      console.error("Error importing song:", error);
+    } catch {
       // throw new Error(`Error importing song: ${error.message}`);
       return null;
     }

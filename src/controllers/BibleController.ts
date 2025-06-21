@@ -41,7 +41,6 @@ export class BibleController extends ContentBaseController {
       const translations = await this.repositories.bibleTranslation.loadNeedingCopyrights();
       for (const translation of translations) {
         const copyright = await ApiBibleHelper.getCopyright(translation.sourceKey);
-        console.log(translation.name, copyright);
         translation.copyright = copyright || "";
         await this.repositories.bibleTranslation.save(translation);
       }

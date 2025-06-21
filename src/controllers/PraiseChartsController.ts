@@ -6,22 +6,21 @@ import { PraiseChartsHelper } from "../helpers/PraiseChartsHelper";
 import * as path from "path";
 import * as fs from "fs";
 import { AwsHelper } from "@churchapps/apihelper";
-import { Environment } from "../helpers";
 
 @controller("/praiseCharts")
 export class PraiseChartsController extends ContentBaseController {
 
   @httpGet("/raw/:id")
   public async raw(@requestParam("id") id: string, req: express.Request<{}, {}, null>, res: express.Response): Promise<interfaces.IHttpActionResult> {
-    return this.actionWrapper(req, res, async (au) => {
+    return this.actionWrapper(req, res, async () => {
       return PraiseChartsHelper.loadRaw(id);
     })
   }
 
   @httpGet("/hasAccount")
-  public async hasPraiseChartsAccount(@requestParam("id") id: string, req: express.Request<{}, {}, null>, res: express.Response): Promise<interfaces.IHttpActionResult> {
+  public async hasPraiseChartsAccount(@requestParam("id") _id: string, req: express.Request<{}, {}, null>, res: express.Response): Promise<interfaces.IHttpActionResult> {
     return this.actionWrapper(req, res, async (au) => {
-      const { token, secret } = await PraiseChartsHelper.loadUserTokens(au);
+      const { token } = await PraiseChartsHelper.loadUserTokens(au);
       if (token) return { hasAccount: true };
       else return { hasAccount: false };
     })
@@ -29,7 +28,7 @@ export class PraiseChartsController extends ContentBaseController {
 
   @httpGet("/search")
   public async search(req: express.Request<{}, {}, null>, res: express.Response): Promise<interfaces.IHttpActionResult> {
-    return this.actionWrapper(req, res, async (au) => {
+    return this.actionWrapper(req, res, async () => {
       const query = req.query.q as string;
       const results = await PraiseChartsHelper.search(query);
       return results;
@@ -66,7 +65,6 @@ export class PraiseChartsController extends ContentBaseController {
   static async saveLocalFile(fileName: string, fileBuffer: any) {
     const publicDownloadsDir = path.join(__dirname, "..", "public", "downloads", "praiseCharts");
     const filePath = path.join(publicDownloadsDir, fileName);
-    console.log("File path", filePath)
     fs.mkdirSync(publicDownloadsDir, { recursive: true });
     fs.writeFileSync(filePath, fileBuffer);
     return `/public/downloads/praiseCharts/${fileName}`;
@@ -79,7 +77,7 @@ export class PraiseChartsController extends ContentBaseController {
   }
 
   @httpGet("/download")
-  public async download(req: express.Request<{}, {}, null>, res: express.Response) {
+  public async download(req: express.Request<{}, {}, null>) {
     const au = this.authUser();
     const settings: Setting[] = await this.repositories.setting.loadUser(au.churchId, au.id);
     const token = settings.find(s => s.keyName === "praiseChartsAccessToken")?.value;

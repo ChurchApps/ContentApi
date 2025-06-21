@@ -13,7 +13,6 @@ export class SubDomainHelper {
       const apiUrl = Environment.membershipApi;
       const url = apiUrl + "/churches/lookup/?id=" + churchId.toString();
       const json: any = (await axios.get(url)).data;
-      console.log(json);
       result = json.subDomain;
       this.subDomains[churchId] = result;
       this.churchIds[result] = churchId;
@@ -28,7 +27,6 @@ export class SubDomainHelper {
       const apiUrl = Environment.membershipApi;
       const url = apiUrl + "/churches/lookup/?subDomain=" + subDomain;
       const json: any = (await axios.get(url)).data;
-      console.log(json);
       if (json.id) {
         result = json.id;
         this.subDomains[result] = subDomain;

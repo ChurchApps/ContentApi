@@ -1,5 +1,4 @@
 import { controller, httpGet, requestParam } from "inversify-express-utils";
-import express from "express";
 import { Sermon, StreamingService } from "../models";
 import { StreamingConfigHelper, SubDomainHelper } from "../helpers";
 import { ContentBaseController } from "./ContentBaseController";
@@ -8,7 +7,7 @@ import { Link } from "../models"
 @controller("/preview")
 export class PreviewController extends ContentBaseController {
   @httpGet("/data/:key")
-  public async loadData(@requestParam("key") key: string, req: express.Request, res: express.Response): Promise<any> {
+  public async loadData(@requestParam("key") key: string): Promise<any> {
     try {
       const churchId = await SubDomainHelper.getId(key);
       let tabs: Link[] = null;

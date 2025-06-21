@@ -20,7 +20,7 @@ export class PollyHelper {
         const buffer = Buffer.concat(chunks);
         return buffer.toString("base64");
       } else throw new Error("Failed to generate audio stream");
-    } catch (error) { console.error("Error synthesizing speech:", error); }
+    } catch { }
   }
 
   static async getMetadata(ssmlString: string) {
@@ -34,11 +34,10 @@ export class PollyHelper {
         for await (const chunk of response.AudioStream) chunks.push(chunk);
         const buffer = Buffer.concat(chunks);
         const json = "[" + buffer.toString().trim().replaceAll("\n",",") + "]";
-        console.log("JSON", json);
         const obj = JSON.parse(json);
         return obj;
       } else throw new Error("Failed to generate audio stream");
-    } catch (error) { console.error("Error synthesizing speech:", error); }
+    } catch { }
   }
 
 }

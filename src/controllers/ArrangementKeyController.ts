@@ -12,7 +12,6 @@ export class ArrangementKeyController extends ContentBaseController {
   @httpGet("/presenter/:churchId/:id")
   public async getForPresenter(@requestParam("churchId") churchId: string, @requestParam("id") id: string, req: express.Request<{}, {}, null>, res: express.Response): Promise<any> {
     return this.actionWrapperAnon(req, res, async () => {
-      console.log(churchId, id);
       const arrangementKey: ArrangementKey = await this.repositories.arrangementKey.load(churchId, id);
       const arrangement: Arrangement = await this.repositories.arrangement.load(churchId, arrangementKey.arrangementId);
       if (!arrangement.freeShowId) {

@@ -10,14 +10,14 @@ import { FileStorageHelper } from "@churchapps/apihelper";
 export class SettingController extends ContentBaseController {
 
   @httpGet("/my")
-  public async my(req: express.Request<{}, {}, null>, res: express.Response): Promise<interfaces.IHttpActionResult> {
+  public async my(req: express.Request, res: express.Response): Promise<interfaces.IHttpActionResult> {
     return this.actionWrapper(req, res, async (au) => {
       return this.repositories.setting.convertAllToModel(au.churchId, await this.repositories.setting.loadUser(au.churchId, au.id));
     })
   }
 
   @httpGet("/")
-  public async get(req: express.Request<{}, {}, null>, res: express.Response): Promise<interfaces.IHttpActionResult> {
+  public async get(req: express.Request, res: express.Response): Promise<interfaces.IHttpActionResult> {
     return this.actionWrapper(req, res, async (au) => {
       if (!au.checkAccess(Permissions.settings.edit)) return this.json({}, 401);
       else {
@@ -57,7 +57,7 @@ export class SettingController extends ContentBaseController {
   }
 
   @httpGet("/public/:churchId")
-  public async publicRoute(@requestParam("churchId") churchId: string, req: express.Request, res: express.Response): Promise<interfaces.IHttpActionResult> {
+  public async publicRoute(@requestParam("churchId") churchId: string): Promise<interfaces.IHttpActionResult> {
     try {
       const settings = this.repositories.setting.convertAllToModel(churchId, await this.repositories.setting.loadPublicSettings(churchId));
       const result: any = {};

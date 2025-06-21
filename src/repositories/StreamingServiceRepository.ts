@@ -30,7 +30,7 @@ export class StreamingServiceRepository {
   }
 
   public loadById(id: string, churchId: string): Promise<StreamingService> {
-    return DB.queryOne("SELECT * FROM streamingServices WHERE id=? AND churchId=?;", [id]);
+    return DB.queryOne("SELECT * FROM streamingServices WHERE id=? AND churchId=?;", [id, churchId]);
   }
 
   public loadAll(churchId: string): Promise<StreamingService[]> {

@@ -51,7 +51,7 @@ export class LinkController extends ContentBaseController {
           link.churchId = au.churchId;
 
           promises.push(
-            this.repositories.link.save(link).then(async (l) => { return link; })
+            this.repositories.link.save(link).then(async () => { return link; })
           );
 
         });

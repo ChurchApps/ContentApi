@@ -1,6 +1,5 @@
 import { controller, httpPost, interfaces } from "inversify-express-utils";
 import express from "express";
-import { Setting } from "../models";
 import { ContentBaseController } from "./ContentBaseController";
 import { PollyHelper } from "../helpers/PollyHelper";
 

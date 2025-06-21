@@ -6,7 +6,6 @@ export class TreeHelper {
 
   public static getChildElements(element: Element, allElements: Element[]) {
     const children = ArrayHelper.getAll(allElements, "parentId", element.id);
-    if (element.elementType==="row") console.log("Children for row - ", element.id, children.length)
     if (children.length > 0) {
       element.elements = children;
       element.elements.forEach(e => { this.getChildElements(e, allElements); });

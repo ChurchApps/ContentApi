@@ -16,7 +16,6 @@ export class MusicBrainzHelper {
       if (data.recordings?.length > 0) {
         return { id: data.recordings[0].id, songDetail: this.convertRecordingToSongDetail(data.recordings[0]) };
       } else {
-        console.log("Error", response.statusText)
         throw new Error(`Error fetching data from MusicBrainz: ${response.statusText}`);
       }
     }
@@ -31,7 +30,6 @@ export class MusicBrainzHelper {
       if (data.id) {
         return { id: data.id, songDetail: this.convertRecordingToSongDetail(data) };
       } else {
-        console.log("Error", response.statusText)
         throw new Error(`Error fetching data from MusicBrainz: ${response.statusText}`);
       }
     }

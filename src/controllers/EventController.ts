@@ -38,7 +38,6 @@ export class EventController extends ContentBaseController {
       const { error, value } = ics.createEvents(newEvents);
 
       if (error) {
-        console.log("error: ", error);
         res.status(500).send("Error generating calendar.");
         return;
       }

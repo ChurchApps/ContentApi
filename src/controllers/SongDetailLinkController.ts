@@ -10,7 +10,7 @@ export class SongDetailLinkController extends ContentBaseController {
 
   @httpGet("/:id")
   public async get(@requestParam("id") id: string, req: express.Request<{}, {}, null>, res: express.Response): Promise<any> {
-    return this.actionWrapper(req, res, async (au) => {
+    return this.actionWrapper(req, res, async () => {
       return await this.repositories.songDetailLink.load(id);
     });
   }
@@ -18,14 +18,14 @@ export class SongDetailLinkController extends ContentBaseController {
 
   @httpGet("/songDetail/:songDetailId")
   public async getForSongDetail(@requestParam("songDetailId") songDetailId: string, req: express.Request<{}, {}, null>, res: express.Response): Promise<interfaces.IHttpActionResult> {
-    return this.actionWrapper(req, res, async (au) => {
+    return this.actionWrapper(req, res, async () => {
       return await this.repositories.songDetailLink.loadForSongDetail(songDetailId);
     })
   }
 
   @httpPost("/")
   public async save(req: express.Request<{}, {}, SongDetailLink[]>, res: express.Response): Promise<interfaces.IHttpActionResult> {
-    return this.actionWrapper(req, res, async (au) => {
+    return this.actionWrapper(req, res, async () => {
       const promises: Promise<SongDetailLink>[] = [];
       req.body.forEach(sd => {
         promises.push(this.repositories.songDetailLink.save(sd));
@@ -47,7 +47,7 @@ export class SongDetailLinkController extends ContentBaseController {
 
   @httpDelete("/:id")
   public async delete(@requestParam("id") id: string, req: express.Request, res: express.Response): Promise<void> {
-    return this.actionWrapper(req, res, async (au) => {
+    return this.actionWrapper(req, res, async () => {
       await this.repositories.songDetailLink.delete(id);
       return null;
     });

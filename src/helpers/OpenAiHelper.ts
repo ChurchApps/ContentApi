@@ -87,7 +87,7 @@ export class OpenAiHelper {
         }));
       }
       throw new Error("Invalid format returned from AI.");
-    } catch (error) {
+    } catch {
       throw new Error("Failed to parse AI response");
     }
   }
@@ -111,7 +111,6 @@ export class OpenAiHelper {
         Notes: ${notes}
         `.trim();
 
-    console.log(prompt);
     /*
     const prompt =
       `You are a church social media manager. Based on the notes below, generate 3 engaging and inspiring social media content ideas.
@@ -144,7 +143,6 @@ export class OpenAiHelper {
     }
     const completion = await this.getCompletion(prompt);
 
-    console.log("Completion from AI:", completion);
 
     const parsedPosts = this.parsePosts(completion);
     return parsedPosts;

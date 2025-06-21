@@ -115,7 +115,6 @@ export class ApiBibleHelper {
   static async getVerseText(translationKey: string, startVerseKey: string, endVerseKey: string) {
     const url = this.baseUrl + "/bibles/" + translationKey + "/verses/" + startVerseKey + "-" + endVerseKey
       + "?content-type=json&include-titles=false&include-verse-numbers=false";
-    console.log(url);
     const data = await this.getContent(url);
     const result: BibleVerseText[] = [];
     data.data.content.forEach((c: any) => {
@@ -151,7 +150,6 @@ export class ApiBibleHelper {
       }
     }
 
-    // console.log(item);
     if (item.items) {
       item.items.forEach((i: any, idx: number) => {
         this.parseVerseItem(i, item, idx, result, translationKey);

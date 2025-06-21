@@ -74,14 +74,12 @@ export class YouTubeHelper {
         // If we get an empty array, increment retry count and try again
         retryCount++;
         if (retryCount < maxRetries) {
-          console.log(`Empty subtitles received, retrying (${retryCount}/${maxRetries})...`);
           // Add a small delay between retries to avoid rate limiting
           await new Promise(resolve => setTimeout(resolve, 1000));
           continue;
         }
 
       } catch (error) {
-        console.log("Subtitle Fetch Failed: ", error);
         return `Error: Subtitle Fetch Failed: ${error}`;;
       }
 
