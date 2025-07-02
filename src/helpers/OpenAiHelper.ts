@@ -32,12 +32,12 @@ export class OpenAiHelper {
         messages: [
           {
             role: "system",
-            content: "You are a church social media strategist.",
+            content: "You are a church social media strategist."
           },
-          { role: "user", content: prompt },
+          { role: "user", content: prompt }
         ],
         temperature: 0.7,
-        max_tokens: 500,
+        max_tokens: 500
       });
 
       return response.choices[0]?.message?.content || "";
@@ -51,16 +51,16 @@ export class OpenAiHelper {
           messages: [
             {
               role: "system",
-              content: "You are a church social media strategist.",
+              content: "You are a church social media strategist."
             },
-            { role: "user", content: prompt },
-          ],
+            { role: "user", content: prompt }
+          ]
         },
         {
           headers: {
             Authorization: `Bearer ${this.OPENROUTER_API_KEY}`,
-            "Content-Type": "application/json",
-          },
+            "Content-Type": "application/json"
+          }
         }
       );
 
@@ -83,7 +83,7 @@ export class OpenAiHelper {
         return parsed.map((item: any) => ({
           postIdea: item.postIdea || "",
           visual: item.visual || "",
-          caption: item.caption || "",
+          caption: item.caption || ""
         }));
       }
       throw new Error("Invalid format returned from AI.");
@@ -143,11 +143,10 @@ export class OpenAiHelper {
     }
     const completion = await this.getCompletion(prompt);
 
-
     const parsedPosts = this.parsePosts(completion);
     return parsedPosts;
   }
-  
+
   public static async generateLessonOutline(url: string, title: string, author: string) {
     const prompt = `Give me a 45 minutes detailed small group lesson outline based on this URL: ${url}. If the link doesn't work then, create the detailed small group lesson outline based on the title of the sermon and it's author/speaker. The sermon title is ${title} and it's author/speaker is ${author}.`;
     const completion = await this.getCompletion(prompt);

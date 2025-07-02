@@ -5,9 +5,9 @@ export { Section } from "./Section";
 export { Link } from "./Link";
 export { GlobalStyle } from "./GlobalStyle";
 
-export { Playlist } from "./Playlist"
+export { Playlist } from "./Playlist";
 export { Sermon } from "./Sermon";
-export { StreamingService } from "./StreamingService"
+export { StreamingService } from "./StreamingService";
 export { File } from "./File";
 
 export { Event } from "./Event";

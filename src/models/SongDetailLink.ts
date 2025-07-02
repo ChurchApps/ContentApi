@@ -1,4 +1,3 @@
-
 export class SongDetailLink {
   id?: string;
   songDetailId?: string;

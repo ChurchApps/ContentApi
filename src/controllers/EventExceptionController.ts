@@ -1,26 +1,32 @@
 import { controller, httpPost, httpGet, interfaces, requestParam, httpDelete } from "inversify-express-utils";
 import express from "express";
-import { ContentBaseController } from "./ContentBaseController"
-import { EventException } from "../models"
+import { ContentBaseController } from "./ContentBaseController";
+import { EventException } from "../models";
 import { Permissions } from "../helpers";
 
 @controller("/eventExceptions")
 export class EventExceptionController extends ContentBaseController {
-
   @httpGet("/:id")
-  public async get(@requestParam("id") id: string, req: express.Request<{}, {}, null>, res: express.Response): Promise<interfaces.IHttpActionResult> {
+  public async get(
+    @requestParam("id") id: string,
+    req: express.Request<{}, {}, null>,
+    res: express.Response
+  ): Promise<interfaces.IHttpActionResult> {
     return this.actionWrapper(req, res, async (au) => {
       return await this.repositories.eventException.load(au.churchId, id);
     });
   }
 
   @httpPost("/")
-  public async save(req: express.Request<{}, {}, EventException[]>, res: express.Response): Promise<interfaces.IHttpActionResult> {
+  public async save(
+    req: express.Request<{}, {}, EventException[]>,
+    res: express.Response
+  ): Promise<interfaces.IHttpActionResult> {
     return this.actionWrapper(req, res, async (au) => {
       if (!au.checkAccess(Permissions.content.edit)) return this.json({}, 401);
       else {
         const promises: Promise<EventException>[] = [];
-        req.body.forEach(eventException => {
+        req.body.forEach((eventException) => {
           eventException.churchId = au.churchId;
           promises.push(this.repositories.eventException.save(eventException));
         });
@@ -31,7 +37,11 @@ export class EventExceptionController extends ContentBaseController {
   }
 
   @httpDelete("/:id")
-  public async delete(@requestParam("id") id: string, req: express.Request<{}, {}, null>, res: express.Response): Promise<interfaces.IHttpActionResult> {
+  public async delete(
+    @requestParam("id") id: string,
+    req: express.Request<{}, {}, null>,
+    res: express.Response
+  ): Promise<interfaces.IHttpActionResult> {
     return this.actionWrapper(req, res, async (au) => {
       if (!au.checkAccess(Permissions.content.edit)) return this.json({}, 401);
       else {
@@ -40,5 +50,4 @@ export class EventExceptionController extends ContentBaseController {
       }
     });
   }
-
 }

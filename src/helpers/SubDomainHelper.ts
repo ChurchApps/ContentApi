@@ -1,8 +1,7 @@
-import axios from 'axios'
-import { Environment } from '.';
+import axios from "axios";
+import { Environment } from ".";
 
 export class SubDomainHelper {
-
   static subDomains: any = {};
   static churchIds: any = {};
 
@@ -35,7 +34,4 @@ export class SubDomainHelper {
     }
     return result;
   }
-
-
-
 }

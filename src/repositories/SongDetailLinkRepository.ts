@@ -1,14 +1,15 @@
 import { injectable } from "inversify";
-import { UniqueIdHelper } from "@churchapps/apihelper"
-import { DB } from "@churchapps/apihelper"
+import { UniqueIdHelper } from "@churchapps/apihelper";
+import { DB } from "@churchapps/apihelper";
 import { SongDetailLink } from "../models";
 
 @injectable()
 export class SongDetailLinkRepository {
-
   public saveAll(links: SongDetailLink[]) {
     const promises: Promise<SongDetailLink>[] = [];
-    links.forEach(sd => { promises.push(this.save(sd)); });
+    links.forEach((sd) => {
+      promises.push(this.save(sd));
+    });
     return Promise.all(promises);
   }
 
@@ -46,5 +47,4 @@ export class SongDetailLinkRepository {
   public loadByServiceAndKey(service: string, serviceKey: string) {
     return DB.queryOne("SELECT * FROM songDetailLinks WHERE service=? AND serviceKey=?;", [service, serviceKey]);
   }
-
 }

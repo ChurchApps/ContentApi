@@ -1,9 +1,8 @@
-import { ArrayHelper, UniqueIdHelper } from "@churchapps/apihelper"
-import { DB } from "@churchapps/apihelper"
+import { ArrayHelper, UniqueIdHelper } from "@churchapps/apihelper";
+import { DB } from "@churchapps/apihelper";
 import { Element } from "../models";
 
 export class ElementRepository {
-
   public save(element: Element) {
     return element.id ? this.update(element) : this.create(element);
   }
@@ -11,15 +10,39 @@ export class ElementRepository {
   private async create(element: Element) {
     element.id = UniqueIdHelper.shortId();
 
-    const sql = "INSERT INTO elements (id, churchId, sectionId, blockId, elementType, sort, parentId, answersJSON, stylesJSON, animationsJSON) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?);";
-    const params = [element.id, element.churchId, element.sectionId, element.blockId, element.elementType, element.sort, element.parentId, element.answersJSON, element.stylesJSON, element.animationsJSON];
+    const sql =
+      "INSERT INTO elements (id, churchId, sectionId, blockId, elementType, sort, parentId, answersJSON, stylesJSON, animationsJSON) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?);";
+    const params = [
+      element.id,
+      element.churchId,
+      element.sectionId,
+      element.blockId,
+      element.elementType,
+      element.sort,
+      element.parentId,
+      element.answersJSON,
+      element.stylesJSON,
+      element.animationsJSON
+    ];
     await DB.query(sql, params);
     return element;
   }
 
   private async update(element: Element) {
-    const sql = "UPDATE elements SET sectionId=?, blockId=?, elementType=?, sort=?, parentId=?, answersJSON=?, stylesJSON=?, animationsJSON=? WHERE id=? and churchId=?";
-    const params = [element.sectionId, element.blockId, element.elementType, element.sort, element.parentId, element.answersJSON, element.stylesJSON, element.animationsJSON, element.id, element.churchId];
+    const sql =
+      "UPDATE elements SET sectionId=?, blockId=?, elementType=?, sort=?, parentId=?, answersJSON=?, stylesJSON=?, animationsJSON=? WHERE id=? and churchId=?";
+    const params = [
+      element.sectionId,
+      element.blockId,
+      element.elementType,
+      element.sort,
+      element.parentId,
+      element.answersJSON,
+      element.stylesJSON,
+      element.animationsJSON,
+      element.id,
+      element.churchId
+    ];
     await DB.query(sql, params);
     return element;
   }
@@ -41,7 +64,7 @@ export class ElementRepository {
   public async updateSort(churchId: string, sectionId: string, parentId: string) {
     const elements = await this.loadForSection(churchId, sectionId);
     const skipParentId = ArrayHelper.getAll(elements, "parentId", null);
-    const withParentId = ArrayHelper.getAll(elements,"parentId" , parentId);
+    const withParentId = ArrayHelper.getAll(elements, "parentId", parentId);
     const promises: Promise<Element>[] = [];
     for (let i = 0; i < skipParentId.length; i++) {
       if (skipParentId[i].sort !== i + 1) {
@@ -50,7 +73,7 @@ export class ElementRepository {
       }
     }
     // for elements inside a column/slide/box
-    for(let i = 0; i < withParentId.length; i++) {
+    for (let i = 0; i < withParentId.length; i++) {
       if (withParentId[i].sort !== i + 1) {
         withParentId[i].sort = i + 1;
         promises.push(this.save(withParentId[i]));
@@ -99,12 +122,12 @@ export class ElementRepository {
   }
 */
   public loadForPage(churchId: string, pageId: string) {
-    const sql = "SELECT e.* "
-      + " FROM elements e"
-      + " INNER JOIN sections s on s.id=e.sectionId"
-      + " WHERE (s.pageId=? OR (s.pageId IS NULL and s.blockId IS NULL)) AND e.churchId=?"
-      + " ORDER BY sort;";
+    const sql =
+      "SELECT e.* " +
+      " FROM elements e" +
+      " INNER JOIN sections s on s.id=e.sectionId" +
+      " WHERE (s.pageId=? OR (s.pageId IS NULL and s.blockId IS NULL)) AND e.churchId=?" +
+      " ORDER BY sort;";
     return DB.query(sql, [pageId, churchId]);
   }
-
 }

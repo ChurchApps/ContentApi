@@ -5,7 +5,7 @@ import { InversifyExpressServer } from "inversify-express-utils";
 import { bindings } from "./inversify.config";
 import express from "express";
 import { CustomAuthProvider } from "@churchapps/apihelper";
-import cors from "cors"
+import cors from "cors";
 import * as path from "path";
 
 export const init = async () => {
@@ -19,21 +19,21 @@ export const init = async () => {
     expApp.use(cors({
       origin: true,
       credentials: true,
-      methods: ['GET', 'POST', 'PUT', 'DELETE', 'PATCH', 'OPTIONS'],
-      allowedHeaders: ['Content-Type', 'Authorization', 'X-Requested-With', 'Accept', 'Origin']
+      methods: ["GET", "POST", "PUT", "DELETE", "PATCH", "OPTIONS"],
+      allowedHeaders: ["Content-Type", "Authorization", "X-Requested-With", "Accept", "Origin"]
     }));
     
     // Handle preflight requests early
-    expApp.options('*', (req, res) => {
-      res.header('Access-Control-Allow-Origin', '*');
-      res.header('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE, PATCH, OPTIONS');
-      res.header('Access-Control-Allow-Headers', 'Content-Type, Authorization, X-Requested-With, Accept, Origin');
+    expApp.options("*", (req, res) => {
+      res.header("Access-Control-Allow-Origin", "*");
+      res.header("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE, PATCH, OPTIONS");
+      res.header("Access-Control-Allow-Headers", "Content-Type, Authorization, X-Requested-With, Accept, Origin");
       res.sendStatus(200);
     });
     
     // Handle body parsing from @codegenie/serverless-express
     expApp.use((req, res, next) => {
-      const contentType = req.headers['content-type'] || '';
+      const contentType = req.headers["content-type"] || "";
       
       // Mark request as already having body parsed to prevent further body parsing attempts
       (req as any)._body = true;
@@ -41,8 +41,8 @@ export const init = async () => {
       // Handle Buffer instances (most common case with serverless-express)
       if (Buffer.isBuffer(req.body)) {
         try {
-          const bodyString = req.body.toString('utf8');
-          if (contentType.includes('application/json')) {
+          const bodyString = req.body.toString("utf8");
+          if (contentType.includes("application/json")) {
             req.body = JSON.parse(bodyString);
           } else {
             req.body = bodyString;
@@ -52,10 +52,10 @@ export const init = async () => {
         }
       }
       // Handle Buffer-like objects
-      else if (req.body && req.body.type === 'Buffer' && Array.isArray(req.body.data)) {
+      else if (req.body && req.body.type === "Buffer" && Array.isArray(req.body.data)) {
         try {
-          const bodyString = Buffer.from(req.body.data).toString('utf8');
-          if (contentType.includes('application/json')) {
+          const bodyString = Buffer.from(req.body.data).toString("utf8");
+          if (contentType.includes("application/json")) {
             req.body = JSON.parse(bodyString);
           } else {
             req.body = bodyString;
@@ -65,9 +65,9 @@ export const init = async () => {
         }
       }
       // Handle string JSON bodies
-      else if (typeof req.body === 'string' && req.body.length > 0) {
+      else if (typeof req.body === "string" && req.body.length > 0) {
         try {
-          if (contentType.includes('application/json')) {
+          if (contentType.includes("application/json")) {
             req.body = JSON.parse(req.body);
           }
         } catch {
@@ -82,9 +82,9 @@ export const init = async () => {
       next();
     });
     
-    expApp.use('/public', express.static(path.join(__dirname, 'public')));
+    expApp.use("/public", express.static(path.join(__dirname, "public")));
   };
 
   const server = app.setConfig(configFunction).build();
   return server;
-}
+};

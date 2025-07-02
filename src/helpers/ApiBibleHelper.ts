@@ -12,12 +12,20 @@ export class ApiBibleHelper {
     "a761ca71e0b3ddcf-01", // NASB2020
     "b8ee27bcd1cae43a-01", // NASB95
     "ce11b813f9a27e20-01" // NBLA
-  ]
+  ];
 
   static async getCopyright(translationKey: string) {
     const books = await ApiBibleHelper.getBooks(translationKey);
     const verseKey = books[0].keyName + ".1.1";
-    const url = this.baseUrl + "/bibles/" + translationKey + "/verses/" + verseKey + "-" + verseKey + "?content-type=json&include-titles=false&include-verse-numbers=false";
+    const url =
+      this.baseUrl +
+      "/bibles/" +
+      translationKey +
+      "/verses/" +
+      verseKey +
+      "-" +
+      verseKey +
+      "?content-type=json&include-titles=false&include-verse-numbers=false";
     const data = await this.getContent(url);
     return data.data.copyright;
   }
@@ -26,7 +34,6 @@ export class ApiBibleHelper {
     const result: BibleTranslation[] = [];
     const url = this.baseUrl + "/bibles";
     const data = await this.getContent(url);
-
 
     data.data.forEach((d: any) => {
       const translation: BibleTranslation = {
@@ -40,9 +47,8 @@ export class ApiBibleHelper {
         source: "api.bible",
         sourceKey: d.id,
         countryList: []
-      }
+      };
       // copyright: this.translationCopyrights[d.id]
-
 
       d.countries.forEach((c: any) => {
         translation.countryList.push(c.id.toLowerCase());
@@ -111,16 +117,22 @@ export class ApiBibleHelper {
     return result;
   }
 
-
   static async getVerseText(translationKey: string, startVerseKey: string, endVerseKey: string) {
-    const url = this.baseUrl + "/bibles/" + translationKey + "/verses/" + startVerseKey + "-" + endVerseKey
-      + "?content-type=json&include-titles=false&include-verse-numbers=false";
+    const url =
+      this.baseUrl +
+      "/bibles/" +
+      translationKey +
+      "/verses/" +
+      startVerseKey +
+      "-" +
+      endVerseKey +
+      "?content-type=json&include-titles=false&include-verse-numbers=false";
     const data = await this.getContent(url);
     const result: BibleVerseText[] = [];
     data.data.content.forEach((c: any) => {
       c.items.forEach((i: any, idx: number) => {
         this.parseVerseItem(i, c, idx, result, translationKey);
-      })
+      });
     });
     return result;
   }
@@ -131,14 +143,13 @@ export class ApiBibleHelper {
       const verse = parseInt(parts[parts.length - 1], 0) || 0;
 
       if (verse > 0 && item.text.trim().length > 0) {
-        const existing = ArrayHelper.getOne(result, "verseKey", item.attrs.verseId)
+        const existing = ArrayHelper.getOne(result, "verseKey", item.attrs.verseId);
         if (existing) {
           const firstChar = item.text.trim().charAt(0);
           const regex = /^[a-zA-Z0-9]+$/;
           if (regex.test(firstChar)) existing.content += " " + item.text.trim();
           else existing.content += item.text.trim();
-        }
-        else {
+        } else {
           result.push({
             translationKey,
             verseKey: item.attrs.verseId,
@@ -155,10 +166,7 @@ export class ApiBibleHelper {
         this.parseVerseItem(i, item, idx, result, translationKey);
       });
     }
-
   }
-
-
 
   static async getContent(url: string) {
     const resp = await axios.get(url, {
@@ -167,7 +175,4 @@ export class ApiBibleHelper {
     const json: any = resp.data;
     return json;
   }
-
-
 }
-

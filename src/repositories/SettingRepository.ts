@@ -4,10 +4,11 @@ import { Setting } from "../models";
 
 @injectable()
 export class SettingRepository {
-
   public saveAll(settings: Setting[]) {
     const promises: Promise<Setting>[] = [];
-    settings.forEach(s => { promises.push(this.save(s)); });
+    settings.forEach((s) => {
+      promises.push(this.save(s));
+    });
     return Promise.all(promises);
   }
 
@@ -25,11 +26,18 @@ export class SettingRepository {
 
   private async update(setting: Setting) {
     const sql = "UPDATE settings SET churchId=?, userId=?, keyName=?, value=?, public=? WHERE id=? AND churchId=?";
-    const params = [setting.churchId, setting.userId, setting.keyName, setting.value, setting.public, setting.id, setting.churchId];
+    const params = [
+      setting.churchId,
+      setting.userId,
+      setting.keyName,
+      setting.value,
+      setting.public,
+      setting.id,
+      setting.churchId
+    ];
     await DB.query(sql, params);
     return setting;
   }
-
 
   public deleteForUser(churchId: string, userId: string, id: string) {
     return DB.query("DELETE FROM settings WHERE id=? and churchId=? and userId=?;", [id, churchId, userId]);
@@ -44,19 +52,25 @@ export class SettingRepository {
   }
 
   public loadPublicSettings(churchId: string) {
-    return DB.query("SELECT * FROM settings WHERE churchId=? AND public=?", [churchId, 1])
+    return DB.query("SELECT * FROM settings WHERE churchId=? AND public=?", [churchId, 1]);
   }
 
   public loadAllPublicSettings() {
-    return DB.query("SELECT * FROM settings WHERE public=1 and userId is null;", [])
+    return DB.query("SELECT * FROM settings WHERE public=1 and userId is null;", []);
   }
 
   public loadMulipleChurches(keyNames: string[], churchIds: string[]) {
-    return DB.query("SELECT * FROM settings WHERE keyName in (?) AND churchId IN (?) AND public=1 and userId is null", [keyNames, churchIds])
+    return DB.query("SELECT * FROM settings WHERE keyName in (?) AND churchId IN (?) AND public=1 and userId is null", [
+      keyNames,
+      churchIds
+    ]);
   }
 
   public loadByKeyNames(churchId: string, keyNames: string[]) {
-    return DB.query("SELECT * FROM settings WHERE keyName in (?) AND churchId=? and userId is null;", [keyNames, churchId]);
+    return DB.query("SELECT * FROM settings WHERE keyName in (?) AND churchId=? and userId is null;", [
+      keyNames,
+      churchId
+    ]);
   }
 
   public convertToModel(churchId: string, data: any) {
@@ -71,18 +85,21 @@ export class SettingRepository {
 
   public convertAllToModel(churchId: string, data: any[]) {
     const result: Setting[] = [];
-    data.forEach(d => result.push(this.convertToModel(churchId, d)));
+    data.forEach((d) => result.push(this.convertToModel(churchId, d)));
     return result;
   }
 
   public getImports(data: any[], type?: string, playlistId?: string, channelId?: string) {
     let result: any[] = [];
     if (playlistId && channelId) {
-      const filterType = type === "youtube" ? "youtubeChannelId" : "vimeoChannelId"
+      const filterType = type === "youtube" ? "youtubeChannelId" : "vimeoChannelId";
       const filteredByPlaylist = data.filter((d) => d.keyName === "autoImportSermons" && d.value.includes(playlistId));
       const filteredByChannel = data.filter((d) => d.keyName === filterType && d.value === channelId);
       const channelIds = ArrayHelper.getIds(filteredByChannel, "id");
-      const filtered = filteredByPlaylist.filter((d) => { const id = d.value.split("|#"); return channelIds.indexOf(id[1]) >= 0; });
+      const filtered = filteredByPlaylist.filter((d) => {
+        const id = d.value.split("|#");
+        return channelIds.indexOf(id[1]) >= 0;
+      });
       if (filtered.length > 0) {
         const split = filtered[0].value.split("|#");
         const getChannelId = ArrayHelper.getOne(filteredByChannel, "id", split[1]);
@@ -95,11 +112,17 @@ export class SettingRepository {
         if (type === "youtube") {
           const filterByYoutube = data.filter((d) => d.keyName === "youtubeChannelId");
           const ids = ArrayHelper.getIds(filterByYoutube, "id");
-          filtered = filterByCategory.filter((d) => { const id = d.value.split("|#"); return ids.indexOf(id[1]) >= 0; });
+          filtered = filterByCategory.filter((d) => {
+            const id = d.value.split("|#");
+            return ids.indexOf(id[1]) >= 0;
+          });
         } else if (type === "vimeo") {
           const filterByVimeo = data.filter((d) => d.keyName === "vimeoChannelId");
           const ids = ArrayHelper.getIds(filterByVimeo, "id");
-          filtered = filterByCategory.filter((d) => { const id = d.value.split("|#"); return ids.indexOf(id[1]) >= 0; });
+          filtered = filterByCategory.filter((d) => {
+            const id = d.value.split("|#");
+            return ids.indexOf(id[1]) >= 0;
+          });
         } else {
           filtered = filterByCategory;
         }
@@ -107,7 +130,7 @@ export class SettingRepository {
           const split = row.value.split("|#");
           const getchannel = ArrayHelper.getOne(data, "id", split[1]);
           result.push({ channel: getchannel, ...row });
-        })
+        });
       }
     }
     return result;
@@ -116,8 +139,14 @@ export class SettingRepository {
   public convertAllImports(data: any[]) {
     const result: any[] = [];
     data.forEach((d) => {
-      result.push({ id: d.id, churchId: d.churchId, keyName: d.keyName, playlistId: d.value.split("|#")[0], [d?.channel?.keyName]: d?.channel?.value });
-    })
+      result.push({
+        id: d.id,
+        churchId: d.churchId,
+        keyName: d.keyName,
+        playlistId: d.value.split("|#")[0],
+        [d?.channel?.keyName]: d?.channel?.value
+      });
+    });
     return result;
   }
 }

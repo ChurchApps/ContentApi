@@ -1,13 +1,12 @@
-import axios from 'axios';
+import axios from "axios";
 import { getSubtitles } from "youtube-captions-scraper";
-import { Sermon } from '../models';
-import { Environment } from '.';
+import { Sermon } from "../models";
+import { Environment } from ".";
 
 export class YouTubeHelper {
-
   public static async getSermon(sermonId: string) {
     const url = `https://www.googleapis.com/youtube/v3/videos?part=contentDetails%2C+snippet&id=${sermonId}&key=${Environment.youTubeApiKey}`;
-    const result = { title: "", thumbnail: "", description: "", duration: 0, publishDate: new Date() }
+    const result = { title: "", thumbnail: "", description: "", duration: 0, publishDate: new Date() };
     const json: any = (await axios.get(url)).data;
     if (json.items?.length > 0) {
       const snippet = json.items[0].snippet;
@@ -27,14 +26,14 @@ export class YouTubeHelper {
     const minuteMatches = duration.match(/[0-9]{1,2}M/g);
     const secondMatches = duration.match(/[0-9]{1,2}S/g);
 
-    const hours = (hourMatches?.length>0) ? parseInt(hourMatches[0].replace("H", ""), 0) : 0;
-    const minutes = (minuteMatches?.length>0) ? parseInt(minuteMatches[0].replace("M", ""), 0) : 0;
-    const seconds = (secondMatches?.length>0) ? parseInt(secondMatches[0].replace("S", ""), 0) : 0;
+    const hours = hourMatches?.length > 0 ? parseInt(hourMatches[0].replace("H", ""), 0) : 0;
+    const minutes = minuteMatches?.length > 0 ? parseInt(minuteMatches[0].replace("M", ""), 0) : 0;
+    const seconds = secondMatches?.length > 0 ? parseInt(secondMatches[0].replace("S", ""), 0) : 0;
     result = hours * 3600 + minutes * 60 + seconds;
     return result;
   }
 
-  public static async getVideosFromChannel(churchId:string, channelId: string) {
+  public static async getVideosFromChannel(churchId: string, channelId: string) {
     const allSermons: Sermon[] = [];
     let data = await this.getVideoPage(churchId, channelId, "");
     allSermons.push(...data.sermons);
@@ -47,13 +46,13 @@ export class YouTubeHelper {
     return allSermons;
   }
 
-  public static async getVideoPage(churchId:string, channelId: string, pageToken:string) {
+  public static async getVideoPage(churchId: string, channelId: string, pageToken: string) {
     const url = `https://www.googleapis.com/youtube/v3/search?part=snippet&channelId=${channelId}&maxResults=50&order=date&type=video&key=${Environment.youTubeApiKey}&pageToken=${pageToken}`;
     const json: any = (await axios.get(url)).data;
     const result = {
       sermons: YouTubeHelper.convertToSermons(churchId, json),
       nextPageToken: json.nextPageToken
-    }
+    };
     return result;
   }
 
@@ -75,12 +74,11 @@ export class YouTubeHelper {
         retryCount++;
         if (retryCount < maxRetries) {
           // Add a small delay between retries to avoid rate limiting
-          await new Promise(resolve => setTimeout(resolve, 1000));
+          await new Promise((resolve) => setTimeout(resolve, 1000));
           continue;
         }
-
       } catch (error) {
-        return `Error: Subtitle Fetch Failed: ${error}`;;
+        return `Error: Subtitle Fetch Failed: ${error}`;
       }
 
       // If we've exhausted all retries and still have no subtitles
@@ -88,10 +86,10 @@ export class YouTubeHelper {
     }
   }
 
-  private static convertToSermons(churchId:string, json: any) {
-    const sermons:Sermon[] = [];
+  private static convertToSermons(churchId: string, json: any) {
+    const sermons: Sermon[] = [];
     for (const item of json.items) {
-      const sermon:Sermon = {
+      const sermon: Sermon = {
         churchId,
         title: item.snippet.title,
         thumbnail: item.snippet.thumbnails?.maxres?.url || item.snippet.thumbnails?.high?.url || "",
@@ -100,15 +98,15 @@ export class YouTubeHelper {
         videoType: "youtube",
         videoData: item.id.videoId,
         duration: 0,
-        permanentUrl:false,
+        permanentUrl: false,
         playlistId: "",
-        videoUrl: "https://www.youtube.com/embed/" + item.id.videoId + "?autoplay=1&controls=0&showinfo=0&rel=0&modestbranding=1&disablekb=1"
+        videoUrl:
+          "https://www.youtube.com/embed/" +
+          item.id.videoId +
+          "?autoplay=1&controls=0&showinfo=0&rel=0&modestbranding=1&disablekb=1"
       };
       sermons.push(sermon);
     }
     return sermons;
   }
-
-
-
 }

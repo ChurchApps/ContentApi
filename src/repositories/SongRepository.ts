@@ -1,14 +1,15 @@
 import { injectable } from "inversify";
-import { UniqueIdHelper } from "@churchapps/apihelper"
-import { DB } from "@churchapps/apihelper"
+import { UniqueIdHelper } from "@churchapps/apihelper";
+import { DB } from "@churchapps/apihelper";
 import { Song } from "../models";
 
 @injectable()
 export class SongRepository {
-
   public saveAll(songs: Song[]) {
     const promises: Promise<Song>[] = [];
-    songs.forEach(sd => { promises.push(this.save(sd)); });
+    songs.forEach((sd) => {
+      promises.push(this.save(sd));
+    });
     return Promise.all(promises);
   }
 
@@ -46,12 +47,12 @@ export class SongRepository {
 
   public search(churchId: string, query: string) {
     const q = "%" + query.replace(/ /g, "%") + "%";
-    const sql = "SELECT sd.*, ak.id as arrangementKeyId, ak.keySignature as arrangementKeySignature, ak.shortDescription FROM songs s"
-      + " INNER JOIN arrangements a on a.songId=s.id"
-      + " INNER JOIN arrangementKeys ak on ak.arrangementId=a.id"
-      + " INNER JOIN songDetails sd on sd.id=a.songDetailId"
-      + " where s.churchId=? AND (concat(sd.title, ' ', sd.artist) like ? or concat(sd.artist, ' ', sd.title) like ?);";
+    const sql =
+      "SELECT sd.*, ak.id as arrangementKeyId, ak.keySignature as arrangementKeySignature, ak.shortDescription FROM songs s" +
+      " INNER JOIN arrangements a on a.songId=s.id" +
+      " INNER JOIN arrangementKeys ak on ak.arrangementId=a.id" +
+      " INNER JOIN songDetails sd on sd.id=a.songDetailId" +
+      " where s.churchId=? AND (concat(sd.title, ' ', sd.artist) like ? or concat(sd.artist, ' ', sd.title) like ?);";
     return DB.query(sql, [churchId, q, q]);
   }
-
 }

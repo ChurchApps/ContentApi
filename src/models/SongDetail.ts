@@ -1,4 +1,3 @@
-
 export class SongDetail {
   id?: string;
   praiseChartsId?: string;

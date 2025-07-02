@@ -1,4 +1,3 @@
-
 export class CuratedEvent {
   public id?: string;
   public churchId?: string;

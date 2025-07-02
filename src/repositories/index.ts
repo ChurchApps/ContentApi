@@ -31,4 +31,3 @@ export { ArrangementRepository } from "./ArrangementRepository";
 export { ArrangementKeyRepository } from "./ArrangementKeyRepository";
 
 export { Repositories } from "./Repositories";
-

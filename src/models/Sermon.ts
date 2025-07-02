@@ -1,4 +1,3 @@
-
 export class Sermon {
   id?: string;
   churchId: string;

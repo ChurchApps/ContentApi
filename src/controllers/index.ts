@@ -3,7 +3,7 @@ export { GlobalStyleController } from "./GlobalStyleController";
 export { ElementController } from "./ElementController";
 export { GalleryController } from "./GalleryController";
 export { FileController } from "./FileController";
-export { LinkController } from "./LinkController"
+export { LinkController } from "./LinkController";
 export { PageController2 } from "./PageController";
 export { SectionController } from "./SectionController";
 export { StockController } from "./StockController";

@@ -1,14 +1,15 @@
 import { injectable } from "inversify";
-import { UniqueIdHelper } from "@churchapps/apihelper"
-import { DB } from "@churchapps/apihelper"
+import { UniqueIdHelper } from "@churchapps/apihelper";
+import { DB } from "@churchapps/apihelper";
 import { Arrangement } from "../models";
 
 @injectable()
 export class ArrangementRepository {
-
   public saveAll(arrangements: Arrangement[]) {
     const promises: Promise<Arrangement>[] = [];
-    arrangements.forEach(sd => { promises.push(this.save(sd)); });
+    arrangements.forEach((sd) => {
+      promises.push(this.save(sd));
+    });
     return Promise.all(promises);
   }
 
@@ -19,15 +20,33 @@ export class ArrangementRepository {
   private async create(arrangement: Arrangement) {
     arrangement.id = UniqueIdHelper.shortId();
 
-    const sql = "INSERT INTO arrangements (id, churchId, songId, songDetailId, name, lyrics, freeShowId) VALUES (?, ?, ?, ?, ?, ?, ?);";
-    const params = [arrangement.id, arrangement.churchId, arrangement.songId, arrangement.songDetailId, arrangement.name, arrangement.lyrics, arrangement.freeShowId];
+    const sql =
+      "INSERT INTO arrangements (id, churchId, songId, songDetailId, name, lyrics, freeShowId) VALUES (?, ?, ?, ?, ?, ?, ?);";
+    const params = [
+      arrangement.id,
+      arrangement.churchId,
+      arrangement.songId,
+      arrangement.songDetailId,
+      arrangement.name,
+      arrangement.lyrics,
+      arrangement.freeShowId
+    ];
     await DB.query(sql, params);
     return arrangement;
   }
 
   private async update(arrangement: Arrangement) {
-    const sql = "UPDATE arrangements SET songId=?, songDetailId=?, name=?, lyrics=?, freeShowId=? WHERE id=? and churchId=?";
-    const params = [arrangement.songId, arrangement.songDetailId, arrangement.name, arrangement.lyrics, arrangement.freeShowId, arrangement.id, arrangement.churchId];
+    const sql =
+      "UPDATE arrangements SET songId=?, songDetailId=?, name=?, lyrics=?, freeShowId=? WHERE id=? and churchId=?";
+    const params = [
+      arrangement.songId,
+      arrangement.songDetailId,
+      arrangement.name,
+      arrangement.lyrics,
+      arrangement.freeShowId,
+      arrangement.id,
+      arrangement.churchId
+    ];
     await DB.query(sql, params);
     return arrangement;
   }
@@ -55,5 +74,4 @@ export class ArrangementRepository {
   public loadByFreeShowId(churchId: string, freeShowId: string) {
     return DB.queryOne("SELECT * FROM arrangements where churchId=? and freeShowId=?;", [churchId, freeShowId]);
   }
-
 }

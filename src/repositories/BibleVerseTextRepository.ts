@@ -1,14 +1,15 @@
 import { injectable } from "inversify";
-import { UniqueIdHelper } from "@churchapps/apihelper"
-import { DB } from "@churchapps/apihelper"
+import { UniqueIdHelper } from "@churchapps/apihelper";
+import { DB } from "@churchapps/apihelper";
 import { BibleVerseText } from "../models";
 
 @injectable()
 export class BibleVerseTextTextRepository {
-
   public saveAll(texts: BibleVerseText[]) {
     const promises: Promise<BibleVerseText>[] = [];
-    texts.forEach(v => { promises.push(this.save(v)); });
+    texts.forEach((v) => {
+      promises.push(this.save(v));
+    });
     return Promise.all(promises);
   }
 
@@ -19,15 +20,35 @@ export class BibleVerseTextTextRepository {
   private async create(text: BibleVerseText) {
     text.id = UniqueIdHelper.shortId();
 
-    const sql = "INSERT INTO bibleVerseTexts (id, translationKey, verseKey, bookKey, chapterNumber, verseNumber, content, newParagraph) VALUES (?, ?, ?, ?, ?, ?, ?, ?);";
-    const params = [text.id, text.translationKey, text.verseKey, text.bookKey, text.chapterNumber, text.verseNumber, text.content, text.newParagraph];
+    const sql =
+      "INSERT INTO bibleVerseTexts (id, translationKey, verseKey, bookKey, chapterNumber, verseNumber, content, newParagraph) VALUES (?, ?, ?, ?, ?, ?, ?, ?);";
+    const params = [
+      text.id,
+      text.translationKey,
+      text.verseKey,
+      text.bookKey,
+      text.chapterNumber,
+      text.verseNumber,
+      text.content,
+      text.newParagraph
+    ];
     await DB.query(sql, params);
     return text;
   }
 
   private async update(text: BibleVerseText) {
-    const sql = "UPDATE bibleVerseTexts SET translationKey=?, verseKey=?, bookKey=?, chapterNumber=?, verseNumber=?, content=?, newParagraph=? WHERE id=?";
-    const params = [text.translationKey, text.verseKey, text.bookKey, text.chapterNumber, text.verseNumber, text.content, text.newParagraph, text.id];
+    const sql =
+      "UPDATE bibleVerseTexts SET translationKey=?, verseKey=?, bookKey=?, chapterNumber=?, verseNumber=?, content=?, newParagraph=? WHERE id=?";
+    const params = [
+      text.translationKey,
+      text.verseKey,
+      text.bookKey,
+      text.chapterNumber,
+      text.verseNumber,
+      text.content,
+      text.newParagraph,
+      text.id
+    ];
     await DB.query(sql, params);
     return text;
   }
@@ -41,14 +62,24 @@ export class BibleVerseTextTextRepository {
   }
 
   private loadChapters(translationKey: string, bookKey: string, startChapter: number, endChapter: number) {
-    return DB.query("SELECT * FROM bibleVerseTexts WHERE translationKey=? and bookKey=? AND chapterNumber BETWEEN ? AND ? order by chapterNumber, verseNumber;", [translationKey, bookKey, startChapter, endChapter]);
+    return DB.query(
+      "SELECT * FROM bibleVerseTexts WHERE translationKey=? and bookKey=? AND chapterNumber BETWEEN ? AND ? order by chapterNumber, verseNumber;",
+      [translationKey, bookKey, startChapter, endChapter]
+    );
   }
 
-  private filterResults(data: BibleVerseText[], startChapter: number, startVerse: number, endChapter: number, endVerse: number) {
+  private filterResults(
+    data: BibleVerseText[],
+    startChapter: number,
+    startVerse: number,
+    endChapter: number,
+    endVerse: number
+  ) {
     const result: BibleVerseText[] = [];
     data.forEach((v: BibleVerseText) => {
       if (startChapter === endChapter) {
-        if (v.chapterNumber === startChapter && v.verseNumber >= startVerse && v.verseNumber <= endVerse) result.push(v);
+        if (v.chapterNumber === startChapter && v.verseNumber >= startVerse && v.verseNumber <= endVerse)
+          result.push(v);
       } else {
         if (v.chapterNumber === startChapter && v.verseNumber >= startVerse) result.push(v);
         if (v.chapterNumber > startChapter && v.chapterNumber < endChapter) result.push(v);
@@ -70,6 +101,4 @@ export class BibleVerseTextTextRepository {
     const data = await this.loadChapters(translationKey, startParts[0], startChapter, endChapter);
     return this.filterResults(data, startChapter, startVerse, endChapter, endVerse);
   }
-
-
 }

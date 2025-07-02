@@ -1,11 +1,10 @@
 import { injectable } from "inversify";
-import { UniqueIdHelper } from "@churchapps/apihelper"
-import { DB } from "@churchapps/apihelper"
+import { UniqueIdHelper } from "@churchapps/apihelper";
+import { DB } from "@churchapps/apihelper";
 import { Page } from "../models";
 
 @injectable()
 export class PageRepository {
-
   public save(page: Page) {
     return page.id ? this.update(page) : this.create(page);
   }
@@ -41,5 +40,4 @@ export class PageRepository {
   public loadAll(churchId: string) {
     return DB.query("SELECT * FROM pages WHERE churchId=?;", [churchId]);
   }
-
 }

@@ -1,5 +1,5 @@
-import { UniqueIdHelper, DateHelper } from "@churchapps/apihelper"
-import { DB } from "@churchapps/apihelper"
+import { UniqueIdHelper, DateHelper } from "@churchapps/apihelper";
+import { DB } from "@churchapps/apihelper";
 import { EventException } from "../models";
 
 export class EventExceptionRepository {
@@ -35,5 +35,4 @@ export class EventExceptionRepository {
   public loadForEvents(churchId: string, eventIds: string[]) {
     return DB.query("SELECT * FROM eventExceptions WHERE churchId=? and eventId in (?);", [churchId, eventIds]);
   }
-
 }

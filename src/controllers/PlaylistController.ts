@@ -8,9 +8,12 @@ import { FileStorageHelper } from "@churchapps/apihelper";
 
 @controller("/playlists")
 export class PlaylistController extends ContentBaseController {
-
   @httpGet("/:id")
-  public async get(@requestParam("id") id: string, req: express.Request<{}, {}, null>, res: express.Response): Promise<any> {
+  public async get(
+    @requestParam("id") id: string,
+    req: express.Request<{}, {}, null>,
+    res: express.Response
+  ): Promise<any> {
     return this.actionWrapper(req, res, async (au) => {
       return await this.repositories.playlist.loadById(id, au.churchId);
     });
@@ -19,14 +22,18 @@ export class PlaylistController extends ContentBaseController {
   @httpGet("/")
   public async loadAll(req: express.Request, res: express.Response): Promise<any> {
     return this.actionWrapper(req, res, async (au) => {
-      return await this.repositories.playlist.loadAll(au.churchId)
+      return await this.repositories.playlist.loadAll(au.churchId);
     });
   }
 
   @httpGet("/public/:churchId")
-  public async loadPublicAll(@requestParam("churchId") churchId: string, req: express.Request<{}, {}, null>, res: express.Response): Promise<any> {
-    return this.actionWrapperAnon(req, res, async() => {
-      return await this.repositories.playlist.loadPublicAll(churchId)
+  public async loadPublicAll(
+    @requestParam("churchId") churchId: string,
+    req: express.Request<{}, {}, null>,
+    res: express.Response
+  ): Promise<any> {
+    return this.actionWrapperAnon(req, res, async () => {
+      return await this.repositories.playlist.loadPublicAll(churchId);
     });
   }
 
@@ -56,15 +63,16 @@ export class PlaylistController extends ContentBaseController {
             base64Photo = p.thumbnail;
             p.thumbnail = "";
           }
-          if (p.churchId === au.churchId) promises.push(
-            this.repositories.playlist.save(p).then(async (playlist: Playlist) => {
-              if (base64Photo) {
-                playlist.thumbnail = base64Photo;
-                await this.savePhoto(au.churchId, playlist);
-              }
-              return playlist;
-            })
-          );
+          if (p.churchId === au.churchId)
+            promises.push(
+              this.repositories.playlist.save(p).then(async (playlist: Playlist) => {
+                if (base64Photo) {
+                  playlist.thumbnail = base64Photo;
+                  await this.savePhoto(au.churchId, playlist);
+                }
+                return playlist;
+              })
+            );
         }
 
         playlists = await Promise.all(promises);
@@ -73,9 +81,8 @@ export class PlaylistController extends ContentBaseController {
     });
   }
 
-
   private async savePhoto(churchId: string, playlist: Playlist) {
-    const base64 = playlist.thumbnail.split(',')[1];
+    const base64 = playlist.thumbnail.split(",")[1];
     const key = "/" + churchId + "/streamingLive/playlists/" + playlist.id + ".png";
 
     return FileStorageHelper.store(key, "image/png", Buffer.from(base64, "base64")).then(async () => {
@@ -84,5 +91,4 @@ export class PlaylistController extends ContentBaseController {
       await this.repositories.playlist.save(playlist);
     });
   }
-
 }

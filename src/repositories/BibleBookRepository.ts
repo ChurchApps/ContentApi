@@ -1,14 +1,15 @@
 import { injectable } from "inversify";
-import { UniqueIdHelper } from "@churchapps/apihelper"
-import { DB } from "@churchapps/apihelper"
+import { UniqueIdHelper } from "@churchapps/apihelper";
+import { DB } from "@churchapps/apihelper";
 import { BibleBook } from "../models";
 
 @injectable()
 export class BibleBookRepository {
-
   public saveAll(books: BibleBook[]) {
     const promises: Promise<BibleBook>[] = [];
-    books.forEach(b => { promises.push(this.save(b)); });
+    books.forEach((b) => {
+      promises.push(this.save(b));
+    });
     return Promise.all(promises);
   }
 
@@ -19,7 +20,8 @@ export class BibleBookRepository {
   private async create(book: BibleBook) {
     book.id = UniqueIdHelper.shortId();
 
-    const sql = "INSERT INTO bibleBooks (id, translationKey, keyName, abbreviation, name, sort) VALUES (?, ?, ?, ?, ?, ?);";
+    const sql =
+      "INSERT INTO bibleBooks (id, translationKey, keyName, abbreviation, name, sort) VALUES (?, ?, ?, ?, ?, ?);";
     const params = [book.id, book.translationKey, book.keyName, book.abbreviation, book.name, book.sort];
     await DB.query(sql, params);
     return book;
@@ -43,5 +45,4 @@ export class BibleBookRepository {
   public loadAll(translationKey: string) {
     return DB.query("SELECT * FROM bibleBooks WHERE translationKey=? order by sort;", [translationKey]);
   }
-
 }

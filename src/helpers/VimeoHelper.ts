@@ -3,7 +3,6 @@ import { Sermon } from "../models";
 import { Environment } from "./Environment";
 
 export class VimeoHelper {
-
   public static async getSermon(videoId: string) {
     const url = `https://api.vimeo.com/videos/${videoId}`;
     const axiosConfig = { headers: { Authorization: "Bearer " + Environment.vimeoToken } };
@@ -17,7 +16,6 @@ export class VimeoHelper {
       result.publishDate = new Date(json.created_time);
     }
     return result;
-
   }
 
   public static async getVideosFromChannel(churchId: string, channelId: string) {
@@ -41,7 +39,7 @@ export class VimeoHelper {
     const result = {
       sermons: this.convertToSermons(churchId, json),
       nextPage: Number(json.page + 1),
-      lastPage: Number(urlParams.get("page")),
+      lastPage: Number(urlParams.get("page"))
     };
     return result;
   }
@@ -61,11 +59,10 @@ export class VimeoHelper {
         duration: item.duration,
         permanentUrl: false,
         playlistId: "",
-        videoUrl: `https://player.vimeo.com/video/${videoId}?autoplay=1`,
+        videoUrl: `https://player.vimeo.com/video/${videoId}?autoplay=1`
       };
       sermons.push(sermon);
     }
     return sermons;
   }
-
 }

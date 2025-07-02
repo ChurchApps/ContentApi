@@ -1,23 +1,28 @@
 import { controller, httpPost, httpGet, interfaces, requestParam, httpDelete } from "inversify-express-utils";
 import express from "express";
-import { ContentBaseController } from "./ContentBaseController"
-import { Block, Element, Section } from "../models"
+import { ContentBaseController } from "./ContentBaseController";
+import { Block, Element, Section } from "../models";
 import { Permissions } from "../helpers";
 import { TreeHelper } from "../helpers/TreeHelper";
 import { ArrayHelper } from "@churchapps/apihelper";
 
 @controller("/blocks")
 export class BlockController extends ContentBaseController {
-
   @httpGet("/:churchId/tree/:id")
-  public async getTree(@requestParam("churchId") churchId: string, @requestParam("id") id: string, req: express.Request<{}, {}, null>, res: express.Response): Promise<interfaces.IHttpActionResult> {
+  public async getTree(
+    @requestParam("churchId") churchId: string,
+    @requestParam("id") id: string,
+    req: express.Request<{}, {}, null>,
+    res: express.Response
+  ): Promise<interfaces.IHttpActionResult> {
     return this.actionWrapperAnon(req, res, async () => {
       const block: Block = await this.repositories.block.load(churchId, id);
       let result: Block = {};
       if (block?.id !== undefined) {
-        const sections: Section[] = (block.blockType === "elementBlock")
-          ? [{ id: "", background: "#FFFFFF", textColor: "dark", blockId: block.id }]
-          : await this.repositories.section.loadForBlock(churchId, block.id);
+        const sections: Section[] =
+          block.blockType === "elementBlock"
+            ? [{ id: "", background: "#FFFFFF", textColor: "dark", blockId: block.id }]
+            : await this.repositories.section.loadForBlock(churchId, block.id);
         const allElements: Element[] = await this.repositories.element.loadForBlock(churchId, block.id);
         /*
         const allElements: Element[] = (block.blockType === "elements")
@@ -33,12 +38,15 @@ export class BlockController extends ContentBaseController {
   }
 
   @httpGet("/:id")
-  public async get(@requestParam("id") id: string, req: express.Request<{}, {}, null>, res: express.Response): Promise<interfaces.IHttpActionResult> {
+  public async get(
+    @requestParam("id") id: string,
+    req: express.Request<{}, {}, null>,
+    res: express.Response
+  ): Promise<interfaces.IHttpActionResult> {
     return this.actionWrapper(req, res, async (au) => {
       return await this.repositories.block.load(au.churchId, id);
     });
   }
-
 
   @httpGet("/")
   public async loadAll(req: express.Request, res: express.Response): Promise<any> {
@@ -48,17 +56,25 @@ export class BlockController extends ContentBaseController {
   }
 
   @httpGet("/blockType/:blockType")
-  public async loadByType(@requestParam("blockType") blockType: string, req: express.Request, res: express.Response): Promise<any> {
+  public async loadByType(
+    @requestParam("blockType") blockType: string,
+    req: express.Request,
+    res: express.Response
+  ): Promise<any> {
     return this.actionWrapper(req, res, async (au) => {
       return await this.repositories.block.loadByBlockType(au.churchId, blockType);
     });
   }
 
   @httpGet("/public/footer/:churchId")
-  public async loadFooter(@requestParam("churchId") churchId: string, req: express.Request, res: express.Response): Promise<any> {
+  public async loadFooter(
+    @requestParam("churchId") churchId: string,
+    req: express.Request,
+    res: express.Response
+  ): Promise<any> {
     return this.actionWrapperAnon(req, res, async () => {
       const footerBlocks = await this.repositories.block.loadByBlockType(churchId, "footerBlock");
-      const result:Section[] = [];
+      const result: Section[] = [];
       if (footerBlocks.length > 0) {
         const blockIds: string[] = ArrayHelper.getIds(footerBlocks, "id");
         const allBlockSections = await this.repositories.section.loadForBlocks(churchId, blockIds);
@@ -67,25 +83,27 @@ export class BlockController extends ContentBaseController {
         TreeHelper.populateAnswers(allBlockSections);
 
         const footerBlockSections = ArrayHelper.getAll(allBlockSections, "blockId", footerBlocks[0].id);
-        footerBlockSections.forEach(s => {
-          s.zone="siteFooter";
+        footerBlockSections.forEach((s) => {
+          s.zone = "siteFooter";
           const blockElements = ArrayHelper.getAll(allBlockElements, "blockId", footerBlocks[0].id);
           const tree = TreeHelper.buildTree([s], blockElements);
           result.push(...tree);
         });
       }
       return result;
-
     });
   }
 
   @httpPost("/")
-  public async save(req: express.Request<{}, {}, Block[]>, res: express.Response): Promise<interfaces.IHttpActionResult> {
+  public async save(
+    req: express.Request<{}, {}, Block[]>,
+    res: express.Response
+  ): Promise<interfaces.IHttpActionResult> {
     return this.actionWrapper(req, res, async (au) => {
       if (!au.checkAccess(Permissions.content.edit)) return this.json({}, 401);
       else {
         const promises: Promise<Block>[] = [];
-        req.body.forEach(block => {
+        req.body.forEach((block) => {
           block.churchId = au.churchId;
           promises.push(this.repositories.block.save(block));
         });
@@ -96,7 +114,11 @@ export class BlockController extends ContentBaseController {
   }
 
   @httpDelete("/:id")
-  public async delete(@requestParam("id") id: string, req: express.Request<{}, {}, null>, res: express.Response): Promise<interfaces.IHttpActionResult> {
+  public async delete(
+    @requestParam("id") id: string,
+    req: express.Request<{}, {}, null>,
+    res: express.Response
+  ): Promise<interfaces.IHttpActionResult> {
     return this.actionWrapper(req, res, async (au) => {
       if (!au.checkAccess(Permissions.content.edit)) return this.json({}, 401);
       else {
@@ -105,5 +127,4 @@ export class BlockController extends ContentBaseController {
       }
     });
   }
-
 }

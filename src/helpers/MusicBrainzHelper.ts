@@ -1,15 +1,13 @@
 import { SongDetail, SongDetailLink } from "../models";
 
 export class MusicBrainzHelper {
-
-
   static async lookup(artist: string, title: string) {
     return this.lookupInner(`${artist} ${title}`);
   }
 
   static async lookupInner(query: string) {
     const url = `https://musicbrainz.org/ws/2/recording/?query=${encodeURIComponent(query)}&fmt=json`;
-    const userAgent = "ChurchApps https://churchapps.org/"
+    const userAgent = "ChurchApps https://churchapps.org/";
     const response = await fetch(url, { headers: { "User-Agent": userAgent } });
     if (response.ok) {
       const data = await response.json();
@@ -23,7 +21,7 @@ export class MusicBrainzHelper {
 
   static async load(id: string) {
     const url = `https://musicbrainz.org/ws/2/recording/${encodeURIComponent(id)}?fmt=json&inc=artist-credits+isrcs+releases`;
-    const userAgent = "ChurchApps https://churchapps.org/"
+    const userAgent = "ChurchApps https://churchapps.org/";
     const response = await fetch(url, { headers: { "User-Agent": userAgent } });
     if (response.ok) {
       const data = await response.json();
@@ -40,7 +38,7 @@ export class MusicBrainzHelper {
     if (mb.songDetail) {
       if (mb.songDetail.artist.toLowerCase() === songDetail.artist.split(" ")[0].toLowerCase()) {
         songDetail.seconds = mb.songDetail.seconds;
-        songDetail.thumbnail = mb.songDetail.thumbnail
+        songDetail.thumbnail = mb.songDetail.thumbnail;
         if (!songDetail.bpm && mb.songDetail.bpm) songDetail.bpm = mb.songDetail.bpm;
         if (mb.id) {
           links.push({ service: "MusicBrainz", url: `https://musicbrainz.org/recording/${mb.id}`, serviceKey: mb.id });
@@ -63,12 +61,12 @@ export class MusicBrainzHelper {
     const result: SongDetail = {
       // musicBrainzId: recording.id,
       title: recording.title,
-      artist: recording['artist-credit']?.[0]?.name,
+      artist: recording["artist-credit"]?.[0]?.name,
       album: recording.releases?.[0]?.title,
       releaseDate: recording.releases?.[0]?.date ? new Date(recording.releases?.[0]?.date) : undefined,
       seconds: recording.length ? Math.round(recording.length / 1000) : 0,
       thumbnail: recording.releases?.[0]?.id ? this.getCoverArtUrl(recording.releases?.[0]?.id) : undefined
-    }
+    };
     return result;
   }
 

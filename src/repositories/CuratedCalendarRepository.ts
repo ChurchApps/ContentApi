@@ -1,11 +1,10 @@
 import { injectable } from "inversify";
-import { UniqueIdHelper } from "@churchapps/apihelper"
-import { DB } from "@churchapps/apihelper"
+import { UniqueIdHelper } from "@churchapps/apihelper";
+import { DB } from "@churchapps/apihelper";
 import { CuratedCalendar } from "../models";
 
 @injectable()
 export class CuratedCalendarRepository {
-
   public save(curatedCalendar: CuratedCalendar) {
     return curatedCalendar.id ? this.update(curatedCalendar) : this.create(curatedCalendar);
   }
@@ -37,5 +36,4 @@ export class CuratedCalendarRepository {
   public loadAll(churchId: string) {
     return DB.query("SELECT * FROM curatedCalendars WHERE churchId=?;", [churchId]);
   }
-
 }

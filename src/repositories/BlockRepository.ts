@@ -1,11 +1,10 @@
 import { injectable } from "inversify";
-import { UniqueIdHelper } from "@churchapps/apihelper"
-import { DB } from "@churchapps/apihelper"
+import { UniqueIdHelper } from "@churchapps/apihelper";
+import { DB } from "@churchapps/apihelper";
 import { Block } from "../models";
 
 @injectable()
 export class BlockRepository {
-
   public save(block: Block) {
     return block.id ? this.update(block) : this.create(block);
   }
@@ -38,8 +37,7 @@ export class BlockRepository {
     return DB.query("SELECT * FROM blocks WHERE churchId=? ORDER BY name;", [churchId]);
   }
 
-  public loadByBlockType(churchId: string, blockType:string) {
+  public loadByBlockType(churchId: string, blockType: string) {
     return DB.query("SELECT * FROM blocks WHERE churchId=? and blockType=? ORDER BY name;", [churchId, blockType]);
   }
-
 }

@@ -1,4 +1,3 @@
-
 export class Link {
   id?: string;
   churchId: string;
@@ -10,5 +9,5 @@ export class Link {
   icon: string;
   text: string;
   sort: number;
-  parentId?:string;
+  parentId?: string;
 }

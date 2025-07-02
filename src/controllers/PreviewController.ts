@@ -2,7 +2,7 @@ import { controller, httpGet, requestParam } from "inversify-express-utils";
 import { Sermon, StreamingService } from "../models";
 import { StreamingConfigHelper, SubDomainHelper } from "../helpers";
 import { ContentBaseController } from "./ContentBaseController";
-import { Link } from "../models"
+import { Link } from "../models";
 
 @controller("/preview")
 export class PreviewController extends ContentBaseController {
@@ -16,10 +16,10 @@ export class PreviewController extends ContentBaseController {
       let sermons: Sermon[] = null;
 
       const promises: Promise<any>[] = [];
-      promises.push(this.repositories.link.loadByCategory(churchId, 'streamingTab').then(d => tabs = d));
-      promises.push(this.repositories.link.loadByCategory(churchId, 'streamingLink').then(d => links = d));
-      promises.push(this.repositories.streamingService.loadAll(churchId).then(d => services = d));
-      promises.push(this.repositories.sermon.loadAll(churchId).then(d => sermons = d));
+      promises.push(this.repositories.link.loadByCategory(churchId, "streamingTab").then((d) => (tabs = d)));
+      promises.push(this.repositories.link.loadByCategory(churchId, "streamingLink").then((d) => (links = d)));
+      promises.push(this.repositories.streamingService.loadAll(churchId).then((d) => (services = d)));
+      promises.push(this.repositories.sermon.loadAll(churchId).then((d) => (sermons = d)));
       await Promise.all(promises);
 
       const result = StreamingConfigHelper.generateJson(churchId, tabs, links, services, sermons);

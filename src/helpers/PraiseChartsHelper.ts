@@ -5,22 +5,29 @@ import { Repositories } from "../repositories";
 import https from "https";
 
 export class PraiseChartsHelper {
-
   static async loadUserTokens(au: any) {
     const settings: Setting[] = await Repositories.getCurrent().setting.loadUser(au.churchId, au.id);
-    const token = settings.find(s => s.keyName === "praiseChartsAccessToken")?.value;
-    const secret = settings.find(s => s.keyName === "praiseChartsAccessTokenSecret")?.value;
+    const token = settings.find((s) => s.keyName === "praiseChartsAccessToken")?.value;
+    const secret = settings.find((s) => s.keyName === "praiseChartsAccessTokenSecret")?.value;
     return { token, secret };
   }
 
   static getOAuth(returnUrl?: string) {
     const requestTokenUrl = "https://api.praisecharts.com/oauth/request_token";
     const accessTokenUrl = "https://api.praisecharts.com/oauth/access_token";
-    const oauth = new OAuth.OAuth(requestTokenUrl, accessTokenUrl, Environment.praiseChartsConsumerKey, Environment.praiseChartsConsumerSecret, "1.0A", returnUrl || "https://churchapps.org/", "HMAC-SHA1");
+    const oauth = new OAuth.OAuth(
+      requestTokenUrl,
+      accessTokenUrl,
+      Environment.praiseChartsConsumerKey,
+      Environment.praiseChartsConsumerSecret,
+      "1.0A",
+      returnUrl || "https://churchapps.org/",
+      "HMAC-SHA1"
+    );
     return oauth;
   }
 
-  static getRequestToken(returnUrl: string): Promise<{ oauthToken: string, oauthTokenSecret: string }> {
+  static getRequestToken(returnUrl: string): Promise<{ oauthToken: string; oauthTokenSecret: string }> {
     return new Promise((resolve, reject) => {
       const oauth = this.getOAuth(returnUrl);
       oauth.getOAuthRequestToken((err, oauthToken, oauthTokenSecret) => {
@@ -34,18 +41,17 @@ export class PraiseChartsHelper {
     return `https://api.praisecharts.com/oauth/authorize?oauth_token=${oauthToken}`;
   }
 
-  static getAccessToken(oauthToken: string, oauthTokenSecret: string, oauthVerifier: string): Promise<{ accessToken: string, accessTokenSecret: string }> {
+  static getAccessToken(
+    oauthToken: string,
+    oauthTokenSecret: string,
+    oauthVerifier: string
+  ): Promise<{ accessToken: string; accessTokenSecret: string }> {
     return new Promise((resolve, reject) => {
       const oauth = this.getOAuth("http://localhost:3101/pingback");
-      oauth.getOAuthAccessToken(
-        oauthToken,
-        oauthTokenSecret,
-        oauthVerifier,
-        (err, accessToken, accessTokenSecret) => {
-          if (err) return reject(err);
-          resolve({ accessToken, accessTokenSecret });
-        }
-      );
+      oauth.getOAuthAccessToken(oauthToken, oauthTokenSecret, oauthVerifier, (err, accessToken, accessTokenSecret) => {
+        if (err) return reject(err);
+        resolve({ accessToken, accessTokenSecret });
+      });
     });
   }
 
@@ -71,11 +77,12 @@ export class PraiseChartsHelper {
   }
 
   static async search(query: string) {
-    const includes = "&arr_includes[]=id"
-      + "&arr_includes[]=details.title"
-      + "&arr_includes[]=details.artists.names"
-      + "&arr_includes[]=details.album.title"
-      + "&arr_includes[]=details.album.images.md.url";
+    const includes =
+      "&arr_includes[]=id" +
+      "&arr_includes[]=details.title" +
+      "&arr_includes[]=details.artists.names" +
+      "&arr_includes[]=details.album.title" +
+      "&arr_includes[]=details.album.images.md.url";
     const url = `https://api.praisecharts.com/v1.0/catalog/search?q=${encodeURIComponent(query)}${includes}`;
     const response = await fetch(url);
     if (response.ok) {
@@ -86,7 +93,6 @@ export class PraiseChartsHelper {
     }
   }
 
-
   static async download(skus: string[], keys: string[], accessToken: string, accessTokenSecret: string) {
     let url = `https://api.praisecharts.com/v1.0/download?skus[]=${encodeURIComponent(skus.join(","))}`;
     if (keys.length > 0) url += "&keys[]=" + keys.join(",");
@@ -96,8 +102,11 @@ export class PraiseChartsHelper {
     return new Promise((resolve, reject) => {
       const req = https.request(url, { method: "GET", headers: { Authorization: authHeader } }, (res) => {
         const chunks: Buffer[] = [];
-        res.on("data", chunk => chunks.push(chunk));
-        res.on("end", () => { const buffer = Buffer.concat(chunks); resolve(buffer); });
+        res.on("data", (chunk) => chunks.push(chunk));
+        res.on("end", () => {
+          const buffer = Buffer.concat(chunks);
+          resolve(buffer);
+        });
       });
 
       req.on("error", reject);
@@ -147,7 +156,7 @@ export class PraiseChartsHelper {
     if (response.ok) {
       const data = await response.json();
       const songDetails = this.convertItemToSongDetail(data.arrangements.items[0]);
-      this.appendDetails(data.arrangements.items[0], songDetails)
+      this.appendDetails(data.arrangements.items[0], songDetails);
       const links = this.getLinks(data.arrangements.items[0]);
       return { songDetails, links };
     } else {
@@ -156,7 +165,7 @@ export class PraiseChartsHelper {
   }
 
   private static convertItemsToSongDetails(items: any[]) {
-    return items.map(item => {
+    return items.map((item) => {
       return this.convertItemToSongDetail(item);
     });
   }
@@ -169,7 +178,7 @@ export class PraiseChartsHelper {
       album: item.details?.album?.title,
       thumbnail: item.details?.album?.images?.md?.url,
       seconds: 0
-    }
+    };
     return result;
   }
 
@@ -186,13 +195,24 @@ export class PraiseChartsHelper {
     const result: SongDetailLink[] = [];
     if (item.details.external_ids) {
       const externalIds = item.details.external_ids;
-      if (externalIds.spotify_id) result.push({ service: "Spotify", serviceKey: externalIds.spotify_id, url: "https://open.spotify.com/track/" + externalIds.spotify_id });
-      if (externalIds.ccli_number) result.push({ service: "CCLI", serviceKey: externalIds.ccli_number, url: "https://songselect.ccli.com/Songs/" + externalIds.ccli_number });
+      if (externalIds.spotify_id)
+        result.push({
+          service: "Spotify",
+          serviceKey: externalIds.spotify_id,
+          url: "https://open.spotify.com/track/" + externalIds.spotify_id
+        });
+      if (externalIds.ccli_number)
+        result.push({
+          service: "CCLI",
+          serviceKey: externalIds.ccli_number,
+          url: "https://songselect.ccli.com/Songs/" + externalIds.ccli_number
+        });
       if (externalIds.isrc) result.push({ service: "ISRC", serviceKey: externalIds.isrc });
     }
     if (item.details.external_urls) {
       const externalUrls = item.details.external_urls;
-      if (externalUrls.youtube) result.push({ service: "YouTube", id: externalUrls.youtube.split("=")[1], url: externalUrls.youtube });
+      if (externalUrls.youtube)
+        result.push({ service: "YouTube", id: externalUrls.youtube.split("=")[1], url: externalUrls.youtube });
     }
     return result;
   }
@@ -236,7 +256,13 @@ export class PraiseChartsHelper {
     return (matchCount / searchWords.length) * 100;
   }
 
-  static async findBestMatch(title?: string, artist?: string, lyrics?: string, ccliNumber?: string, geniusId?: string): Promise<SongDetail | null> {
+  static async findBestMatch(
+    title?: string,
+    artist?: string,
+    lyrics?: string,
+    ccliNumber?: string,
+    geniusId?: string
+  ): Promise<SongDetail | null> {
     try {
       // First try CCLI number if provided
       if (ccliNumber) {
@@ -256,14 +282,15 @@ export class PraiseChartsHelper {
       if (artist) searchQuery += ` ${artist}`;
 
       if (searchQuery.trim()) {
-        const includes = "&arr_includes[]=id"
-          + "&arr_includes[]=details.title"
-          + "&arr_includes[]=details.artists.names"
-          + "&arr_includes[]=details.album.title"
-          + "&arr_includes[]=details.album.images.md.url"
-          + "&arr_includes[]=details.external_ids.ccli_number"
-          + "&arr_includes[]=details.external_ids.genius_id"
-          + "&arr_includes[]=details.lyrics";
+        const includes =
+          "&arr_includes[]=id" +
+          "&arr_includes[]=details.title" +
+          "&arr_includes[]=details.artists.names" +
+          "&arr_includes[]=details.album.title" +
+          "&arr_includes[]=details.album.images.md.url" +
+          "&arr_includes[]=details.external_ids.ccli_number" +
+          "&arr_includes[]=details.external_ids.genius_id" +
+          "&arr_includes[]=details.lyrics";
 
         const url = `https://api.praisecharts.com/v1.0/catalog/search?q=${encodeURIComponent(searchQuery.trim())}${includes}`;
         const response = await fetch(url);
@@ -302,7 +329,9 @@ export class PraiseChartsHelper {
 
   static getArtistBestMatch(arrangements: any, artist: string) {
     let bestMatch = arrangements[0];
-    let bestScore = bestMatch.details?.artists?.names ? this.calculateMatchScore(artist, bestMatch.details?.artists?.names || "") : 0;
+    let bestScore = bestMatch.details?.artists?.names
+      ? this.calculateMatchScore(artist, bestMatch.details?.artists?.names || "")
+      : 0;
 
     for (let i = 1; i < arrangements.length; i++) {
       const currentItem = arrangements[i];
@@ -334,5 +363,4 @@ export class PraiseChartsHelper {
       throw new Error(`Error searching PraiseCharts by Genius ID: ${error.message}`);
     }
   }
-
 }

@@ -1,11 +1,10 @@
 import { injectable } from "inversify";
-import { UniqueIdHelper } from "@churchapps/apihelper"
-import { DB } from "@churchapps/apihelper"
+import { UniqueIdHelper } from "@churchapps/apihelper";
+import { DB } from "@churchapps/apihelper";
 import { Section } from "../models";
 
 @injectable()
 export class SectionRepository {
-
   public save(section: Section) {
     return section.id ? this.update(section) : this.create(section);
   }
@@ -13,15 +12,47 @@ export class SectionRepository {
   private async create(section: Section) {
     section.id = UniqueIdHelper.shortId();
 
-    const sql = "INSERT INTO sections (id, churchId, pageId, blockId, zone, background, textColor, headingColor, linkColor, sort, targetBlockId, answersJSON, stylesJSON, animationsJSON) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?);";
-    const params = [section.id, section.churchId, section.pageId, section.blockId, section.zone, section.background, section.textColor, section.headingColor, section.linkColor, section.sort, section.targetBlockId, section.answersJSON, section.stylesJSON, section.animationsJSON];
+    const sql =
+      "INSERT INTO sections (id, churchId, pageId, blockId, zone, background, textColor, headingColor, linkColor, sort, targetBlockId, answersJSON, stylesJSON, animationsJSON) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?);";
+    const params = [
+      section.id,
+      section.churchId,
+      section.pageId,
+      section.blockId,
+      section.zone,
+      section.background,
+      section.textColor,
+      section.headingColor,
+      section.linkColor,
+      section.sort,
+      section.targetBlockId,
+      section.answersJSON,
+      section.stylesJSON,
+      section.animationsJSON
+    ];
     await DB.query(sql, params);
     return section;
   }
 
   private async update(section: Section) {
-    const sql = "UPDATE sections SET pageId=?, blockId=?, zone=?, background=?, textColor=?, headingColor=?, linkColor=?, sort=?, targetBlockId=?, answersJSON=?, stylesJSON=?, animationsJSON=? WHERE id=? and churchId=?";
-    const params = [section.pageId, section.blockId, section.zone, section.background, section.textColor, section.headingColor, section.linkColor, section.sort, section.targetBlockId, section.answersJSON, section.stylesJSON, section.animationsJSON, section.id, section.churchId];
+    const sql =
+      "UPDATE sections SET pageId=?, blockId=?, zone=?, background=?, textColor=?, headingColor=?, linkColor=?, sort=?, targetBlockId=?, answersJSON=?, stylesJSON=?, animationsJSON=? WHERE id=? and churchId=?";
+    const params = [
+      section.pageId,
+      section.blockId,
+      section.zone,
+      section.background,
+      section.textColor,
+      section.headingColor,
+      section.linkColor,
+      section.sort,
+      section.targetBlockId,
+      section.answersJSON,
+      section.stylesJSON,
+      section.animationsJSON,
+      section.id,
+      section.churchId
+    ];
     await DB.query(sql, params);
     return section;
   }
@@ -67,11 +98,17 @@ export class SectionRepository {
   }
 
   public loadForPage(churchId: string, pageId: string) {
-    return DB.query("SELECT * FROM sections WHERE churchId=? AND (pageId=? or (pageId IS NULL and blockId IS NULL)) order by sort;", [churchId, pageId]);
+    return DB.query(
+      "SELECT * FROM sections WHERE churchId=? AND (pageId=? or (pageId IS NULL and blockId IS NULL)) order by sort;",
+      [churchId, pageId]
+    );
   }
 
   public loadForZone(churchId: string, pageId: string, zone: string) {
-    return DB.query("SELECT * FROM sections WHERE churchId=? AND pageId=? AND zone=? order by sort;", [churchId, pageId, zone]);
+    return DB.query("SELECT * FROM sections WHERE churchId=? AND pageId=? AND zone=? order by sort;", [
+      churchId,
+      pageId,
+      zone
+    ]);
   }
-
 }

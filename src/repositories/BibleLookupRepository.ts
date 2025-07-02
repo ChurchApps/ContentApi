@@ -1,14 +1,15 @@
 import { injectable } from "inversify";
-import { UniqueIdHelper } from "@churchapps/apihelper"
-import { DB } from "@churchapps/apihelper"
+import { UniqueIdHelper } from "@churchapps/apihelper";
+import { DB } from "@churchapps/apihelper";
 import { BibleLookup } from "../models";
 
 @injectable()
 export class BibleLookupRepository {
-
   public saveAll(lookups: BibleLookup[]) {
     const promises: Promise<BibleLookup>[] = [];
-    lookups.forEach(b => { promises.push(this.save(b)); });
+    lookups.forEach((b) => {
+      promises.push(this.save(b));
+    });
     return Promise.all(promises);
   }
 
@@ -19,26 +20,36 @@ export class BibleLookupRepository {
   private async create(lookup: BibleLookup) {
     lookup.id = UniqueIdHelper.shortId();
 
-    const sql = "INSERT INTO bibleLookups (id, translationKey, lookupTime, ipAddress, startVerseKey, endVerseKey) VALUES (?, ?, now(), ?, ?, ?);";
+    const sql =
+      "INSERT INTO bibleLookups (id, translationKey, lookupTime, ipAddress, startVerseKey, endVerseKey) VALUES (?, ?, now(), ?, ?, ?);";
     const params = [lookup.id, lookup.translationKey, lookup.ipAddress, lookup.startVerseKey, lookup.endVerseKey];
     await DB.query(sql, params);
     return lookup;
   }
 
   private async update(lookup: BibleLookup) {
-    const sql = "UPDATE bibleLookups SET translationKey=?, lookupTime=?, ipAddress=?, startVerseKey=?, endVerseKey=? WHERE id=?";
-    const params = [lookup.translationKey, lookup.lookupTime, lookup.ipAddress, lookup.startVerseKey, lookup.endVerseKey, lookup.id];
+    const sql =
+      "UPDATE bibleLookups SET translationKey=?, lookupTime=?, ipAddress=?, startVerseKey=?, endVerseKey=? WHERE id=?";
+    const params = [
+      lookup.translationKey,
+      lookup.lookupTime,
+      lookup.ipAddress,
+      lookup.startVerseKey,
+      lookup.endVerseKey,
+      lookup.id
+    ];
     await DB.query(sql, params);
     return lookup;
   }
 
   public async getStats(startDate: Date, endDate: Date) {
-    const sql = "SELECT bt.abbreviation, count(distinct(bl.ipAddress)) as lookups" +
+    const sql =
+      "SELECT bt.abbreviation, count(distinct(bl.ipAddress)) as lookups" +
       " FROM bibletranslations bt" +
       " INNER JOIN biblelookups bl ON bl.translationKey = bt.abbreviation" +
       " WHERE bl.lookupTime BETWEEN ? AND ?" +
       " GROUP BY bt.abbreviation" +
-      " ORDER BY bt.abbreviation;"
+      " ORDER BY bt.abbreviation;";
     const params = [startDate, endDate];
     return DB.query(sql, params);
   }
@@ -50,6 +61,4 @@ export class BibleLookupRepository {
   public load(id: string) {
     return DB.queryOne("SELECT * FROM bibleLookups WHERE id=?;", [id]);
   }
-
-
 }

@@ -12,10 +12,6 @@ export interface FreeShowSong {
 }
 
 export class SongHelper {
-
-
-
-
   static async importSongs(churchId: string, songs: FreeShowSong[]): Promise<Arrangement[]> {
     const promises: Promise<Arrangement>[] = [];
     for (const song of songs) {
@@ -38,7 +34,7 @@ export class SongHelper {
       churchId,
       name: customSongDetail.title,
       dateAdded: new Date()
-    }
+    };
     const song = await Repositories.getCurrent().song.save(customSong);
     const customArrangement: Arrangement = {
       churchId,
@@ -46,7 +42,7 @@ export class SongHelper {
       songDetailId: songDetail.id,
       name: "Default",
       lyrics: freeshowSong.lyrics || "",
-      freeShowId: freeshowSong.freeShowId,
+      freeShowId: freeshowSong.freeShowId
     };
     const result = await Repositories.getCurrent().arrangement.save(customArrangement);
     const arrangementKey: ArrangementKey = {
@@ -61,9 +57,11 @@ export class SongHelper {
 
   static async importSong(churchId: string, freeshowSong: FreeShowSong): Promise<Arrangement> {
     try {
-
       // 1. Check if arrangement already exists for this church and freeshow key
-      const exactMathArrangement = await Repositories.getCurrent().arrangement.loadByFreeShowId(churchId, freeshowSong.freeShowId);
+      const exactMathArrangement = await Repositories.getCurrent().arrangement.loadByFreeShowId(
+        churchId,
+        freeshowSong.freeShowId
+      );
       if (exactMathArrangement) return exactMathArrangement;
 
       // 2. Try to find existing song by CCLI
@@ -77,16 +75,29 @@ export class SongHelper {
       }
 
       // 4. Look up song on PraiseCharts
-      const praiseChartsResult = await PraiseChartsHelper.findBestMatch(freeshowSong.title, freeshowSong.artist, freeshowSong.lyrics, freeshowSong.ccliNumber, freeshowSong.geniusId);
+      const praiseChartsResult = await PraiseChartsHelper.findBestMatch(
+        freeshowSong.title,
+        freeshowSong.artist,
+        freeshowSong.lyrics,
+        freeshowSong.ccliNumber,
+        freeshowSong.geniusId
+      );
       if (!praiseChartsResult) {
         return this.createCustomSong(churchId, freeshowSong);
       }
 
       // 5. Get or create song detail
-      const songDetail = await this.getOrCreateSongDetail(praiseChartsResult, freeshowSong.ccliNumber, freeshowSong.geniusId);
+      const songDetail = await this.getOrCreateSongDetail(
+        praiseChartsResult,
+        freeshowSong.ccliNumber,
+        freeshowSong.geniusId
+      );
 
       // 6. Check if arrangement exists for this church
-      const existingArrangement = await Repositories.getCurrent().arrangement.loadBySongDetailId(churchId, songDetail.id);
+      const existingArrangement = await Repositories.getCurrent().arrangement.loadBySongDetailId(
+        churchId,
+        songDetail.id
+      );
       if (existingArrangement.length > 0) {
         // If arrangement exists, update it with freeshow details
         if (!existingArrangement[0].freeShowId && freeshowSong.freeShowId) {
@@ -111,7 +122,10 @@ export class SongHelper {
     if (existingByCCLI) {
       const songDetail = await Repositories.getCurrent().songDetail.load(existingByCCLI.songDetailId);
       if (songDetail) {
-        const existingArrangement = await Repositories.getCurrent().arrangement.loadBySongDetailId(churchId, songDetail.id);
+        const existingArrangement = await Repositories.getCurrent().arrangement.loadBySongDetailId(
+          churchId,
+          songDetail.id
+        );
         if (existingArrangement.length > 0) return songDetail;
       }
     }
@@ -123,7 +137,10 @@ export class SongHelper {
     if (existingByGenius) {
       const songDetail = await Repositories.getCurrent().songDetail.load(existingByGenius.songDetailId);
       if (songDetail) {
-        const existingArrangement = await Repositories.getCurrent().arrangement.loadBySongDetailId(churchId, songDetail.id);
+        const existingArrangement = await Repositories.getCurrent().arrangement.loadBySongDetailId(
+          churchId,
+          songDetail.id
+        );
         if (existingArrangement.length > 0) {
           return existingArrangement[0];
         }
@@ -132,7 +149,11 @@ export class SongHelper {
     return null;
   }
 
-  private static async getOrCreateSongDetail(praiseChartsResult: SongDetail, ccliNumber?: string, geniusId?: string): Promise<SongDetail> {
+  private static async getOrCreateSongDetail(
+    praiseChartsResult: SongDetail,
+    ccliNumber?: string,
+    geniusId?: string
+  ): Promise<SongDetail> {
     let songDetail = await Repositories.getCurrent().songDetail.loadByPraiseChartsId(praiseChartsResult.praiseChartsId);
 
     if (!songDetail) {
@@ -161,11 +182,18 @@ export class SongHelper {
     }
   }
 
-  private static async createAdditionalLinks(songDetail: SongDetail, ccliNumber?: string, geniusId?: string): Promise<void> {
+  private static async createAdditionalLinks(
+    songDetail: SongDetail,
+    ccliNumber?: string,
+    geniusId?: string
+  ): Promise<void> {
     const existingLinks = await Repositories.getCurrent().songDetailLink.loadForSongDetail(songDetail.id);
 
     // Create CCLI link if provided and doesn't exist
-    if (ccliNumber && !existingLinks.some((link: SongDetailLink) => link.service === "CCLI" && link.serviceKey === ccliNumber)) {
+    if (
+      ccliNumber &&
+      !existingLinks.some((link: SongDetailLink) => link.service === "CCLI" && link.serviceKey === ccliNumber)
+    ) {
       const ccliLink: SongDetailLink = {
         songDetailId: songDetail.id,
         service: "CCLI",
@@ -176,7 +204,10 @@ export class SongHelper {
     }
 
     // Create Genius link if provided and doesn't exist
-    if (geniusId && !existingLinks.some((link: SongDetailLink) => link.service === "Genius" && link.serviceKey === geniusId)) {
+    if (
+      geniusId &&
+      !existingLinks.some((link: SongDetailLink) => link.service === "Genius" && link.serviceKey === geniusId)
+    ) {
       const geniusLink: SongDetailLink = {
         songDetailId: songDetail.id,
         service: "Genius",
@@ -187,7 +218,11 @@ export class SongHelper {
     }
   }
 
-  private static async createSongAndArrangement(churchId: string, songDetail: SongDetail, freeShowSong: FreeShowSong): Promise<Arrangement> {
+  private static async createSongAndArrangement(
+    churchId: string,
+    songDetail: SongDetail,
+    freeShowSong: FreeShowSong
+  ): Promise<Arrangement> {
     // Create new Song
     const song: Song = {
       churchId,
@@ -203,7 +238,7 @@ export class SongHelper {
       songDetailId: songDetail.id,
       name: "Default",
       lyrics: freeShowSong.lyrics || "",
-      freeShowId: freeShowSong.freeShowId,
+      freeShowId: freeShowSong.freeShowId
     };
     const result = await Repositories.getCurrent().arrangement.save(arrangement);
 
@@ -217,5 +252,4 @@ export class SongHelper {
 
     return result;
   }
-
 }

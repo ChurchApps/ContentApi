@@ -1,7 +1,7 @@
 export enum RoleContentType {
-    ADMIN = "Admin",
+  ADMIN = "Admin"
 }
 
 export enum RoleAction {
-    EDIT_SETTINGS = "Edit Settings",
+  EDIT_SETTINGS = "Edit Settings"
 }

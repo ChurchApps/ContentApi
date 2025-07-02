@@ -1,33 +1,41 @@
-import { controller, httpDelete, httpGet, httpPost, interfaces, requestParam, } from "inversify-express-utils";
+import { controller, httpDelete, httpGet, httpPost, interfaces, requestParam } from "inversify-express-utils";
 import express from "express";
 import { ContentBaseController } from "./ContentBaseController";
 import { SongDetailLink } from "../models";
 import { MusicBrainzHelper } from "../helpers/MusicBrainzHelper";
 
-
 @controller("/songDetailLinks")
 export class SongDetailLinkController extends ContentBaseController {
-
   @httpGet("/:id")
-  public async get(@requestParam("id") id: string, req: express.Request<{}, {}, null>, res: express.Response): Promise<any> {
+  public async get(
+    @requestParam("id") id: string,
+    req: express.Request<{}, {}, null>,
+    res: express.Response
+  ): Promise<any> {
     return this.actionWrapper(req, res, async () => {
       return await this.repositories.songDetailLink.load(id);
     });
   }
 
-
   @httpGet("/songDetail/:songDetailId")
-  public async getForSongDetail(@requestParam("songDetailId") songDetailId: string, req: express.Request<{}, {}, null>, res: express.Response): Promise<interfaces.IHttpActionResult> {
+  public async getForSongDetail(
+    @requestParam("songDetailId") songDetailId: string,
+    req: express.Request<{}, {}, null>,
+    res: express.Response
+  ): Promise<interfaces.IHttpActionResult> {
     return this.actionWrapper(req, res, async () => {
       return await this.repositories.songDetailLink.loadForSongDetail(songDetailId);
-    })
+    });
   }
 
   @httpPost("/")
-  public async save(req: express.Request<{}, {}, SongDetailLink[]>, res: express.Response): Promise<interfaces.IHttpActionResult> {
+  public async save(
+    req: express.Request<{}, {}, SongDetailLink[]>,
+    res: express.Response
+  ): Promise<interfaces.IHttpActionResult> {
     return this.actionWrapper(req, res, async () => {
       const promises: Promise<SongDetailLink>[] = [];
-      req.body.forEach(sd => {
+      req.body.forEach((sd) => {
         promises.push(this.repositories.songDetailLink.save(sd));
       });
       const result = await Promise.all(promises);
@@ -44,7 +52,6 @@ export class SongDetailLinkController extends ContentBaseController {
     });
   }
 
-
   @httpDelete("/:id")
   public async delete(@requestParam("id") id: string, req: express.Request, res: express.Response): Promise<void> {
     return this.actionWrapper(req, res, async () => {
@@ -52,5 +59,4 @@ export class SongDetailLinkController extends ContentBaseController {
       return null;
     });
   }
-
 }

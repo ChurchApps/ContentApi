@@ -1,14 +1,17 @@
 import { controller, httpPost, httpGet, interfaces, requestParam, httpDelete } from "inversify-express-utils";
 import express from "express";
-import { ContentBaseController } from "./ContentBaseController"
-import { CuratedCalendar } from "../models"
+import { ContentBaseController } from "./ContentBaseController";
+import { CuratedCalendar } from "../models";
 import { Permissions } from "../helpers";
 
 @controller("/curatedCalendars")
 export class CuratedCalendarController extends ContentBaseController {
-
   @httpGet("/:id")
-  public async get(@requestParam("id") id: string, req: express.Request<{}, {}, null>, res: express.Response): Promise<interfaces.IHttpActionResult> {
+  public async get(
+    @requestParam("id") id: string,
+    req: express.Request<{}, {}, null>,
+    res: express.Response
+  ): Promise<interfaces.IHttpActionResult> {
     return this.actionWrapper(req, res, async (au) => {
       return await this.repositories.curatedCalendar.load(au.churchId, id);
     });
@@ -22,12 +25,15 @@ export class CuratedCalendarController extends ContentBaseController {
   }
 
   @httpPost("/")
-  public async save(req: express.Request<{}, {}, CuratedCalendar[]>, res: express.Response): Promise<interfaces.IHttpActionResult> {
+  public async save(
+    req: express.Request<{}, {}, CuratedCalendar[]>,
+    res: express.Response
+  ): Promise<interfaces.IHttpActionResult> {
     return this.actionWrapper(req, res, async (au) => {
       if (!au.checkAccess(Permissions.content.edit)) return this.json({}, 401);
       else {
         const promises: Promise<CuratedCalendar>[] = [];
-        req.body.forEach(curatedCalendar => {
+        req.body.forEach((curatedCalendar) => {
           curatedCalendar.churchId = au.churchId;
           promises.push(this.repositories.curatedCalendar.save(curatedCalendar));
         });
@@ -38,7 +44,11 @@ export class CuratedCalendarController extends ContentBaseController {
   }
 
   @httpDelete("/:id")
-  public async delete(@requestParam("id") id: string, req: express.Request<{}, {}, null>, res: express.Response): Promise<interfaces.IHttpActionResult> {
+  public async delete(
+    @requestParam("id") id: string,
+    req: express.Request<{}, {}, null>,
+    res: express.Response
+  ): Promise<interfaces.IHttpActionResult> {
     return this.actionWrapper(req, res, async (au) => {
       if (!au.checkAccess(Permissions.content.edit)) return this.json({}, 401);
       else {
@@ -47,5 +57,4 @@ export class CuratedCalendarController extends ContentBaseController {
       }
     });
   }
-
 }
