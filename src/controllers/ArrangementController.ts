@@ -1,4 +1,4 @@
-import { controller, httpPost, httpGet, interfaces, requestParam, httpDelete } from "inversify-express-utils";
+import { controller, httpPost, httpGet, requestParam, httpDelete } from "inversify-express-utils";
 import express from "express";
 import { Arrangement } from "../models";
 import { ContentBaseController } from "./ContentBaseController";
@@ -22,7 +22,7 @@ export class ArrangementController extends ContentBaseController {
     @requestParam("songId") songId: string,
     req: express.Request<{}, {}, null>,
     res: express.Response
-  ): Promise<interfaces.IHttpActionResult> {
+  ): Promise<any> {
     return this.actionWrapper(req, res, async (au) => {
       if (!au.checkAccess(Permissions.content.edit)) return this.json({}, 401);
       else {
@@ -36,7 +36,7 @@ export class ArrangementController extends ContentBaseController {
     @requestParam("songDetailId") songDetailId: string,
     req: express.Request<{}, {}, null>,
     res: express.Response
-  ): Promise<interfaces.IHttpActionResult> {
+  ): Promise<any> {
     return this.actionWrapper(req, res, async (au) => {
       if (!au.checkAccess(Permissions.content.edit)) return this.json({}, 401);
       else {
@@ -46,10 +46,7 @@ export class ArrangementController extends ContentBaseController {
   }
 
   @httpGet("/")
-  public async getAll(
-    req: express.Request<{}, {}, null>,
-    res: express.Response
-  ): Promise<interfaces.IHttpActionResult> {
+  public async getAll(req: express.Request<{}, {}, null>, res: express.Response): Promise<any> {
     return this.actionWrapper(req, res, async (au) => {
       if (!au.checkAccess(Permissions.content.edit)) return this.json({}, 401);
       else {
@@ -59,10 +56,7 @@ export class ArrangementController extends ContentBaseController {
   }
 
   @httpPost("/")
-  public async post(
-    req: express.Request<{}, {}, Arrangement[]>,
-    res: express.Response
-  ): Promise<interfaces.IHttpActionResult> {
+  public async post(req: express.Request<{}, {}, Arrangement[]>, res: express.Response): Promise<any> {
     return this.actionWrapper(req, res, async (au) => {
       if (!au.checkAccess(Permissions.content.edit)) return this.json({}, 401);
       else {
@@ -78,7 +72,7 @@ export class ArrangementController extends ContentBaseController {
   }
 
   @httpDelete("/:id")
-  public async delete(@requestParam("id") id: string, req: express.Request, res: express.Response): Promise<void> {
+  public async delete(@requestParam("id") id: string, req: express.Request, res: express.Response): Promise<any> {
     return this.actionWrapper(req, res, async (au) => {
       if (!au.checkAccess(Permissions.content.edit)) return this.json({}, 401);
       else {
@@ -98,7 +92,7 @@ export class ArrangementController extends ContentBaseController {
   public async getMissingFreeShowArrangements(
     req: express.Request<{}, {}, { freeShowIds: string[] }>,
     res: express.Response
-  ): Promise<interfaces.IHttpActionResult> {
+  ): Promise<any> {
     return this.actionWrapper(req, res, async (au) => {
       const { freeShowIds } = req.body;
       if (!freeShowIds || !Array.isArray(freeShowIds)) {

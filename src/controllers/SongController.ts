@@ -1,4 +1,4 @@
-import { controller, httpPost, httpGet, interfaces, requestParam } from "inversify-express-utils";
+import { controller, httpPost, httpGet, requestParam } from "inversify-express-utils";
 import express from "express";
 import { Song } from "../models";
 import { ContentBaseController } from "./ContentBaseController";
@@ -8,10 +8,7 @@ import { FreeShowSong, SongHelper } from "../helpers/SongHelper";
 @controller("/songs")
 export class SongController extends ContentBaseController {
   @httpGet("/search")
-  public async search(
-    req: express.Request<{}, {}, null>,
-    res: express.Response
-  ): Promise<interfaces.IHttpActionResult> {
+  public async search(req: express.Request<{}, {}, null>, res: express.Response): Promise<any> {
     return this.actionWrapper(req, res, async (au) => {
       const query = req.query.q as string;
       const results = await this.repositories.song.search(au.churchId, query);
@@ -31,10 +28,7 @@ export class SongController extends ContentBaseController {
   }
 
   @httpGet("/")
-  public async getAll(
-    req: express.Request<{}, {}, null>,
-    res: express.Response
-  ): Promise<interfaces.IHttpActionResult> {
+  public async getAll(req: express.Request<{}, {}, null>, res: express.Response): Promise<any> {
     return this.actionWrapper(req, res, async (au) => {
       if (!au.checkAccess(Permissions.content.edit)) return this.json({}, 401);
       else {
@@ -45,7 +39,7 @@ export class SongController extends ContentBaseController {
 
   /*
     @httpPost("/create")
-    public async create(req: express.Request<{}, {}, Song>, res: express.Response): Promise<interfaces.IHttpActionResult> {
+    public async create(req: express.Request<{}, {}, Song>, res: express.Response): Promise<any> {
       return this.actionWrapper(req, res, async (au) => {
         const song = req.body;
         song.churchId = au.churchId;
@@ -57,10 +51,7 @@ export class SongController extends ContentBaseController {
     }*/
 
   @httpPost("/")
-  public async post(
-    req: express.Request<{}, {}, Song[]>,
-    res: express.Response
-  ): Promise<interfaces.IHttpActionResult> {
+  public async post(req: express.Request<{}, {}, Song[]>, res: express.Response): Promise<any> {
     return this.actionWrapper(req, res, async (au) => {
       if (!au.checkAccess(Permissions.content.edit)) return this.json({}, 401);
       else {
@@ -77,10 +68,7 @@ export class SongController extends ContentBaseController {
 
   // We should do batches of 10 or so.
   @httpPost("/import")
-  public async import(
-    req: express.Request<{}, {}, FreeShowSong[]>,
-    res: express.Response
-  ): Promise<interfaces.IHttpActionResult> {
+  public async import(req: express.Request<{}, {}, FreeShowSong[]>, res: express.Response): Promise<any> {
     return this.actionWrapper(req, res, async (au) => {
       // if (!au.checkAccess(Permissions.content.edit)) return this.json({}, 401); //This is via oAuth.  Need to figure out another way.
 

@@ -1,4 +1,4 @@
-import { controller, httpPost, interfaces } from "inversify-express-utils";
+import { controller, httpPost } from "inversify-express-utils";
 import express from "express";
 import { ContentBaseController } from "./ContentBaseController";
 import Pexels from "pexels";
@@ -7,10 +7,7 @@ import { Environment } from "../helpers";
 @controller("/stock")
 export class StockController extends ContentBaseController {
   @httpPost("/search")
-  public async getUploadUrl(
-    req: express.Request<{}, {}, { term: string }>,
-    res: express.Response
-  ): Promise<interfaces.IHttpActionResult> {
+  public async getUploadUrl(req: express.Request<{}, {}, { term: string }>, res: express.Response): Promise<any> {
     return this.actionWrapperAnon(req, res, async () => {
       const key = Environment.pexelsKey;
       const client = Pexels.createClient(key);

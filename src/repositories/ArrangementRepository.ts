@@ -1,6 +1,6 @@
 import { injectable } from "inversify";
 import { UniqueIdHelper } from "@churchapps/apihelper";
-import { DB } from "@churchapps/apihelper";
+import { TypedDB } from "../helpers";
 import { Arrangement } from "../models";
 
 @injectable()
@@ -31,7 +31,7 @@ export class ArrangementRepository {
       arrangement.lyrics,
       arrangement.freeShowId
     ];
-    await DB.query(sql, params);
+    await TypedDB.query(sql, params);
     return arrangement;
   }
 
@@ -47,31 +47,36 @@ export class ArrangementRepository {
       arrangement.id,
       arrangement.churchId
     ];
-    await DB.query(sql, params);
+    await TypedDB.query(sql, params);
     return arrangement;
   }
 
   public delete(churchId: string, id: string) {
-    return DB.query("DELETE FROM arrangements WHERE id=? and churchId=?;", [id, churchId]);
+    return TypedDB.query("DELETE FROM arrangements WHERE id=? and churchId=?;", [id, churchId]);
   }
 
   public loadAll(churchId: string) {
-    return DB.query("SELECT * FROM arrangements WHERE churchId=? ORDER BY name;", [churchId]);
+    return TypedDB.query("SELECT * FROM arrangements WHERE churchId=? ORDER BY name;", [churchId]);
   }
 
   public load(churchId: string, id: string) {
-    return DB.queryOne("SELECT * FROM arrangements WHERE id=? AND churchId=?;", [id, churchId]);
+    return TypedDB.queryOne("SELECT * FROM arrangements WHERE id=? AND churchId=?;", [
+      id,
+      churchId
+    ]) as Promise<Arrangement | null>;
   }
 
   public loadBySongId(churchId: string, songId: string) {
-    return DB.query("SELECT * FROM arrangements where churchId=? and songId=?;", [churchId, songId]);
+    return TypedDB.query("SELECT * FROM arrangements where churchId=? and songId=?;", [churchId, songId]) as Promise<
+      Arrangement[]
+    >;
   }
 
   public loadBySongDetailId(churchId: string, songDetailId: string) {
-    return DB.query("SELECT * FROM arrangements where churchId=? and songDetailId=?;", [churchId, songDetailId]);
+    return TypedDB.query("SELECT * FROM arrangements where churchId=? and songDetailId=?;", [churchId, songDetailId]);
   }
 
   public loadByFreeShowId(churchId: string, freeShowId: string) {
-    return DB.queryOne("SELECT * FROM arrangements where churchId=? and freeShowId=?;", [churchId, freeShowId]);
+    return TypedDB.queryOne("SELECT * FROM arrangements where churchId=? and freeShowId=?;", [churchId, freeShowId]);
   }
 }

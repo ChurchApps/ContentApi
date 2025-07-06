@@ -1,5 +1,5 @@
 import { DateHelper, UniqueIdHelper } from "@churchapps/apihelper";
-import { DB } from "@churchapps/apihelper";
+import { TypedDB } from "../helpers";
 import { StreamingService } from "../models";
 
 export class StreamingServiceRepository {
@@ -27,7 +27,7 @@ export class StreamingServiceRepository {
       service.label,
       service.sermonId
     ];
-    await DB.query(sql, params);
+    await TypedDB.query(sql, params);
     return service;
   }
 
@@ -49,23 +49,23 @@ export class StreamingServiceRepository {
       service.sermonId,
       service.id
     ];
-    await DB.query(sql, params);
+    await TypedDB.query(sql, params);
     return service;
   }
 
   public delete(id: string, churchId: string) {
-    return DB.query("DELETE FROM streamingServices WHERE id=? AND churchId=?;", [id, churchId]);
+    return TypedDB.query("DELETE FROM streamingServices WHERE id=? AND churchId=?;", [id, churchId]);
   }
 
   public loadById(id: string, churchId: string): Promise<StreamingService> {
-    return DB.queryOne("SELECT * FROM streamingServices WHERE id=? AND churchId=?;", [id, churchId]);
+    return TypedDB.queryOne("SELECT * FROM streamingServices WHERE id=? AND churchId=?;", [id, churchId]);
   }
 
   public loadAll(churchId: string): Promise<StreamingService[]> {
-    return DB.query("SELECT * FROM streamingServices WHERE churchId=? ORDER BY serviceTime;", [churchId]);
+    return TypedDB.query("SELECT * FROM streamingServices WHERE churchId=? ORDER BY serviceTime;", [churchId]);
   }
 
   public loadAllRecurring(): Promise<StreamingService[]> {
-    return DB.query("SELECT * FROM streamingServices WHERE recurring=1 ORDER BY serviceTime;", []);
+    return TypedDB.query("SELECT * FROM streamingServices WHERE recurring=1 ORDER BY serviceTime;", []);
   }
 }

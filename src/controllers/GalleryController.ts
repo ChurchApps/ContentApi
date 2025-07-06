@@ -1,4 +1,4 @@
-import { controller, httpGet, httpPost, httpDelete, interfaces, requestParam } from "inversify-express-utils";
+import { controller, httpGet, httpPost, httpDelete, requestParam } from "inversify-express-utils";
 import express from "express";
 import { ContentBaseController } from "./ContentBaseController";
 import { AwsHelper, FileStorageHelper } from "@churchapps/apihelper";
@@ -11,7 +11,7 @@ export class GalleryController extends ContentBaseController {
     @requestParam("folder") folder: string,
     req: express.Request<{}, {}, null>,
     res: express.Response
-  ): Promise<interfaces.IHttpActionResult> {
+  ): Promise<any> {
     return this.actionWrapperAnon(req, res, async () => {
       const files = await FileStorageHelper.list("stockPhotos/" + folder);
       return { images: files };
@@ -23,7 +23,7 @@ export class GalleryController extends ContentBaseController {
     @requestParam("folder") folder: string,
     req: express.Request<{}, {}, null>,
     res: express.Response
-  ): Promise<interfaces.IHttpActionResult> {
+  ): Promise<any> {
     return this.actionWrapper(req, res, async (au) => {
       if (!au.checkAccess(Permissions.content.edit)) return this.json({}, 401);
       else {
@@ -37,7 +37,7 @@ export class GalleryController extends ContentBaseController {
   public async getUploadUrl(
     req: express.Request<{}, {}, { folder: string; fileName: string }>,
     res: express.Response
-  ): Promise<interfaces.IHttpActionResult> {
+  ): Promise<any> {
     return this.actionWrapper(req, res, async (au) => {
       if (!au.checkAccess(Permissions.content.edit)) return this.json({}, 401);
       else {
@@ -54,7 +54,7 @@ export class GalleryController extends ContentBaseController {
     @requestParam("image") image: string,
     req: express.Request<{}, {}, null>,
     res: express.Response
-  ): Promise<interfaces.IHttpActionResult> {
+  ): Promise<any> {
     return this.actionWrapper(req, res, async (au) => {
       if (!au.checkAccess(Permissions.content.edit)) return this.json({}, 401);
       else {

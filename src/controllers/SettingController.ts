@@ -1,4 +1,4 @@
-import { controller, httpPost, httpGet, interfaces, requestParam, httpDelete } from "inversify-express-utils";
+import { controller, httpPost, httpGet, requestParam, httpDelete } from "inversify-express-utils";
 import express from "express";
 import { Setting } from "../models";
 import { ContentBaseController } from "./ContentBaseController";
@@ -8,7 +8,7 @@ import { FileStorageHelper } from "@churchapps/apihelper";
 @controller("/settings")
 export class SettingController extends ContentBaseController {
   @httpGet("/my")
-  public async my(req: express.Request, res: express.Response): Promise<interfaces.IHttpActionResult> {
+  public async my(req: express.Request, res: express.Response): Promise<any> {
     return this.actionWrapper(req, res, async (au) => {
       return this.repositories.setting.convertAllToModel(
         au.churchId,
@@ -18,7 +18,7 @@ export class SettingController extends ContentBaseController {
   }
 
   @httpGet("/")
-  public async get(req: express.Request, res: express.Response): Promise<interfaces.IHttpActionResult> {
+  public async get(req: express.Request, res: express.Response): Promise<any> {
     return this.actionWrapper(req, res, async (au) => {
       if (!au.checkAccess(Permissions.settings.edit)) return this.json({}, 401);
       else {
@@ -31,10 +31,7 @@ export class SettingController extends ContentBaseController {
   }
 
   @httpPost("/my")
-  public async postMy(
-    req: express.Request<{}, {}, Setting[]>,
-    res: express.Response
-  ): Promise<interfaces.IHttpActionResult> {
+  public async postMy(req: express.Request<{}, {}, Setting[]>, res: express.Response): Promise<any> {
     return this.actionWrapper(req, res, async (au) => {
       const promises: Promise<Setting>[] = [];
       req.body.forEach((setting) => {
@@ -48,10 +45,7 @@ export class SettingController extends ContentBaseController {
   }
 
   @httpPost("/")
-  public async post(
-    req: express.Request<{}, {}, Setting[]>,
-    res: express.Response
-  ): Promise<interfaces.IHttpActionResult> {
+  public async post(req: express.Request<{}, {}, Setting[]>, res: express.Response): Promise<any> {
     return this.actionWrapper(req, res, async (au) => {
       if (!au.checkAccess(Permissions.settings.edit)) return this.json({}, 401);
       else {
@@ -67,7 +61,7 @@ export class SettingController extends ContentBaseController {
   }
 
   @httpGet("/public/:churchId")
-  public async publicRoute(@requestParam("churchId") churchId: string): Promise<interfaces.IHttpActionResult> {
+  public async publicRoute(@requestParam("churchId") churchId: string): Promise<any> {
     try {
       const settings = this.repositories.setting.convertAllToModel(
         churchId,
@@ -85,10 +79,7 @@ export class SettingController extends ContentBaseController {
   }
 
   @httpGet("/imports")
-  public async getAutoImportSettings(
-    req: express.Request<{}, {}, null>,
-    res: express.Response
-  ): Promise<interfaces.IHttpActionResult> {
+  public async getAutoImportSettings(req: express.Request<{}, {}, null>, res: express.Response): Promise<any> {
     return this.actionWrapper(req, res, async (au) => {
       if (!au.checkAccess(Permissions.settings.edit)) return this.json({}, 401);
       else {
@@ -112,7 +103,7 @@ export class SettingController extends ContentBaseController {
   }
 
   @httpDelete("/my/:id")
-  public async delete(@requestParam("id") id: string, req: express.Request, res: express.Response): Promise<void> {
+  public async delete(@requestParam("id") id: string, req: express.Request, res: express.Response): Promise<any> {
     return this.actionWrapper(req, res, async (au) => {
       await this.repositories.setting.deleteForUser(au.churchId, au.id, id);
       return this.json({ success: true });

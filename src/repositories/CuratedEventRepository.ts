@@ -1,6 +1,6 @@
 import { injectable } from "inversify";
 import { UniqueIdHelper } from "@churchapps/apihelper";
-import { DB } from "@churchapps/apihelper";
+import { TypedDB } from "../helpers";
 import { CuratedEvent } from "../models";
 
 @injectable()
@@ -20,7 +20,7 @@ export class CuratedEventRepository {
       curatedEvent.groupId,
       curatedEvent.eventId
     ];
-    await DB.query(sql, params);
+    await TypedDB.query(sql, params);
     return curatedEvent;
   }
 
@@ -33,16 +33,16 @@ export class CuratedEventRepository {
       curatedEvent.id,
       curatedEvent.churchId
     ];
-    await DB.query(sql, params);
+    await TypedDB.query(sql, params);
     return curatedEvent;
   }
 
   public delete(churchId: string, id: string) {
-    return DB.query("DELETE FROM curatedEvents WHERE id=? AND churchId=?;", [id, churchId]);
+    return TypedDB.query("DELETE FROM curatedEvents WHERE id=? AND churchId=?;", [id, churchId]);
   }
 
   public deleteByEventId(churchId: string, curatedCalendarId: string, eventId: string) {
-    return DB.query("DELETE FROM curatedEvents WHERE curatedCalendarId=? AND eventId=? and churchId=?;", [
+    return TypedDB.query("DELETE FROM curatedEvents WHERE curatedCalendarId=? AND eventId=? and churchId=?;", [
       curatedCalendarId,
       eventId,
       churchId
@@ -50,7 +50,7 @@ export class CuratedEventRepository {
   }
 
   public deleteByGroupId(churchId: string, curatedCalendarId: string, groupId: string) {
-    return DB.query("DELETE FROM curatedEvents WHERE curatedCalendarId=? AND groupId=? and churchId=?;", [
+    return TypedDB.query("DELETE FROM curatedEvents WHERE curatedCalendarId=? AND groupId=? and churchId=?;", [
       curatedCalendarId,
       groupId,
       churchId
@@ -58,15 +58,15 @@ export class CuratedEventRepository {
   }
 
   public load(churchId: string, id: string) {
-    return DB.queryOne("SELECT * FROM curatedEvents WHERE id=? AND churchId=?;", [id, churchId]);
+    return TypedDB.queryOne("SELECT * FROM curatedEvents WHERE id=? AND churchId=?;", [id, churchId]);
   }
 
   public loadAll(churchId: string) {
-    return DB.query("SELECT * FROM curatedEvents WHERE churchId=?;", [churchId]);
+    return TypedDB.query("SELECT * FROM curatedEvents WHERE churchId=?;", [churchId]);
   }
 
   public loadByCuratedCalendarId(churchId: string, curatedCalendarId: string) {
-    return DB.query("SELECT * FROM curatedEvents WHERE churchId=? AND curatedCalendarId=?;", [
+    return TypedDB.query("SELECT * FROM curatedEvents WHERE churchId=? AND curatedCalendarId=?;", [
       churchId,
       curatedCalendarId
     ]);
@@ -82,6 +82,6 @@ export class CuratedEventRepository {
       " ELSE e.id=ce.eventId" +
       " END)" +
       " where curatedCalendarId=? AND ce.churchId=? and e.visibility='public';";
-    return DB.query(sql, [curatedCalendarId, churchId]);
+    return TypedDB.query(sql, [curatedCalendarId, churchId]);
   }
 }

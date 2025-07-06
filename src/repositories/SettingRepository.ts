@@ -1,5 +1,6 @@
 import { injectable } from "inversify";
-import { ArrayHelper, DB, UniqueIdHelper } from "@churchapps/apihelper";
+import { ArrayHelper, UniqueIdHelper } from "@churchapps/apihelper";
+import { TypedDB } from "../helpers";
 import { Setting } from "../models";
 
 @injectable()
@@ -20,7 +21,7 @@ export class SettingRepository {
     setting.id = UniqueIdHelper.shortId();
     const sql = "INSERT INTO settings (id, churchId, userId, keyName, value, public) VALUES (?, ?, ?, ?, ?, ?)";
     const params = [setting.id, setting.churchId, setting.userId, setting.keyName, setting.value, setting.public];
-    await DB.query(sql, params);
+    await TypedDB.query(sql, params);
     return setting;
   }
 
@@ -35,39 +36,39 @@ export class SettingRepository {
       setting.id,
       setting.churchId
     ];
-    await DB.query(sql, params);
+    await TypedDB.query(sql, params);
     return setting;
   }
 
   public deleteForUser(churchId: string, userId: string, id: string) {
-    return DB.query("DELETE FROM settings WHERE id=? and churchId=? and userId=?;", [id, churchId, userId]);
+    return TypedDB.query("DELETE FROM settings WHERE id=? and churchId=? and userId=?;", [id, churchId, userId]);
   }
 
   public loadAll(churchId: string) {
-    return DB.query("SELECT * FROM settings WHERE churchId=? and userId is null;", [churchId]);
+    return TypedDB.query("SELECT * FROM settings WHERE churchId=? and userId is null;", [churchId]);
   }
 
   public loadUser(churchId: string, userId: string) {
-    return DB.query("SELECT * FROM settings WHERE churchId=? and userId=?;", [churchId, userId]);
+    return TypedDB.query("SELECT * FROM settings WHERE churchId=? and userId=?;", [churchId, userId]);
   }
 
   public loadPublicSettings(churchId: string) {
-    return DB.query("SELECT * FROM settings WHERE churchId=? AND public=?", [churchId, 1]);
+    return TypedDB.query("SELECT * FROM settings WHERE churchId=? AND public=?", [churchId, 1]);
   }
 
   public loadAllPublicSettings() {
-    return DB.query("SELECT * FROM settings WHERE public=1 and userId is null;", []);
+    return TypedDB.query("SELECT * FROM settings WHERE public=1 and userId is null;", []);
   }
 
   public loadMulipleChurches(keyNames: string[], churchIds: string[]) {
-    return DB.query("SELECT * FROM settings WHERE keyName in (?) AND churchId IN (?) AND public=1 and userId is null", [
-      keyNames,
-      churchIds
-    ]);
+    return TypedDB.query(
+      "SELECT * FROM settings WHERE keyName in (?) AND churchId IN (?) AND public=1 and userId is null",
+      [keyNames, churchIds]
+    );
   }
 
   public loadByKeyNames(churchId: string, keyNames: string[]) {
-    return DB.query("SELECT * FROM settings WHERE keyName in (?) AND churchId=? and userId is null;", [
+    return TypedDB.query("SELECT * FROM settings WHERE keyName in (?) AND churchId=? and userId is null;", [
       keyNames,
       churchId
     ]);

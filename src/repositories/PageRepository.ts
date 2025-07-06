@@ -1,6 +1,6 @@
 import { injectable } from "inversify";
 import { UniqueIdHelper } from "@churchapps/apihelper";
-import { DB } from "@churchapps/apihelper";
+import { TypedDB } from "../helpers";
 import { Page } from "../models";
 
 @injectable()
@@ -14,30 +14,30 @@ export class PageRepository {
 
     const sql = "INSERT INTO pages (id, churchId, url, title, layout) VALUES (?, ?, ?, ?, ?);";
     const params = [page.id, page.churchId, page.url, page.title, page.layout];
-    await DB.query(sql, params);
+    await TypedDB.query(sql, params);
     return page;
   }
 
   private async update(page: Page) {
     const sql = "UPDATE pages SET url=?, title=?, layout=? WHERE id=? and churchId=?";
     const params = [page.url, page.title, page.layout, page.id, page.churchId];
-    await DB.query(sql, params);
+    await TypedDB.query(sql, params);
     return page;
   }
 
   public delete(churchId: string, id: string) {
-    return DB.query("DELETE FROM pages WHERE id=? AND churchId=?;", [id, churchId]);
+    return TypedDB.query("DELETE FROM pages WHERE id=? AND churchId=?;", [id, churchId]);
   }
 
   public load(churchId: string, id: string) {
-    return DB.queryOne("SELECT * FROM pages WHERE id=? AND churchId=? order by url;", [id, churchId]);
+    return TypedDB.queryOne("SELECT * FROM pages WHERE id=? AND churchId=? order by url;", [id, churchId]);
   }
 
   public loadByUrl(churchId: string, url: string) {
-    return DB.queryOne("SELECT * FROM pages WHERE url=? AND churchId=?;", [url, churchId]);
+    return TypedDB.queryOne("SELECT * FROM pages WHERE url=? AND churchId=?;", [url, churchId]);
   }
 
   public loadAll(churchId: string) {
-    return DB.query("SELECT * FROM pages WHERE churchId=?;", [churchId]);
+    return TypedDB.query("SELECT * FROM pages WHERE churchId=?;", [churchId]);
   }
 }

@@ -1,4 +1,4 @@
-import { controller, httpGet, interfaces, requestParam } from "inversify-express-utils";
+import { controller, httpGet, requestParam } from "inversify-express-utils";
 import express from "express";
 import { ContentBaseController } from "./ContentBaseController";
 import { ApiBibleHelper } from "../helpers/ApiBibleHelper";
@@ -20,7 +20,7 @@ export class BibleController extends ContentBaseController {
     @requestParam("translationKey") translationKey: string,
     req: express.Request<{}, {}, null>,
     res: express.Response
-  ): Promise<interfaces.IHttpActionResult> {
+  ): Promise<any> {
     return this.actionWrapperAnon(req, res, async () => {
       const query = req.query.query as string;
       const result = await ApiBibleHelper.search(translationKey, query);
@@ -29,10 +29,7 @@ export class BibleController extends ContentBaseController {
   }
 
   @httpGet("/stats")
-  public async getStats(
-    req: express.Request<{}, {}, null>,
-    res: express.Response
-  ): Promise<interfaces.IHttpActionResult> {
+  public async getStats(req: express.Request<{}, {}, null>, res: express.Response): Promise<any> {
     return this.actionWrapperAnon(req, res, async () => {
       const startDate = new Date(req.query.startDate.toString());
       const endDate = new Date(req.query.endDate.toString());
@@ -42,10 +39,7 @@ export class BibleController extends ContentBaseController {
   }
 
   @httpGet("/updateCopyrights")
-  public async updateCopyrights(
-    req: express.Request<{}, {}, null>,
-    res: express.Response
-  ): Promise<interfaces.IHttpActionResult> {
+  public async updateCopyrights(req: express.Request<{}, {}, null>, res: express.Response): Promise<any> {
     return this.actionWrapperAnon(req, res, async () => {
       const translations = await this.repositories.bibleTranslation.loadNeedingCopyrights();
       for (const translation of translations) {
@@ -62,7 +56,7 @@ export class BibleController extends ContentBaseController {
     @requestParam("translationKey") translationKey: string,
     req: express.Request<{}, {}, null>,
     res: express.Response
-  ): Promise<interfaces.IHttpActionResult> {
+  ): Promise<any> {
     return this.actionWrapperAnon(req, res, async () => {
       const copyright = await ApiBibleHelper.getCopyright(translationKey);
       const bible = await this.repositories.bibleTranslation.loadBySourceKey("api.bible", translationKey);
@@ -77,7 +71,7 @@ export class BibleController extends ContentBaseController {
     @requestParam("translationKey") translationKey: string,
     req: express.Request<{}, {}, null>,
     res: express.Response
-  ): Promise<interfaces.IHttpActionResult> {
+  ): Promise<any> {
     return this.actionWrapperAnon(req, res, async () => {
       let result = await this.repositories.bibleBook.loadAll(translationKey);
       if (result.length === 0) {
@@ -94,7 +88,7 @@ export class BibleController extends ContentBaseController {
     @requestParam("bookKey") bookKey: string,
     req: express.Request<{}, {}, null>,
     res: express.Response
-  ): Promise<interfaces.IHttpActionResult> {
+  ): Promise<any> {
     return this.actionWrapperAnon(req, res, async () => {
       let result = await this.repositories.bibleChapter.loadAll(translationKey, bookKey);
       if (result.length === 0) {
@@ -111,7 +105,7 @@ export class BibleController extends ContentBaseController {
     @requestParam("chapterKey") chapterKey: string,
     req: express.Request<{}, {}, null>,
     res: express.Response
-  ): Promise<interfaces.IHttpActionResult> {
+  ): Promise<any> {
     return this.actionWrapperAnon(req, res, async () => {
       let result = await this.repositories.bibleVerse.loadAll(translationKey, chapterKey);
       if (result.length === 0) {
@@ -129,7 +123,7 @@ export class BibleController extends ContentBaseController {
     @requestParam("endVerseKey") endVerseKey: string,
     req: express.Request<{}, {}, null>,
     res: express.Response
-  ): Promise<interfaces.IHttpActionResult> {
+  ): Promise<any> {
     return this.actionWrapperAnon(req, res, async () => {
       const canCache = !this.noCache.includes(translationKey);
       let result: BibleVerseText[] = [];
@@ -155,10 +149,7 @@ export class BibleController extends ContentBaseController {
   }
 
   @httpGet("/updateTranslations")
-  public async updateTranslations(
-    req: express.Request<{}, {}, null>,
-    res: express.Response
-  ): Promise<interfaces.IHttpActionResult> {
+  public async updateTranslations(req: express.Request<{}, {}, null>, res: express.Response): Promise<any> {
     return this.actionWrapperAnon(req, res, async () => {
       const dbResult = await this.repositories.bibleTranslation.loadAll();
       const apiResult = await ApiBibleHelper.getTranslations();
@@ -180,10 +171,7 @@ export class BibleController extends ContentBaseController {
   }
 
   @httpGet("/")
-  public async getAll(
-    req: express.Request<{}, {}, null>,
-    res: express.Response
-  ): Promise<interfaces.IHttpActionResult> {
+  public async getAll(req: express.Request<{}, {}, null>, res: express.Response): Promise<any> {
     return this.actionWrapperAnon(req, res, async () => {
       let result = await this.repositories.bibleTranslation.loadAll();
       if (result.length === 0) {
@@ -212,14 +200,14 @@ export class BibleController extends ContentBaseController {
 
   /*
   @httpGet("/:id")
-  public async get(@requestParam("id") id: string, req: express.Request<{}, {}, null>, res: express.Response): Promise<interfaces.IHttpActionResult> {
+  public async get(@requestParam("id") id: string, req: express.Request<{}, {}, null>, res: express.Response): Promise<any> {
     return this.actionWrapperAnon(req, res, async () => {
       return await this.repositories.bible.load(id);
     });
   }*/
   /*
     @httpGet("/list")
-    public async list(req: express.Request<{}, {}, null>, res: express.Response): Promise<interfaces.IHttpActionResult> {
+    public async list(req: express.Request<{}, {}, null>, res: express.Response): Promise<any> {
       return this.actionWrapper(req, res, async (au) => {
         return await ApiBibleHelper.list();
       });
@@ -228,14 +216,14 @@ export class BibleController extends ContentBaseController {
 
 
     @httpGet("/test")
-    public async test(req: express.Request<{}, {}, null>, res: express.Response): Promise<interfaces.IHttpActionResult> {
+    public async test(req: express.Request<{}, {}, null>, res: express.Response): Promise<any> {
       return this.actionWrapper(req, res, async (au) => {
         return await ApiBibleHelper.passages("06125adad2d5898a-01", "GEN.1");
       });
     }
 
     @httpGet("/import/next")
-    public async importNext(req: express.Request<{}, {}, null>, res: express.Response): Promise<interfaces.IHttpActionResult> {
+    public async importNext(req: express.Request<{}, {}, null>, res: express.Response): Promise<any> {
       return this.actionWrapperAnon(req, res, async () => {
         const apiList = await ApiBibleHelper.list();
         const translations = await this.repositories.bibleTranslation.loadAll();
@@ -259,7 +247,7 @@ export class BibleController extends ContentBaseController {
     }
 
     @httpGet("/import/:abbreviation")
-    public async full(@requestParam("abbreviation") abbreviation: string, req: express.Request<{}, {}, null>, res: express.Response): Promise<interfaces.IHttpActionResult> {
+    public async full(@requestParam("abbreviation") abbreviation: string, req: express.Request<{}, {}, null>, res: express.Response): Promise<any> {
       return this.actionWrapperAnon(req, res, async () => {
         await ApiBibleHelper.import(abbreviation);
 
@@ -271,7 +259,7 @@ export class BibleController extends ContentBaseController {
   /*
 
   @httpGet("/:id")
-  public async get(@requestParam("id") id: string, req: express.Request<{}, {}, null>, res: express.Response): Promise<interfaces.IHttpActionResult> {
+  public async get(@requestParam("id") id: string, req: express.Request<{}, {}, null>, res: express.Response): Promise<any> {
     return this.actionWrapper(req, res, async (au) => {
       return await this.repositories.element.load(au.churchId, id);
     });

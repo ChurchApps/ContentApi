@@ -1,6 +1,6 @@
 import { injectable } from "inversify";
 import { UniqueIdHelper } from "@churchapps/apihelper";
-import { DB } from "@churchapps/apihelper";
+import { TypedDB } from "../helpers";
 import { BibleVerseText } from "../models";
 
 @injectable()
@@ -32,7 +32,7 @@ export class BibleVerseTextTextRepository {
       text.content,
       text.newParagraph
     ];
-    await DB.query(sql, params);
+    await TypedDB.query(sql, params);
     return text;
   }
 
@@ -49,20 +49,20 @@ export class BibleVerseTextTextRepository {
       text.newParagraph,
       text.id
     ];
-    await DB.query(sql, params);
+    await TypedDB.query(sql, params);
     return text;
   }
 
   public delete(id: string) {
-    return DB.query("DELETE FROM bibleVerseTexts WHERE id=?;", [id]);
+    return TypedDB.query("DELETE FROM bibleVerseTexts WHERE id=?;", [id]);
   }
 
   public load(id: string) {
-    return DB.queryOne("SELECT * FROM bibleVerseTexts WHERE id=?;", [id]);
+    return TypedDB.queryOne("SELECT * FROM bibleVerseTexts WHERE id=?;", [id]);
   }
 
   private loadChapters(translationKey: string, bookKey: string, startChapter: number, endChapter: number) {
-    return DB.query(
+    return TypedDB.query(
       "SELECT * FROM bibleVerseTexts WHERE translationKey=? and bookKey=? AND chapterNumber BETWEEN ? AND ? order by chapterNumber, verseNumber;",
       [translationKey, bookKey, startChapter, endChapter]
     );

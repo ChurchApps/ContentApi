@@ -1,17 +1,18 @@
 import { Link } from "../models";
-import { ArrayHelper, DB, UniqueIdHelper } from "@churchapps/apihelper";
+import { ArrayHelper, UniqueIdHelper } from "@churchapps/apihelper";
+import { TypedDB } from "../helpers";
 
 export class LinkRepository {
   public loadAll(churchId: string) {
-    return DB.query("SELECT * FROM links WHERE churchId=? order by sort", [churchId]);
+    return TypedDB.query("SELECT * FROM links WHERE churchId=? order by sort", [churchId]);
   }
 
   public load(churchId: string, id: string) {
-    return DB.queryOne("SELECT * FROM links WHERE id=? AND churchId=?;", [id, churchId]);
+    return TypedDB.queryOne("SELECT * FROM links WHERE id=? AND churchId=?;", [id, churchId]);
   }
 
   public loadByCategory(churchId: string, category: string) {
-    return DB.query("SELECT * FROM links WHERE churchId=? and category=? order by sort", [churchId, category]);
+    return TypedDB.query("SELECT * FROM links WHERE churchId=? and category=? order by sort", [churchId, category]);
   }
 
   public save(link: Link) {
@@ -50,12 +51,12 @@ export class LinkRepository {
       link.sort,
       link.parentId
     ];
-    await DB.query(query, params);
+    await TypedDB.query(query, params);
     return link;
   }
 
   public delete(id: string, churchId: string) {
-    return DB.query("DELETE FROM links WHERE id=? AND churchId=?;", [id, churchId]);
+    return TypedDB.query("DELETE FROM links WHERE id=? AND churchId=?;", [id, churchId]);
   }
 
   private async update(link: Link) {
@@ -73,12 +74,12 @@ export class LinkRepository {
       link.parentId,
       link.id
     ];
-    await DB.query(sql, params);
+    await TypedDB.query(sql, params);
     return link;
   }
 
   public loadById(id: string, churchId: string): Promise<Link> {
-    return DB.queryOne("SELECT * FROM links WHERE id=? AND churchId=?;", [id, churchId]);
+    return TypedDB.queryOne("SELECT * FROM links WHERE id=? AND churchId=?;", [id, churchId]);
   }
 
   public convertToModel(churchId: string, data: any) {

@@ -1,6 +1,6 @@
 import { injectable } from "inversify";
 import { UniqueIdHelper } from "@churchapps/apihelper";
-import { DB } from "@churchapps/apihelper";
+import { TypedDB } from "../helpers";
 import { ArrangementKey } from "../models";
 
 @injectable()
@@ -29,7 +29,7 @@ export class ArrangementKeyRepository {
       arrangementKey.keySignature,
       arrangementKey.shortDescription
     ];
-    await DB.query(sql, params);
+    await TypedDB.query(sql, params);
     return arrangementKey;
   }
 
@@ -43,27 +43,33 @@ export class ArrangementKeyRepository {
       arrangementKey.id,
       arrangementKey.churchId
     ];
-    await DB.query(sql, params);
+    await TypedDB.query(sql, params);
     return arrangementKey;
   }
 
   public delete(churchId: string, id: string) {
-    return DB.query("DELETE FROM arrangementKeys WHERE id=? and churchId=?;", [id, churchId]);
+    return TypedDB.query("DELETE FROM arrangementKeys WHERE id=? and churchId=?;", [id, churchId]);
   }
 
   public deleteForArrangement(churchId: string, arrangementId: string) {
-    return DB.query("DELETE FROM arrangementKeys WHERE churchId=? and arrangementId=?;", [churchId, arrangementId]);
+    return TypedDB.query("DELETE FROM arrangementKeys WHERE churchId=? and arrangementId=?;", [
+      churchId,
+      arrangementId
+    ]);
   }
 
   public loadAll(churchId: string) {
-    return DB.queryOne("SELECT * FROM arrangementKeys WHERE churchId=? ORDER BY name;", [churchId]);
+    return TypedDB.queryOne("SELECT * FROM arrangementKeys WHERE churchId=? ORDER BY name;", [churchId]);
   }
 
   public load(churchId: string, id: string) {
-    return DB.queryOne("SELECT * FROM arrangementKeys WHERE id=? AND churchId=?;", [id, churchId]);
+    return TypedDB.queryOne("SELECT * FROM arrangementKeys WHERE id=? AND churchId=?;", [id, churchId]);
   }
 
   public loadByArrangementId(churchId: string, arrangementId: string) {
-    return DB.query("SELECT * FROM arrangementKeys where churchId=? and arrangementId=?;", [churchId, arrangementId]);
+    return TypedDB.query("SELECT * FROM arrangementKeys where churchId=? and arrangementId=?;", [
+      churchId,
+      arrangementId
+    ]);
   }
 }

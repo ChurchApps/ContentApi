@@ -1,5 +1,5 @@
 import { UniqueIdHelper, DateHelper } from "@churchapps/apihelper";
-import { DB } from "@churchapps/apihelper";
+import { TypedDB } from "../helpers";
 import { EventException } from "../models";
 
 export class EventExceptionRepository {
@@ -12,7 +12,7 @@ export class EventExceptionRepository {
     const exceptionDate = DateHelper.toMysqlDate(eventException.exceptionDate);
     const sql = "INSERT INTO eventExceptions (id, churchId, eventId, exceptionDate) VALUES (?, ?, ?, ?);";
     const params = [eventException.id, eventException.churchId, eventException.eventId, exceptionDate];
-    await DB.query(sql, params);
+    await TypedDB.query(sql, params);
     return eventException;
   }
 
@@ -20,19 +20,19 @@ export class EventExceptionRepository {
     const exceptionDate = DateHelper.toMysqlDate(eventException.exceptionDate);
     const sql = "UPDATE eventExceptions SET eventId=?, exceptionDate=?, WHERE id=? and churchId=?";
     const params = [eventException.eventId, exceptionDate, eventException.id, eventException.churchId];
-    await DB.query(sql, params);
+    await TypedDB.query(sql, params);
     return eventException;
   }
 
   public delete(churchId: string, id: string) {
-    return DB.query("DELETE FROM eventExceptions WHERE id=? AND churchId=?;", [id, churchId]);
+    return TypedDB.query("DELETE FROM eventExceptions WHERE id=? AND churchId=?;", [id, churchId]);
   }
 
   public load(churchId: string, id: string) {
-    return DB.queryOne("SELECT * FROM eventExceptions WHERE id=? AND churchId=?;", [id, churchId]);
+    return TypedDB.queryOne("SELECT * FROM eventExceptions WHERE id=? AND churchId=?;", [id, churchId]);
   }
 
   public loadForEvents(churchId: string, eventIds: string[]) {
-    return DB.query("SELECT * FROM eventExceptions WHERE churchId=? and eventId in (?);", [churchId, eventIds]);
+    return TypedDB.query("SELECT * FROM eventExceptions WHERE churchId=? and eventId in (?);", [churchId, eventIds]);
   }
 }

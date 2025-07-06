@@ -1,4 +1,4 @@
-import { controller, httpPost, httpGet, interfaces, requestParam, httpDelete } from "inversify-express-utils";
+import { controller, httpPost, httpGet, requestParam, httpDelete } from "inversify-express-utils";
 import express from "express";
 import * as ics from "ics";
 import { ContentBaseController } from "./ContentBaseController";
@@ -12,7 +12,7 @@ export class EventController extends ContentBaseController {
     @requestParam("groupId") groupId: string,
     req: express.Request<{}, {}, null>,
     res: express.Response
-  ): Promise<interfaces.IHttpActionResult> {
+  ): Promise<any> {
     return this.actionWrapper(req, res, async (au) => {
       const eventIds = req.query.eventIds ? req.query.eventIds.toString().split(",") : [];
       return await this.repositories.event.loadTimelineGroup(au.churchId, groupId, eventIds);
@@ -20,10 +20,7 @@ export class EventController extends ContentBaseController {
   }
 
   @httpGet("/timeline")
-  public async getPosts(
-    req: express.Request<{}, {}, null>,
-    res: express.Response
-  ): Promise<interfaces.IHttpActionResult> {
+  public async getPosts(req: express.Request<{}, {}, null>, res: express.Response): Promise<any> {
     return this.actionWrapper(req, res, async (au) => {
       const eventIds = req.query.eventIds ? req.query.eventIds.toString().split(",") : [];
       return await this.repositories.event.loadTimeline(au.churchId, au.groupIds, eventIds);
@@ -31,10 +28,7 @@ export class EventController extends ContentBaseController {
   }
 
   @httpGet("/subscribe")
-  public async subscribe(
-    req: express.Request<{}, {}, null>,
-    res: express.Response
-  ): Promise<interfaces.IHttpActionResult> {
+  public async subscribe(req: express.Request<{}, {}, null>, res: express.Response): Promise<any> {
     return this.actionWrapperAnon(req, res, async () => {
       let newEvents: any[] = [];
       if (req.query.groupId) {
@@ -67,7 +61,7 @@ export class EventController extends ContentBaseController {
     @requestParam("groupId") groupId: string,
     req: express.Request<{}, {}, null>,
     res: express.Response
-  ): Promise<interfaces.IHttpActionResult> {
+  ): Promise<any> {
     return this.actionWrapper(req, res, async (au) => {
       const result = await this.repositories.event.loadForGroup(au.churchId, groupId);
       await this.addExceptionDates(result);
@@ -81,7 +75,7 @@ export class EventController extends ContentBaseController {
     @requestParam("groupId") groupId: string,
     req: express.Request<{}, {}, null>,
     res: express.Response
-  ): Promise<interfaces.IHttpActionResult> {
+  ): Promise<any> {
     return this.actionWrapperAnon(req, res, async () => {
       const result = await this.repositories.event.loadPublicForGroup(churchId, groupId);
       await this.addExceptionDates(result);
@@ -94,17 +88,14 @@ export class EventController extends ContentBaseController {
     @requestParam("id") id: string,
     req: express.Request<{}, {}, null>,
     res: express.Response
-  ): Promise<interfaces.IHttpActionResult> {
+  ): Promise<any> {
     return this.actionWrapper(req, res, async (au) => {
       return await this.repositories.event.load(au.churchId, id);
     });
   }
 
   @httpPost("/")
-  public async save(
-    req: express.Request<{}, {}, Event[]>,
-    res: express.Response
-  ): Promise<interfaces.IHttpActionResult> {
+  public async save(req: express.Request<{}, {}, Event[]>, res: express.Response): Promise<any> {
     return this.actionWrapper(req, res, async (au) => {
       // if (!au.checkAccess(Permissions.content.edit)) return this.json({}, 401);
       // else {
@@ -124,7 +115,7 @@ export class EventController extends ContentBaseController {
     @requestParam("id") id: string,
     req: express.Request<{}, {}, null>,
     res: express.Response
-  ): Promise<interfaces.IHttpActionResult> {
+  ): Promise<any> {
     return this.actionWrapper(req, res, async (au) => {
       if (!au.checkAccess(Permissions.content.edit)) return this.json({}, 401);
       else {

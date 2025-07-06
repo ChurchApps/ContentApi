@@ -1,4 +1,5 @@
-import { DB, UniqueIdHelper, DateHelper } from "@churchapps/apihelper";
+import { UniqueIdHelper, DateHelper } from "@churchapps/apihelper";
+import { TypedDB } from "../helpers";
 import { Sermon } from "../models";
 
 export class SermonRepository {
@@ -25,7 +26,7 @@ export class SermonRepository {
       sermon.duration,
       sermon.permanentUrl
     ];
-    await DB.query(sql, params);
+    await TypedDB.query(sql, params);
     return sermon;
   }
 
@@ -47,24 +48,24 @@ export class SermonRepository {
       sermon.id,
       sermon.churchId
     ];
-    await DB.query(sql, params);
+    await TypedDB.query(sql, params);
     return sermon;
   }
 
   public delete(id: string, churchId: string) {
-    return DB.query("DELETE FROM sermons WHERE id=? AND churchId=?;", [id, churchId]);
+    return TypedDB.query("DELETE FROM sermons WHERE id=? AND churchId=?;", [id, churchId]);
   }
 
   public loadById(id: string, churchId: string): Promise<Sermon> {
-    return DB.queryOne("SELECT * FROM sermons WHERE id=? AND churchId=?;", [id, churchId]);
+    return TypedDB.queryOne("SELECT * FROM sermons WHERE id=? AND churchId=?;", [id, churchId]);
   }
 
   public loadAll(churchId: string): Promise<Sermon[]> {
-    return DB.query("SELECT * FROM sermons WHERE churchId=? ORDER BY publishDate desc;", [churchId]);
+    return TypedDB.query("SELECT * FROM sermons WHERE churchId=? ORDER BY publishDate desc;", [churchId]);
   }
 
   public loadPublicAll(churchId: string): Promise<Sermon[]> {
-    return DB.query("SELECT * FROM sermons WHERE churchId=? ORDER BY publishDate desc;", [churchId]);
+    return TypedDB.query("SELECT * FROM sermons WHERE churchId=? ORDER BY publishDate desc;", [churchId]);
   }
 
   public async loadTimeline(sermonIds: string[]) {
@@ -72,7 +73,7 @@ export class SermonRepository {
       "select 'sermon' as postType, id as postId, title, description, thumbnail" + " from sermons" + " where id in (?)";
 
     const params = [sermonIds];
-    const result = await DB.query(sql, params);
+    const result = await TypedDB.query(sql, params);
     return result;
   }
 }

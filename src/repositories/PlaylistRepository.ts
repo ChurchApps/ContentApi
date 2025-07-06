@@ -1,4 +1,5 @@
-import { DB, UniqueIdHelper, DateHelper } from "@churchapps/apihelper";
+import { UniqueIdHelper, DateHelper } from "@churchapps/apihelper";
+import { TypedDB } from "../helpers";
 import { Playlist } from "../models";
 
 export class PlaylistRepository {
@@ -19,7 +20,7 @@ export class PlaylistRepository {
       publishDate,
       playlist.thumbnail
     ];
-    await DB.query(sql, params);
+    await TypedDB.query(sql, params);
     return playlist;
   }
 
@@ -34,23 +35,23 @@ export class PlaylistRepository {
       playlist.id,
       playlist.churchId
     ];
-    await DB.query(sql, params);
+    await TypedDB.query(sql, params);
     return playlist;
   }
 
   public delete(id: string, churchId: string) {
-    return DB.query("DELETE FROM playlists WHERE id=? AND churchId=?;", [id, churchId]);
+    return TypedDB.query("DELETE FROM playlists WHERE id=? AND churchId=?;", [id, churchId]);
   }
 
   public loadById(id: string, churchId: string): Promise<Playlist> {
-    return DB.queryOne("SELECT * FROM playlists WHERE id=? AND churchId=?;", [id, churchId]);
+    return TypedDB.queryOne("SELECT * FROM playlists WHERE id=? AND churchId=?;", [id, churchId]);
   }
 
   public loadAll(churchId: string): Promise<Playlist[]> {
-    return DB.query("SELECT * FROM playlists WHERE churchId=? ORDER BY publishDate desc;", [churchId]);
+    return TypedDB.query("SELECT * FROM playlists WHERE churchId=? ORDER BY publishDate desc;", [churchId]);
   }
 
   public loadPublicAll(churchId: string): Promise<Playlist[]> {
-    return DB.query("SELECT * FROM playlists WHERE churchId=? ORDER BY publishDate desc;", [churchId]);
+    return TypedDB.query("SELECT * FROM playlists WHERE churchId=? ORDER BY publishDate desc;", [churchId]);
   }
 }

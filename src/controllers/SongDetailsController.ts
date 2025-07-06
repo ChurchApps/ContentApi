@@ -1,4 +1,4 @@
-import { controller, httpGet, httpPost, interfaces, requestParam } from "inversify-express-utils";
+import { controller, httpGet, httpPost, requestParam } from "inversify-express-utils";
 import express from "express";
 import { ContentBaseController } from "./ContentBaseController";
 import { SongDetail } from "../models";
@@ -19,20 +19,14 @@ export class SongDetailsController extends ContentBaseController {
   }
 
   @httpGet("/")
-  public async getAll(
-    req: express.Request<{}, {}, null>,
-    res: express.Response
-  ): Promise<interfaces.IHttpActionResult> {
+  public async getAll(req: express.Request<{}, {}, null>, res: express.Response): Promise<any> {
     return this.actionWrapper(req, res, async (au) => {
       return await this.repositories.songDetail.loadForChurch(au.churchId);
     });
   }
 
   @httpPost("/create")
-  public async post(
-    req: express.Request<{}, {}, SongDetail>,
-    res: express.Response
-  ): Promise<interfaces.IHttpActionResult> {
+  public async post(req: express.Request<{}, {}, SongDetail>, res: express.Response): Promise<any> {
     return this.actionWrapper(req, res, async () => {
       const sd = req.body;
       if (!sd.praiseChartsId) return null;
@@ -53,10 +47,7 @@ export class SongDetailsController extends ContentBaseController {
   }
 
   @httpPost("/")
-  public async save(
-    req: express.Request<{}, {}, SongDetail[]>,
-    res: express.Response
-  ): Promise<interfaces.IHttpActionResult> {
+  public async save(req: express.Request<{}, {}, SongDetail[]>, res: express.Response): Promise<any> {
     return this.actionWrapper(req, res, async () => {
       const promises: Promise<SongDetail>[] = [];
       req.body.forEach((sd) => {

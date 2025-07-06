@@ -1,6 +1,6 @@
 import { injectable } from "inversify";
 import { UniqueIdHelper } from "@churchapps/apihelper";
-import { DB } from "@churchapps/apihelper";
+import { TypedDB } from "../helpers";
 import { SongDetail } from "../models";
 
 @injectable()
@@ -36,7 +36,7 @@ export class SongDetailRepository {
       songDetail.meter,
       songDetail.tones
     ];
-    await DB.query(sql, params);
+    await TypedDB.query(sql, params);
     return songDetail;
   }
 
@@ -58,28 +58,28 @@ export class SongDetailRepository {
       songDetail.tones,
       songDetail.id
     ];
-    await DB.query(sql, params);
+    await TypedDB.query(sql, params);
     return songDetail;
   }
 
   public delete(id: string) {
-    return DB.query("DELETE FROM songDetails WHERE id=?;", [id]);
+    return TypedDB.query("DELETE FROM songDetails WHERE id=?;", [id]);
   }
 
   public load(id: string) {
-    return DB.queryOne("SELECT * FROM songDetails WHERE id=?;", [id]);
+    return TypedDB.queryOne("SELECT * FROM songDetails WHERE id=?;", [id]);
   }
 
   public search(query: string) {
     const q = "%" + query.replace(/ /g, "%") + "%";
-    return DB.query("SELECT * FROM songDetails where title + ' ' + artist like ? or artist + ' ' + title like ?;", [
-      q,
-      q
-    ]);
+    return TypedDB.query(
+      "SELECT * FROM songDetails where title + ' ' + artist like ? or artist + ' ' + title like ?;",
+      [q, q]
+    );
   }
 
   public loadByPraiseChartsId(praiseChartsId: string) {
-    return DB.queryOne("SELECT * FROM songDetails where praiseChartsId=?;", [praiseChartsId]);
+    return TypedDB.queryOne("SELECT * FROM songDetails where praiseChartsId=?;", [praiseChartsId]);
   }
 
   public loadForChurch(churchId: string) {
@@ -90,6 +90,6 @@ export class SongDetailRepository {
       " INNER JOIN songDetails sd on sd.id=a.songDetailId" +
       " WHERE s.churchId=?" +
       " ORDER BY sd.title, sd.artist;";
-    return DB.query(sql, [churchId]);
+    return TypedDB.query(sql, [churchId]);
   }
 }

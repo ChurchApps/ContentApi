@@ -1,6 +1,6 @@
 import { injectable } from "inversify";
 import { UniqueIdHelper } from "@churchapps/apihelper";
-import { DB } from "@churchapps/apihelper";
+import { TypedDB } from "../helpers";
 import { BibleTranslation } from "../models";
 
 @injectable()
@@ -36,7 +36,7 @@ export class BibleTranslationRepository {
       translation.attributionRequired,
       translation.attributionString
     ];
-    await DB.query(sql, params);
+    await TypedDB.query(sql, params);
     return translation;
   }
 
@@ -57,27 +57,27 @@ export class BibleTranslationRepository {
       translation.attributionString,
       translation.id
     ];
-    await DB.query(sql, params);
+    await TypedDB.query(sql, params);
     return translation;
   }
 
   public delete(id: string) {
-    return DB.query("DELETE FROM bibleTranslations WHERE id=?;", [id]);
+    return TypedDB.query("DELETE FROM bibleTranslations WHERE id=?;", [id]);
   }
 
   public load(id: string) {
-    return DB.queryOne("SELECT * FROM bibleTranslations WHERE id=?;", [id]);
+    return TypedDB.queryOne("SELECT * FROM bibleTranslations WHERE id=?;", [id]);
   }
 
   public loadBySourceKey(source: string, sourceKey: string) {
-    return DB.queryOne("SELECT * FROM bibleTranslations WHERE source=? and sourceKey=?;", [source, sourceKey]);
+    return TypedDB.queryOne("SELECT * FROM bibleTranslations WHERE source=? and sourceKey=?;", [source, sourceKey]);
   }
 
   public loadAll() {
-    return DB.query("SELECT * FROM bibleTranslations order by name;", []);
+    return TypedDB.query("SELECT * FROM bibleTranslations order by name;", []);
   }
 
   public loadNeedingCopyrights() {
-    return DB.query("SELECT * FROM bibleTranslations where copyright is null;", []);
+    return TypedDB.query("SELECT * FROM bibleTranslations where copyright is null;", []);
   }
 }

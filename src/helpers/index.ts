@@ -6,3 +6,4 @@ export { StreamingConfigHelper } from "./StreamingConfigHelper";
 export { YouTubeHelper } from "./YouTubeHelper";
 export { VimeoHelper } from "./VimeoHelper";
 export { OpenAiHelper } from "./OpenAiHelper";
+export { TypedDB } from "./TypedDB";

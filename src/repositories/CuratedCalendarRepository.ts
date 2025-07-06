@@ -1,6 +1,6 @@
 import { injectable } from "inversify";
 import { UniqueIdHelper } from "@churchapps/apihelper";
-import { DB } from "@churchapps/apihelper";
+import { TypedDB } from "../helpers";
 import { CuratedCalendar } from "../models";
 
 @injectable()
@@ -14,26 +14,26 @@ export class CuratedCalendarRepository {
 
     const sql = "INSERT INTO curatedCalendars (id, churchId, name) VALUES (?, ?, ?);";
     const params = [curatedCalendar.id, curatedCalendar.churchId, curatedCalendar.name];
-    await DB.query(sql, params);
+    await TypedDB.query(sql, params);
     return curatedCalendar;
   }
 
   private async update(curatedCalendar: CuratedCalendar) {
     const sql = "UPDATE curatedCalendars SET name=? WHERE id=? and churchId=?";
     const params = [curatedCalendar.name, curatedCalendar.id, curatedCalendar.churchId];
-    await DB.query(sql, params);
+    await TypedDB.query(sql, params);
     return curatedCalendar;
   }
 
   public delete(churchId: string, id: string) {
-    return DB.query("DELETE FROM curatedCalendars WHERE id=? AND churchId=?;", [id, churchId]);
+    return TypedDB.query("DELETE FROM curatedCalendars WHERE id=? AND churchId=?;", [id, churchId]);
   }
 
   public load(churchId: string, id: string) {
-    return DB.queryOne("SELECT * FROM curatedCalendars WHERE id=? AND churchId=?;", [id, churchId]);
+    return TypedDB.queryOne("SELECT * FROM curatedCalendars WHERE id=? AND churchId=?;", [id, churchId]);
   }
 
   public loadAll(churchId: string) {
-    return DB.query("SELECT * FROM curatedCalendars WHERE churchId=?;", [churchId]);
+    return TypedDB.query("SELECT * FROM curatedCalendars WHERE churchId=?;", [churchId]);
   }
 }

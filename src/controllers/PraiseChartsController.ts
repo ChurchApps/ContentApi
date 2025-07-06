@@ -1,4 +1,4 @@
-import { controller, httpGet, interfaces, requestParam } from "inversify-express-utils";
+import { controller, httpGet, requestParam } from "inversify-express-utils";
 import express from "express";
 import { ContentBaseController } from "./ContentBaseController";
 import { Setting } from "../models";
@@ -14,7 +14,7 @@ export class PraiseChartsController extends ContentBaseController {
     @requestParam("id") id: string,
     req: express.Request<{}, {}, null>,
     res: express.Response
-  ): Promise<interfaces.IHttpActionResult> {
+  ): Promise<any> {
     return this.actionWrapper(req, res, async () => {
       return PraiseChartsHelper.loadRaw(id);
     });
@@ -25,7 +25,7 @@ export class PraiseChartsController extends ContentBaseController {
     @requestParam("id") _id: string,
     req: express.Request<{}, {}, null>,
     res: express.Response
-  ): Promise<interfaces.IHttpActionResult> {
+  ): Promise<any> {
     return this.actionWrapper(req, res, async (au) => {
       const { token } = await PraiseChartsHelper.loadUserTokens(au);
       if (token) return { hasAccount: true };
@@ -34,10 +34,7 @@ export class PraiseChartsController extends ContentBaseController {
   }
 
   @httpGet("/search")
-  public async search(
-    req: express.Request<{}, {}, null>,
-    res: express.Response
-  ): Promise<interfaces.IHttpActionResult> {
+  public async search(req: express.Request<{}, {}, null>, res: express.Response): Promise<any> {
     return this.actionWrapper(req, res, async () => {
       const query = req.query.q as string;
       const results = await PraiseChartsHelper.search(query);
@@ -50,7 +47,7 @@ export class PraiseChartsController extends ContentBaseController {
     @requestParam("id") id: string,
     req: express.Request<{}, {}, null>,
     res: express.Response
-  ): Promise<interfaces.IHttpActionResult> {
+  ): Promise<any> {
     return this.actionWrapper(req, res, async (au) => {
       const { token, secret } = await PraiseChartsHelper.loadUserTokens(au);
       const keys = req.query.keys ? req.query.keys.toString().split(",") : [];
@@ -70,7 +67,7 @@ export class PraiseChartsController extends ContentBaseController {
     @requestParam("id") id: string,
     req: express.Request<{}, {}, null>,
     res: express.Response
-  ): Promise<interfaces.IHttpActionResult> {
+  ): Promise<any> {
     return this.actionWrapper(req, res, async (au) => {
       const { token, secret } = await PraiseChartsHelper.loadUserTokens(au);
       const keys = req.query.keys ? req.query.keys.toString().split(",") : [];
@@ -130,10 +127,7 @@ export class PraiseChartsController extends ContentBaseController {
   }
 
   @httpGet("/authUrl")
-  public async praiseChartsAuthUrl(
-    req: express.Request<{}, {}, null>,
-    res: express.Response
-  ): Promise<interfaces.IHttpActionResult> {
+  public async praiseChartsAuthUrl(req: express.Request<{}, {}, null>, res: express.Response): Promise<any> {
     return this.actionWrapperAnon(req, res, async () => {
       const returnUrl = req.query.returnUrl as string;
       const { oauthToken, oauthTokenSecret } = await PraiseChartsHelper.getRequestToken(returnUrl);
@@ -144,10 +138,7 @@ export class PraiseChartsController extends ContentBaseController {
   }
 
   @httpGet("/access")
-  public async praiseChartsTest(
-    req: express.Request<{}, {}, null>,
-    res: express.Response
-  ): Promise<interfaces.IHttpActionResult> {
+  public async praiseChartsTest(req: express.Request<{}, {}, null>, res: express.Response): Promise<any> {
     return this.actionWrapper(req, res, async (au) => {
       const verifier = req.query.verifier as string;
       const token = req.query.token as string;
@@ -171,10 +162,7 @@ export class PraiseChartsController extends ContentBaseController {
   }
 
   @httpGet("/library")
-  public async praiseChartsCatalog(
-    req: express.Request<{}, {}, null>,
-    res: express.Response
-  ): Promise<interfaces.IHttpActionResult> {
+  public async praiseChartsCatalog(req: express.Request<{}, {}, null>, res: express.Response): Promise<any> {
     return this.actionWrapper(req, res, async (au) => {
       const settings: Setting[] = await this.repositories.setting.loadUser(au.churchId, au.id);
       const token = settings.find((s) => s.keyName === "praiseChartsAccessToken")?.value;

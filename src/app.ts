@@ -1,4 +1,4 @@
-import dotenv from "dotenv";
+import * as dotenv from "dotenv";
 import "reflect-metadata";
 import { Container } from "inversify";
 import { InversifyExpressServer } from "inversify-express-utils";
@@ -16,13 +16,15 @@ export const init = async () => {
 
   const configFunction = (expApp: express.Application) => {
     // Configure CORS first
-    expApp.use(cors({
-      origin: true,
-      credentials: true,
-      methods: ["GET", "POST", "PUT", "DELETE", "PATCH", "OPTIONS"],
-      allowedHeaders: ["Content-Type", "Authorization", "X-Requested-With", "Accept", "Origin"]
-    }));
-    
+    expApp.use(
+      cors({
+        origin: true,
+        credentials: true,
+        methods: ["GET", "POST", "PUT", "DELETE", "PATCH", "OPTIONS"],
+        allowedHeaders: ["Content-Type", "Authorization", "X-Requested-With", "Accept", "Origin"]
+      })
+    );
+
     // Handle preflight requests early
     expApp.options("*", (req, res) => {
       res.header("Access-Control-Allow-Origin", "*");
@@ -30,14 +32,14 @@ export const init = async () => {
       res.header("Access-Control-Allow-Headers", "Content-Type, Authorization, X-Requested-With, Accept, Origin");
       res.sendStatus(200);
     });
-    
+
     // Handle body parsing from @codegenie/serverless-express
     expApp.use((req, res, next) => {
       const contentType = req.headers["content-type"] || "";
-      
+
       // Mark request as already having body parsed to prevent further body parsing attempts
       (req as any)._body = true;
-      
+
       // Handle Buffer instances (most common case with serverless-express)
       if (Buffer.isBuffer(req.body)) {
         try {
@@ -78,10 +80,10 @@ export const init = async () => {
       else if (!req.body) {
         req.body = {};
       }
-      
+
       next();
     });
-    
+
     expApp.use("/public", express.static(path.join(__dirname, "public")));
   };
 

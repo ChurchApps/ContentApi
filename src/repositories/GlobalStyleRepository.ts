@@ -1,4 +1,4 @@
-import { DB } from "@churchapps/apihelper";
+import { TypedDB } from "../helpers";
 import { GlobalStyle } from "../models";
 import { UniqueIdHelper } from "@churchapps/apihelper";
 
@@ -20,7 +20,7 @@ export class GlobalStyleRepository {
       globalStyle.customCss,
       globalStyle.customJS
     ];
-    await DB.query(sql, params);
+    await TypedDB.query(sql, params);
     return globalStyle;
   }
 
@@ -34,19 +34,19 @@ export class GlobalStyleRepository {
       globalStyle.id,
       globalStyle.churchId
     ];
-    await DB.query(sql, params);
+    await TypedDB.query(sql, params);
     return globalStyle;
   }
 
   public load(churchId: string, id: string): Promise<GlobalStyle> {
-    return DB.queryOne("SELECT * FROM globalStyles WHERE id=? AND churchId=?", [id, churchId]);
+    return TypedDB.queryOne("SELECT * FROM globalStyles WHERE id=? AND churchId=?", [id, churchId]);
   }
 
   public loadForChurch(churchId: string): Promise<GlobalStyle[]> {
-    return DB.queryOne("SELECT * FROM globalStyles WHERE churchId=? limit 1;", [churchId]);
+    return TypedDB.queryOne("SELECT * FROM globalStyles WHERE churchId=? limit 1;", [churchId]);
   }
 
   public delete(churchId: string, id: string): Promise<GlobalStyle> {
-    return DB.query("DELETE FROM globalStyles WHERE id=? AND churchId=?", [id, churchId]);
+    return TypedDB.query("DELETE FROM globalStyles WHERE id=? AND churchId=?", [id, churchId]);
   }
 }

@@ -3,20 +3,22 @@
   "version": "1.0.0",
   "description": "Lambda layer dependencies for Content API",
   "dependencies": {
-    "@aws-sdk/client-polly": "^3.828.0",
-    "@churchapps/apihelper": "0.0.24",
+    "@aws-sdk/client-polly": "^3.840.0",
+    "@churchapps/apihelper": "0.1.1",
     "@codegenie/serverless-express": "^4.16.0",
-    "axios": "^1.9.0",
+    "axios": "^1.10.0",
     "cors": "^2.8.5",
-    "dotenv": "^16.5.0",
+    "dotenv": "^17.0.1",
     "express": "^4.21.2",
     "ics": "^3.8.1",
     "inversify": "^6.2.2",
     "inversify-express-utils": "^6.5.0",
+    "mysql2": "^3.14.1",
     "oauth": "^0.10.2",
-    "openai": "^5.3.0",
+    "openai": "^5.8.2",
     "pexels": "^1.4.0",
     "reflect-metadata": "^0.2.2",
-    "youtube-captions-scraper": "^2.0.3"
+    "youtube-captions-scraper": "^2.0.3",
+    "youtube-transcript-api": "^3.0.6"
   }
 }

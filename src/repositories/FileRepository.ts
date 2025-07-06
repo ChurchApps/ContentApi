@@ -1,4 +1,4 @@
-import { DB } from "@churchapps/apihelper";
+import { TypedDB } from "../helpers";
 import { File } from "../models";
 import { ArrayHelper, UniqueIdHelper } from "@churchapps/apihelper";
 
@@ -22,7 +22,7 @@ export class FileRepository {
       file.fileType,
       file.size
     ];
-    await DB.query(sql, params);
+    await TypedDB.query(sql, params);
     return file;
   }
 
@@ -40,21 +40,21 @@ export class FileRepository {
       file.id,
       file.churchId
     ];
-    await DB.query(sql, params);
+    await TypedDB.query(sql, params);
     return file;
   }
 
   public load(churchId: string, id: string): Promise<File> {
-    return DB.queryOne("SELECT * FROM files WHERE id=? AND churchId=?", [id, churchId]);
+    return TypedDB.queryOne("SELECT * FROM files WHERE id=? AND churchId=?", [id, churchId]);
   }
 
   public loadByIds(churchId: string, ids: string[]): Promise<File[]> {
     const sql = "SELECT * FROM files WHERE churchId=? AND id IN (" + ArrayHelper.fillArray("?", ids.length) + ")";
-    return DB.query(sql, [churchId].concat(ids));
+    return TypedDB.query(sql, [churchId].concat(ids));
   }
 
   public loadForContent(churchId: string, contentType: string, contentId: string): Promise<File[]> {
-    return DB.query("SELECT * FROM files WHERE churchId=? and contentType=? and contentId=?", [
+    return TypedDB.query("SELECT * FROM files WHERE churchId=? and contentType=? and contentId=?", [
       churchId,
       contentType,
       contentId
@@ -62,17 +62,17 @@ export class FileRepository {
   }
 
   public loadForWebsite(churchId: string): Promise<File[]> {
-    return DB.query("SELECT * FROM files WHERE churchId=? and contentType='website'", [churchId]);
+    return TypedDB.query("SELECT * FROM files WHERE churchId=? and contentType='website'", [churchId]);
   }
 
   public loadTotalBytes(churchId: string, contentType: string, contentId: string): Promise<{ size: number }> {
-    return DB.query(
+    return TypedDB.query(
       "select IFNULL(sum(size), 0) as size from files where churchId=? and contentType=? and contentId=?",
       [churchId, contentType, contentId]
     );
   }
 
   public delete(churchId: string, id: string): Promise<File> {
-    return DB.query("DELETE FROM files WHERE id=? AND churchId=?", [id, churchId]);
+    return TypedDB.query("DELETE FROM files WHERE id=? AND churchId=?", [id, churchId]);
   }
 }

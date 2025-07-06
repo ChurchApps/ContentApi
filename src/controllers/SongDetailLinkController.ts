@@ -1,4 +1,4 @@
-import { controller, httpDelete, httpGet, httpPost, interfaces, requestParam } from "inversify-express-utils";
+import { controller, httpDelete, httpGet, httpPost, requestParam } from "inversify-express-utils";
 import express from "express";
 import { ContentBaseController } from "./ContentBaseController";
 import { SongDetailLink } from "../models";
@@ -22,17 +22,14 @@ export class SongDetailLinkController extends ContentBaseController {
     @requestParam("songDetailId") songDetailId: string,
     req: express.Request<{}, {}, null>,
     res: express.Response
-  ): Promise<interfaces.IHttpActionResult> {
+  ): Promise<any> {
     return this.actionWrapper(req, res, async () => {
       return await this.repositories.songDetailLink.loadForSongDetail(songDetailId);
     });
   }
 
   @httpPost("/")
-  public async save(
-    req: express.Request<{}, {}, SongDetailLink[]>,
-    res: express.Response
-  ): Promise<interfaces.IHttpActionResult> {
+  public async save(req: express.Request<{}, {}, SongDetailLink[]>, res: express.Response): Promise<any> {
     return this.actionWrapper(req, res, async () => {
       const promises: Promise<SongDetailLink>[] = [];
       req.body.forEach((sd) => {
@@ -53,7 +50,7 @@ export class SongDetailLinkController extends ContentBaseController {
   }
 
   @httpDelete("/:id")
-  public async delete(@requestParam("id") id: string, req: express.Request, res: express.Response): Promise<void> {
+  public async delete(@requestParam("id") id: string, req: express.Request, res: express.Response): Promise<any> {
     return this.actionWrapper(req, res, async () => {
       await this.repositories.songDetailLink.delete(id);
       return null;

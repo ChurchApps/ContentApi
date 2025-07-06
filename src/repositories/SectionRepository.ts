@@ -1,6 +1,6 @@
 import { injectable } from "inversify";
 import { UniqueIdHelper } from "@churchapps/apihelper";
-import { DB } from "@churchapps/apihelper";
+import { TypedDB } from "../helpers";
 import { Section } from "../models";
 
 @injectable()
@@ -30,7 +30,7 @@ export class SectionRepository {
       section.stylesJSON,
       section.animationsJSON
     ];
-    await DB.query(sql, params);
+    await TypedDB.query(sql, params);
     return section;
   }
 
@@ -53,7 +53,7 @@ export class SectionRepository {
       section.id,
       section.churchId
     ];
-    await DB.query(sql, params);
+    await TypedDB.query(sql, params);
     return section;
   }
 
@@ -82,30 +82,33 @@ export class SectionRepository {
   }
 
   public delete(churchId: string, id: string) {
-    return DB.query("DELETE FROM sections WHERE id=? AND churchId=?;", [id, churchId]);
+    return TypedDB.query("DELETE FROM sections WHERE id=? AND churchId=?;", [id, churchId]);
   }
 
   public load(churchId: string, id: string) {
-    return DB.queryOne("SELECT * FROM sections WHERE id=? AND churchId=?;", [id, churchId]);
+    return TypedDB.queryOne("SELECT * FROM sections WHERE id=? AND churchId=?;", [id, churchId]);
   }
 
   public loadForBlock(churchId: string, blockId: string) {
-    return DB.query("SELECT * FROM sections WHERE churchId=? AND blockId=? order by sort;", [churchId, blockId]);
+    return TypedDB.query("SELECT * FROM sections WHERE churchId=? AND blockId=? order by sort;", [churchId, blockId]);
   }
 
   public loadForBlocks(churchId: string, blockIds: string[]) {
-    return DB.query("SELECT * FROM sections WHERE churchId=? AND blockId IN (?) order by sort;", [churchId, blockIds]);
+    return TypedDB.query("SELECT * FROM sections WHERE churchId=? AND blockId IN (?) order by sort;", [
+      churchId,
+      blockIds
+    ]);
   }
 
   public loadForPage(churchId: string, pageId: string) {
-    return DB.query(
+    return TypedDB.query(
       "SELECT * FROM sections WHERE churchId=? AND (pageId=? or (pageId IS NULL and blockId IS NULL)) order by sort;",
       [churchId, pageId]
     );
   }
 
   public loadForZone(churchId: string, pageId: string, zone: string) {
-    return DB.query("SELECT * FROM sections WHERE churchId=? AND pageId=? AND zone=? order by sort;", [
+    return TypedDB.query("SELECT * FROM sections WHERE churchId=? AND pageId=? AND zone=? order by sort;", [
       churchId,
       pageId,
       zone

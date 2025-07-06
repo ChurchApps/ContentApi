@@ -1,5 +1,5 @@
 import { UniqueIdHelper, DateHelper } from "@churchapps/apihelper";
-import { DB } from "@churchapps/apihelper";
+import { TypedDB } from "../helpers";
 import { Event } from "../models";
 
 export class EventRepository {
@@ -18,7 +18,7 @@ export class EventRepository {
     sql += ")";
     const params: any = [churchId, groupId, churchId, churchId];
     if (eventIds.length > 0) params.push(eventIds);
-    const result = await DB.query(sql, params);
+    const result = await TypedDB.query(sql, params);
     return result;
   }
 
@@ -37,7 +37,7 @@ export class EventRepository {
     sql += ")";
     const params = [churchId, groupIds, churchId, churchId];
     if (eventIds.length > 0) params.push(eventIds);
-    const result = await DB.query(sql, params);
+    const result = await TypedDB.query(sql, params);
     return result;
   }
 
@@ -59,7 +59,7 @@ export class EventRepository {
       event.visibility,
       event.recurrenceRule
     ];
-    await DB.query(sql, params);
+    await TypedDB.query(sql, params);
     return event;
   }
 
@@ -80,26 +80,26 @@ export class EventRepository {
       event.id,
       event.churchId
     ];
-    await DB.query(sql, params);
+    await TypedDB.query(sql, params);
     return event;
   }
 
   public delete(churchId: string, id: string) {
-    return DB.query("DELETE FROM events WHERE id=? AND churchId=?;", [id, churchId]);
+    return TypedDB.query("DELETE FROM events WHERE id=? AND churchId=?;", [id, churchId]);
   }
 
   public load(churchId: string, id: string) {
-    return DB.queryOne("SELECT * FROM events WHERE id=? AND churchId=?;", [id, churchId]);
+    return TypedDB.queryOne("SELECT * FROM events WHERE id=? AND churchId=?;", [id, churchId]);
   }
 
   public loadForGroup(churchId: string, groupId: string) {
-    return DB.query("SELECT * FROM events WHERE groupId=? AND churchId=? order by start;", [groupId, churchId]);
+    return TypedDB.query("SELECT * FROM events WHERE groupId=? AND churchId=? order by start;", [groupId, churchId]);
   }
 
   public loadPublicForGroup(churchId: string, groupId: string) {
-    return DB.query("SELECT * FROM events WHERE groupId=? AND churchId=? and visibility='public' order by start;", [
-      groupId,
-      churchId
-    ]);
+    return TypedDB.query(
+      "SELECT * FROM events WHERE groupId=? AND churchId=? and visibility='public' order by start;",
+      [groupId, churchId]
+    );
   }
 }

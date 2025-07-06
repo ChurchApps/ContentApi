@@ -1,6 +1,6 @@
 import { injectable } from "inversify";
 import { UniqueIdHelper } from "@churchapps/apihelper";
-import { DB } from "@churchapps/apihelper";
+import { TypedDB } from "../helpers";
 import { BibleLookup } from "../models";
 
 @injectable()
@@ -23,7 +23,7 @@ export class BibleLookupRepository {
     const sql =
       "INSERT INTO bibleLookups (id, translationKey, lookupTime, ipAddress, startVerseKey, endVerseKey) VALUES (?, ?, now(), ?, ?, ?);";
     const params = [lookup.id, lookup.translationKey, lookup.ipAddress, lookup.startVerseKey, lookup.endVerseKey];
-    await DB.query(sql, params);
+    await TypedDB.query(sql, params);
     return lookup;
   }
 
@@ -38,7 +38,7 @@ export class BibleLookupRepository {
       lookup.endVerseKey,
       lookup.id
     ];
-    await DB.query(sql, params);
+    await TypedDB.query(sql, params);
     return lookup;
   }
 
@@ -51,14 +51,14 @@ export class BibleLookupRepository {
       " GROUP BY bt.abbreviation" +
       " ORDER BY bt.abbreviation;";
     const params = [startDate, endDate];
-    return DB.query(sql, params);
+    return TypedDB.query(sql, params);
   }
 
   public delete(id: string) {
-    return DB.query("DELETE FROM bibleLookups WHERE id=?;", [id]);
+    return TypedDB.query("DELETE FROM bibleLookups WHERE id=?;", [id]);
   }
 
   public load(id: string) {
-    return DB.queryOne("SELECT * FROM bibleLookups WHERE id=?;", [id]);
+    return TypedDB.queryOne("SELECT * FROM bibleLookups WHERE id=?;", [id]);
   }
 }

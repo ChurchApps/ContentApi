@@ -1,5 +1,5 @@
 import { ArrayHelper, UniqueIdHelper } from "@churchapps/apihelper";
-import { DB } from "@churchapps/apihelper";
+import { TypedDB } from "../helpers";
 import { Element } from "../models";
 
 export class ElementRepository {
@@ -24,7 +24,7 @@ export class ElementRepository {
       element.stylesJSON,
       element.animationsJSON
     ];
-    await DB.query(sql, params);
+    await TypedDB.query(sql, params);
     return element;
   }
 
@@ -43,7 +43,7 @@ export class ElementRepository {
       element.id,
       element.churchId
     ];
-    await DB.query(sql, params);
+    await TypedDB.query(sql, params);
     return element;
   }
 
@@ -83,23 +83,29 @@ export class ElementRepository {
   }
 
   public delete(churchId: string, id: string) {
-    return DB.query("DELETE FROM elements WHERE id=? AND churchId=?;", [id, churchId]);
+    return TypedDB.query("DELETE FROM elements WHERE id=? AND churchId=?;", [id, churchId]);
   }
 
   public load(churchId: string, id: string) {
-    return DB.queryOne("SELECT * FROM elements WHERE id=? AND churchId=?;", [id, churchId]);
+    return TypedDB.queryOne("SELECT * FROM elements WHERE id=? AND churchId=?;", [id, churchId]);
   }
 
   public loadForSection(churchId: string, sectionId: string) {
-    return DB.query("SELECT * FROM elements WHERE churchId=? AND sectionId=? order by sort;", [churchId, sectionId]);
+    return TypedDB.query("SELECT * FROM elements WHERE churchId=? AND sectionId=? order by sort;", [
+      churchId,
+      sectionId
+    ]);
   }
 
   public loadForBlock(churchId: string, blockId: string) {
-    return DB.query("SELECT * FROM elements WHERE churchId=? AND blockId=? order by sort;", [churchId, blockId]);
+    return TypedDB.query("SELECT * FROM elements WHERE churchId=? AND blockId=? order by sort;", [churchId, blockId]);
   }
 
   public loadForBlocks(churchId: string, blockIds: string[]) {
-    return DB.query("SELECT * FROM elements WHERE churchId=? AND blockId IN (?) order by sort;", [churchId, blockIds]);
+    return TypedDB.query("SELECT * FROM elements WHERE churchId=? AND blockId IN (?) order by sort;", [
+      churchId,
+      blockIds
+    ]);
   }
 
   /*
@@ -109,7 +115,7 @@ export class ElementRepository {
       + " LEFT JOIN sections s on s.id=e.sectionId"
       + " WHERE e.churchId=? AND (e.blockId IN (?) OR s.blockId IN (?))"
       + " ORDER BY sort;";
-    return DB.query(sql, [churchId, blockIds, blockIds]);
+    return TypedDB.query(sql, [churchId, blockIds, blockIds]);
   }
 
   public loadForBlock(churchId: string, blockId: string) {
@@ -118,7 +124,7 @@ export class ElementRepository {
       + " LEFT JOIN sections s on s.id=e.sectionId"
       + " WHERE e.churchId=? AND (e.blockId=? OR s.blockId=?)"
       + " ORDER BY sort;";
-    return DB.query(sql, [churchId, blockId, blockId]);
+    return TypedDB.query(sql, [churchId, blockId, blockId]);
   }
 */
   public loadForPage(churchId: string, pageId: string) {
@@ -128,6 +134,6 @@ export class ElementRepository {
       " INNER JOIN sections s on s.id=e.sectionId" +
       " WHERE (s.pageId=? OR (s.pageId IS NULL and s.blockId IS NULL)) AND e.churchId=?" +
       " ORDER BY sort;";
-    return DB.query(sql, [pageId, churchId]);
+    return TypedDB.query(sql, [pageId, churchId]);
   }
 }
