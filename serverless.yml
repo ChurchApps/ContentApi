@@ -18,20 +18,23 @@ custom:
 provider:
   name: aws
   runtime: nodejs20.x
-  memorySize: 1024
-  timeout: 300
+  memorySize: 1024 # Keep 1024MB for media processing
+  timeout: 30 # Reduced from 300 seconds for cost optimization
   region: us-east-2
   iam:
     role: arn:aws:iam::428019619026:role/ChurchAppsRole
   environment:
     APP_ENV: ${self:custom.env}
+  logs:
+    httpApi:
+      logRetentionInDays: 1
   httpApi:
     binaryMediaTypes:
       - "*/*"
   apiGateway:
     throttle:
-      rateLimit: 5     # 5 requests per second per IP
-      burstLimit: 20   # Allow bursts up to 20 requests per second
+      rateLimit: 5 # 5 requests per second per IP
+      burstLimit: 20 # Allow bursts up to 20 requests per second
 
 layers:
   dependencies:
@@ -54,9 +57,7 @@ functions:
           method: ANY
     vpc: ${self:custom.vpcSettings.current}
     layers:
-      - {
-          Ref: DependenciesLambdaLayer
-        }
+      - { Ref: DependenciesLambdaLayer }
     package:
       patterns:
         - "!node_modules/**"
@@ -65,15 +66,15 @@ functions:
   nightly:
     name: content-api-${sls:stage}-nightly
     handler: lambda.nightly
+    memorySize: 512 # Reduced from 1024MB for cost optimization
+    timeout: 120 # Reduced from 300 seconds
     events:
       - schedule:
           rate: cron(0 0 * * ? *)
           enabled: true
     vpc: ${self:custom.vpcSettings.current}
     layers:
-      - {
-          Ref: DependenciesLambdaLayer
-        }
+      - { Ref: DependenciesLambdaLayer }
     package:
       patterns:
         - "!node_modules/**"
@@ -81,15 +82,15 @@ functions:
   timer2Monday:
     name: content-api-${sls:stage}-timer2Monday
     handler: lambda.timer2Monday
+    memorySize: 256 # Reduced from 1024MB for lightweight timer
+    timeout: 60 # Reduced from 300 seconds
     events:
       - schedule:
           rate: cron(0 2 ? * MON *)
           enabled: true
     vpc: ${self:custom.vpcSettings.current}
     layers:
-      - {
-          Ref: DependenciesLambdaLayer
-        }
+      - { Ref: DependenciesLambdaLayer }
     package:
       patterns:
         - "!node_modules/**"
