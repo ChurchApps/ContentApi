@@ -215,12 +215,6 @@ export class BibleController extends ContentBaseController {
 
 
 
-    @httpGet("/test")
-    public async test(req: express.Request<{}, {}, null>, res: express.Response): Promise<any> {
-      return this.actionWrapper(req, res, async (au) => {
-        return await ApiBibleHelper.passages("06125adad2d5898a-01", "GEN.1");
-      });
-    }
 
     @httpGet("/import/next")
     public async importNext(req: express.Request<{}, {}, null>, res: express.Response): Promise<any> {

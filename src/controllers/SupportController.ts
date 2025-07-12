@@ -8,7 +8,7 @@ export class SupportController extends ContentBaseController {
   @httpPost("/createAudio")
   public async post(req: express.Request<{}, {}, { ssml: string }>, res: express.Response): Promise<any> {
     return this.actionWrapperAnon(req, res, async () => {
-      // const ssml = "<speak><p>Hello World</p><mark name=\"test\" /><p>Goodbye<mark name=\"test2\" /></p></speak>";
+      // const ssmlTest = "<speak>This is a test of the SSML to MP3 conversion.</speak>";
       const ssml = req.body.ssml;
       const data = await PollyHelper.SsmlToMp3(ssml);
       return data;

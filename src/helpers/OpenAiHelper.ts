@@ -155,5 +155,3 @@ export class OpenAiHelper {
   }
 }
 
-// TODO: if the subtitles are not there, then also create social media posts and let users know they are not based on the subtitles.
-// TODO: Add site-name and url to the openrouter and openai headers.
