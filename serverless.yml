@@ -39,6 +39,12 @@ provider:
 package:
   individually: true
   patterns:
+    - "dist/**"
+    - "lambda.js"
+    - "package.json"
+    - "!node_modules/**"
+    - "!src/**"
+    - "!tools/**"
     - "!.git/**"
     - "!.gitignore"
     - "!README.md"
@@ -66,6 +72,7 @@ functions:
     vpc: ${self:custom.vpcSettings.current}
     package:
       patterns:
+        - "!node_modules/**"
         - "!package-lock.json"
         - "!tsconfig.json"
         - "!src/**"
@@ -75,7 +82,6 @@ functions:
         - "!.git/**"
         - "!.gitignore"
         - "!README.md"
-        - "!node_modules/**"
   nightly:
     name: content-api-${self:custom.stage}-nightly
     handler: lambda.nightly
@@ -90,6 +96,7 @@ functions:
     vpc: ${self:custom.vpcSettings.current}
     package:
       patterns:
+        - "!node_modules/**"
         - "!package-lock.json"
         - "!tsconfig.json"
         - "!src/**"
@@ -99,7 +106,6 @@ functions:
         - "!.git/**"
         - "!.gitignore"
         - "!README.md"
-        - "!node_modules/**"
   timer2Monday:
     name: content-api-${self:custom.stage}-timer2Monday
     handler: lambda.timer2Monday
@@ -114,6 +120,7 @@ functions:
     vpc: ${self:custom.vpcSettings.current}
     package:
       patterns:
+        - "!node_modules/**"
         - "!package-lock.json"
         - "!tsconfig.json"
         - "!src/**"
@@ -123,7 +130,6 @@ functions:
         - "!.git/**"
         - "!.gitignore"
         - "!README.md"
-        - "!node_modules/**"
 
 plugins:
   - serverless-plugin-utils
