@@ -102,7 +102,7 @@ export class PageController2 extends ContentBaseController {
       if (!au.checkAccess(Permissions.content.edit)) return this.json({}, 401);
       else {
         const promises: Promise<Page>[] = [];
-        this.repositories.page.create(req.body.page);
+        promises.push(this.repositories.page.create(req.body.page));
         req.body.sections.forEach((section) => {
           promises.push(this.repositories.section.create(section));
         });
