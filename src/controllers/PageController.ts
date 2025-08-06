@@ -110,7 +110,7 @@ export class PageController2 extends ContentBaseController {
           promises.push(this.repositories.element.create(element));
         });
         const result = await Promise.all(promises);
-        return result;
+        return result[0];
       }
     });
   }

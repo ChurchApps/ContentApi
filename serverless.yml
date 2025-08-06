@@ -1,19 +1,28 @@
 service: content-api
 
-package:
-  individually: true
-  exclude:
-    - node_modules/**
+useDotenv: true
 
 custom:
-  env: ${lower(${opt:stage, self:provider.stage})}
+  stage: ${opt:stage, 'dev'}
+  env: ${lower(${self:custom.stage})}
+  layerName: ${self:service}-dependencies-${self:custom.stage}
   vpcSettings:
     prod:
       securityGroupIds:
         - sg-052314a1eec2f2567
       subnetIds:
         - subnet-01a6b61d749d10c46
-    current: ${ternary(${self:custom.env}, prod, ${self:custom.vpcSettings.prod}, ~)}
+    staging:
+      securityGroupIds:
+        - sg-052314a1eec2f2567
+      subnetIds:
+        - subnet-01a6b61d749d10c46
+    demo:
+      securityGroupIds:
+        - sg-052314a1eec2f2567
+      subnetIds:
+        - subnet-01a6b61d749d10c46
+    current: ${self:custom.vpcSettings.${self:custom.env}, ''}
 
 provider:
   name: aws
@@ -21,33 +30,32 @@ provider:
   memorySize: 1024 # Keep 1024MB for media processing
   timeout: 30 # Reduced from 300 seconds for cost optimization
   region: us-east-2
+  stage: ${self:custom.stage}
   iam:
     role: arn:aws:iam::428019619026:role/ChurchAppsRole
   environment:
     APP_ENV: ${self:custom.env}
-  logs:
-    httpApi:
-      logRetentionInDays: 1
-  httpApi:
-    binaryMediaTypes:
-      - "*/*"
-  apiGateway:
-    throttle:
-      rateLimit: 5 # 5 requests per second per IP
-      burstLimit: 20 # Allow bursts up to 20 requests per second
+
+package:
+  individually: true
+  patterns:
+    - "!.git/**"
+    - "!.gitignore"
+    - "!README.md"
+    - "!*.md"
 
 layers:
   dependencies:
+    name: ${self:custom.layerName}
     path: layer
-    name: ${self:service}-${sls:stage}-dependencies
-    description: Dependencies for ${self:service}
-    compatibleRuntimes:
-      - nodejs20.x
+    retain: false
 
 functions:
   api:
-    name: content-api-${sls:stage}-api
+    name: content-api-${self:custom.stage}-api
     handler: lambda.universal
+    layers:
+      - { Ref: DependenciesLambdaLayer }
     events:
       - http:
           path: /{proxy+}
@@ -56,45 +64,66 @@ functions:
           path: /
           method: ANY
     vpc: ${self:custom.vpcSettings.current}
-    layers:
-      - { Ref: DependenciesLambdaLayer }
     package:
       patterns:
-        - "!node_modules/**"
         - "!package-lock.json"
-        - "**"
+        - "!tsconfig.json"
+        - "!src/**"
+        - "!tools/**"
+        - "!*.md"
+        - "!Dockerfile"
+        - "!.git/**"
+        - "!.gitignore"
+        - "!README.md"
+        - "!node_modules/**"
   nightly:
-    name: content-api-${sls:stage}-nightly
+    name: content-api-${self:custom.stage}-nightly
     handler: lambda.nightly
     memorySize: 512 # Reduced from 1024MB for cost optimization
     timeout: 120 # Reduced from 300 seconds
+    layers:
+      - { Ref: DependenciesLambdaLayer }
     events:
       - schedule:
           rate: cron(0 0 * * ? *)
           enabled: true
     vpc: ${self:custom.vpcSettings.current}
-    layers:
-      - { Ref: DependenciesLambdaLayer }
     package:
       patterns:
-        - "!node_modules/**"
         - "!package-lock.json"
+        - "!tsconfig.json"
+        - "!src/**"
+        - "!tools/**"
+        - "!*.md"
+        - "!Dockerfile"
+        - "!.git/**"
+        - "!.gitignore"
+        - "!README.md"
+        - "!node_modules/**"
   timer2Monday:
-    name: content-api-${sls:stage}-timer2Monday
+    name: content-api-${self:custom.stage}-timer2Monday
     handler: lambda.timer2Monday
     memorySize: 256 # Reduced from 1024MB for lightweight timer
     timeout: 60 # Reduced from 300 seconds
+    layers:
+      - { Ref: DependenciesLambdaLayer }
     events:
       - schedule:
           rate: cron(0 2 ? * MON *)
           enabled: true
     vpc: ${self:custom.vpcSettings.current}
-    layers:
-      - { Ref: DependenciesLambdaLayer }
     package:
       patterns:
-        - "!node_modules/**"
         - "!package-lock.json"
+        - "!tsconfig.json"
+        - "!src/**"
+        - "!tools/**"
+        - "!*.md"
+        - "!Dockerfile"
+        - "!.git/**"
+        - "!.gitignore"
+        - "!README.md"
+        - "!node_modules/**"
 
 plugins:
   - serverless-plugin-utils
