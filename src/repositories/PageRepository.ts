@@ -10,7 +10,7 @@ export class PageRepository {
   }
 
   public async create(page: Page) {
-    page.id = UniqueIdHelper.shortId();
+    if (!page.id) page.id = UniqueIdHelper.shortId();
 
     const sql = "INSERT INTO pages (id, churchId, url, title, layout) VALUES (?, ?, ?, ?, ?);";
     const params = [page.id, page.churchId, page.url, page.title, page.layout];

@@ -10,7 +10,7 @@ export class SectionRepository {
   }
 
   public async create(section: Section) {
-    section.id = UniqueIdHelper.shortId();
+    if (!section.id) section.id = UniqueIdHelper.shortId();
 
     const sql =
       "INSERT INTO sections (id, churchId, pageId, blockId, zone, background, textColor, headingColor, linkColor, sort, targetBlockId, answersJSON, stylesJSON, animationsJSON) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?);";

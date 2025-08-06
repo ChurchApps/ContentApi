@@ -8,7 +8,7 @@ export class ElementRepository {
   }
 
   public async create(element: Element) {
-    element.id = UniqueIdHelper.shortId();
+    if (!element.id) element.id = UniqueIdHelper.shortId();
 
     const sql =
       "INSERT INTO elements (id, churchId, sectionId, blockId, elementType, sort, parentId, answersJSON, stylesJSON, animationsJSON) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?);";
