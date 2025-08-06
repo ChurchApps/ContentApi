@@ -7,7 +7,7 @@ export class ElementRepository {
     return element.id ? this.update(element) : this.create(element);
   }
 
-  private async create(element: Element) {
+  public async create(element: Element) {
     element.id = UniqueIdHelper.shortId();
 
     const sql =

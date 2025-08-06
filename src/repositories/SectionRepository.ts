@@ -1,5 +1,5 @@
-import { injectable } from "inversify";
 import { UniqueIdHelper } from "@churchapps/apihelper";
+import { injectable } from "inversify";
 import { TypedDB } from "../helpers";
 import { Section } from "../models";
 
@@ -9,7 +9,7 @@ export class SectionRepository {
     return section.id ? this.update(section) : this.create(section);
   }
 
-  private async create(section: Section) {
+  public async create(section: Section) {
     section.id = UniqueIdHelper.shortId();
 
     const sql =

@@ -1,9 +1,9 @@
-import { controller, httpPost, httpGet, requestParam, httpDelete } from "inversify-express-utils";
 import express from "express";
-import { ContentBaseController } from "./ContentBaseController";
-import { Element, Page, Section } from "../models";
+import { controller, httpDelete, httpGet, httpPost, requestParam } from "inversify-express-utils";
 import { Permissions } from "../helpers";
 import { TreeHelper } from "../helpers/TreeHelper";
+import { Element, Page, Section } from "../models";
+import { ContentBaseController } from "./ContentBaseController";
 
 @controller("/pages")
 export class PageController2 extends ContentBaseController {
@@ -89,6 +89,28 @@ export class PageController2 extends ContentBaseController {
         await Promise.all(promises);
 
         return newPage;
+      }
+    });
+  }
+
+  @httpPost("/temp/ai")
+  public async ai(
+    req: express.Request<{}, {}, { page: Page; sections: Section[]; elements: Element[] }>,
+    res: express.Response
+  ): Promise<any> {
+    return this.actionWrapper(req, res, async (au) => {
+      if (!au.checkAccess(Permissions.content.edit)) return this.json({}, 401);
+      else {
+        const promises: Promise<Page>[] = [];
+        this.repositories.page.create(req.body.page);
+        req.body.sections.forEach((section) => {
+          promises.push(this.repositories.section.create(section));
+        });
+        req.body.elements.forEach((element) => {
+          promises.push(this.repositories.element.create(element));
+        });
+        const result = await Promise.all(promises);
+        return result;
       }
     });
   }

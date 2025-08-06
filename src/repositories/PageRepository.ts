@@ -1,5 +1,5 @@
-import { injectable } from "inversify";
 import { UniqueIdHelper } from "@churchapps/apihelper";
+import { injectable } from "inversify";
 import { TypedDB } from "../helpers";
 import { Page } from "../models";
 
@@ -9,7 +9,7 @@ export class PageRepository {
     return page.id ? this.update(page) : this.create(page);
   }
 
-  private async create(page: Page) {
+  public async create(page: Page) {
     page.id = UniqueIdHelper.shortId();
 
     const sql = "INSERT INTO pages (id, churchId, url, title, layout) VALUES (?, ?, ?, ?, ?);";
