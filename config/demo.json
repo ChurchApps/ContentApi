@@ -1,0 +1,11 @@
+{
+  "appEnv": "demo",
+  "appName": "ContentApi",
+  "contentRoot": "https://democontent.churchapps.org",
+  "fileStore": "S3",
+  "mailSystem": "SES",
+  "membershipApi": "https://membershipapi.demo.churchapps.org",
+  "s3Bucket": "demo-churchapps-content",
+  "messagingApi": "https://messagingapi.demo.churchapps.org",
+  "aiProvider": "openrouter"
+}

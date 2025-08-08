@@ -1,7 +1,7 @@
 import fs from "fs";
 import path from "path";
 
-import { EnvironmentBase, AwsHelper } from "@churchapps/apihelper";
+import { AwsHelper, EnvironmentBase } from "@churchapps/apihelper";
 
 export class Environment extends EnvironmentBase {
   static membershipApi: string;
@@ -18,6 +18,7 @@ export class Environment extends EnvironmentBase {
 
   static async init(environment: string) {
     let file = "dev.json";
+    if (environment === "demo") file = "demo.json";
     if (environment === "staging") file = "staging.json";
     if (environment === "prod") file = "prod.json";
 
