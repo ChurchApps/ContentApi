@@ -1,8 +1,8 @@
-import { controller, httpGet, httpPost, httpDelete, requestParam } from "inversify-express-utils";
-import express from "express";
-import { ContentBaseController } from "./ContentBaseController";
 import { AwsHelper, FileStorageHelper } from "@churchapps/apihelper";
+import express from "express";
+import { controller, httpDelete, httpGet, httpPost, requestParam } from "inversify-express-utils";
 import { Environment, Permissions } from "../helpers";
+import { ContentBaseController } from "./ContentBaseController";
 
 @controller("/gallery")
 export class GalleryController extends ContentBaseController {
@@ -39,6 +39,10 @@ export class GalleryController extends ContentBaseController {
     res: express.Response
   ): Promise<any> {
     return this.actionWrapper(req, res, async (au) => {
+      console.log("User Is", au.firstName);
+      console.log("Permissions", au.permissions);
+      console.log("User Has Access", au.checkAccess(Permissions.content.edit));
+
       if (!au.checkAccess(Permissions.content.edit)) return this.json({}, 401);
       else {
         const key = au.churchId + "/gallery/" + req.body.folder + "/" + req.body.fileName;

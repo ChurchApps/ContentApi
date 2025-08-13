@@ -8,6 +8,8 @@ Environment.init(process.env.APP_ENV).then(() => {
   Pool.initPool();
 
   init().then((app) => {
-    app.listen(port);
+    app.listen(port, () => {
+      console.log(`Server is running on port ${port}`);
+    });
   });
 });

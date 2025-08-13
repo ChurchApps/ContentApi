@@ -23,7 +23,7 @@
     "clean-layer": "rimraf layer",
     "rebuild-layer": "npm-run-all clean-layer build-layer",
     "dev:start": "npm-run-all build start",
-    "dev": "nodemon --watch src -e ts,ejs --exec \"ts-node src/app.ts\"",
+    "dev": "nodemon --watch src -e ts,ejs --exec \"ts-node src/index.ts\"",
     "start": "node .",
     "test": "echo \"Error: no test specified\" && exit 1",
     "serverless-local": "serverless invoke local -f api"

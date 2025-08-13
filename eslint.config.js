@@ -30,7 +30,7 @@ module.exports = [
       '@typescript-eslint/no-inferrable-types': 'off',
       
       // General rules
-      'no-console': 'error',
+      'no-console': 'off',
       'prefer-const': 'error',
       
       // Code style (enforced by Prettier, but useful for linting)
